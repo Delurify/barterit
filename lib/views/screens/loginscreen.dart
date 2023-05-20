@@ -186,10 +186,10 @@ class _LoginScreenState extends State<LoginScreen> {
     String pass = _passEditingController.text;
     print(pass);
     try {
-      http.post(Uri.parse("${MyConfig().SERVER}/mynelayan/php/login_user.php"),
+      http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/login_user.php"),
           body: {
             "email": email,
-            "password": pass,
+            "user_password": pass,
           }).then((response) {
         print(response.body);
         if (response.statusCode == 200) {

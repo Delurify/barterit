@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:barterit/myconfig.dart';
+import 'package:barterit/views/screens/loginscreen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -34,18 +35,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          // SvgPicture.asset(
-          //   "assets/images/signup.svg",
-          //   height: screenHeight * 0.35,
-          // ),
-          
-          // SizedBox(
-          //     height: screenHeight * 0.35,
-          //     width: screenWidth,
-          //     child: Image.asset(
-          //       "assets/images/register.jpg",
-          //       fit: BoxFit.cover,
-          //     )),
+          Container(
+            margin: EdgeInsets.fromLTRB(
+                0, screenHeight * 0.05, 0, screenHeight * 0.05),
+            width: screenWidth * 0.5,
+            child: Image.asset(
+              "assets/images/logo-with-text.png",
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -156,7 +153,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           Expanded(
                               child: ElevatedButton(
                                   onPressed: onRegisterDialog,
-                                  child: const Text("Register")))
+                                  child: const Text(
+                                    "Register",
+                                    style: TextStyle(color: Colors.white),
+                                  )))
                         ],
                       )
                     ]),
@@ -256,15 +256,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     String phone = _phonelditingController.text;
     String passa = _passEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/mynelayan/php/register_user.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/register_user.php"),
         body: {
           "name": name,
           "email": email,
           "phone": phone,
           "password": passa,
         }).then((response) {
-     //  print(response.body);
+      print("This is the response.body: " + response.body);
       if (response.statusCode == 200) {
+        print("Status code: " + response.statusCode.toString());
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -282,5 +283,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  void _goLogin() {}
+  void _goLogin() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
 }

@@ -61,9 +61,9 @@ class SplashScreenState extends State<SplashScreen> {
     late User user;
     if (ischeck) {
       try {
-        http.post(
-            Uri.parse("${MyConfig().SERVER}/mynelayan/php/login_user.php"),
-            body: {"email": email, "password": password}).then((response) {
+        http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/login_user.php"),
+            body: {"email": email, "user_password": password}).then((response) {
+          print(response.body);
           if (response.statusCode == 200) {
             var jsondata = jsonDecode(response.body);
             user = User.fromJson(jsondata['data']);

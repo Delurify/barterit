@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-    @override
+  @override
   void dispose() {
     super.dispose();
     print("dispose");
@@ -65,6 +65,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 label: "Search"),
             BottomNavigationBarItem(
+                backgroundColor: Colors.orange,
                 icon: Icon(
                   Icons.autorenew,
                 ),
