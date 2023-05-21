@@ -58,6 +58,8 @@ class SplashScreenState extends State<SplashScreen> {
     String email = (prefs.getString('email')) ?? '';
     String password = (prefs.getString('pass')) ?? '';
     bool ischeck = (prefs.getBool('checkbox')) ?? false;
+    print(email);
+    print(password);
     late User user;
     if (ischeck) {
       try {
@@ -105,7 +107,7 @@ class SplashScreenState extends State<SplashScreen> {
           password: "na",
           otp: "na");
       Timer(
-          const Duration(seconds: 3),
+          const Duration(seconds: 15),
           () => Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (content) => MainScreen(user: user))));
     }

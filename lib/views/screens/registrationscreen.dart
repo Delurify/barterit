@@ -265,7 +265,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }).then((response) {
       print("This is the response.body: " + response.body);
       if (response.statusCode == 200) {
-        print("Status code: " + response.statusCode.toString());
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
