@@ -1,10 +1,15 @@
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:barterit/models/user.dart';
+import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
+import 'package:barterit/myconfig.dart';
+import 'package:ndialog/ndialog.dart';
 
 class ProfileTabScreen extends StatefulWidget {
   final User user;
@@ -19,11 +24,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   String maintitle = "Profile";
   late double screenHeight, screenWidth, cardwitdh;
   File? _image;
+  String avatarPath = "assets/images/profile-placeholder.png";
 
   @override
   void initState() {
     super.initState();
-    print("Profile");
     Future.delayed(Duration.zero, () {
       checkLogin();
     });
@@ -78,8 +83,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                     ),
                     CircleAvatar(
                       radius: screenHeight * 0.05,
-                      backgroundImage: const AssetImage(
-                          "assets/images/profile-placeholder.png"),
+                      backgroundImage: _image == null
+                          ? AssetImage(avatarPath)
+                          : FileImage(_image!) as ImageProvider,
                     ),
                     const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -128,12 +134,12 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             if (widget.user.id != "na") {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (content) => NewCatchScreen(
-              //               user: widget.user,
-              //             )));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => NewTradeScreen(
+                            user: widget.user,
+                          )));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -147,6 +153,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
 
   void checkLogin() {
+    print(widget.user.email);
     if (widget.user.id == "na") {
       showDialog(
         context: context,
@@ -193,8 +200,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         break;
       case 1:
         print('Clicked Logout');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (content) => LoginScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (content) => const LoginScreen()));
 
         break;
     }
@@ -243,8 +250,31 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       int? sizeInBytes = _image?.lengthSync();
       double sizeInMb = sizeInBytes! / (1024 * 1024);
       print(sizeInMb);
-
+      insertAvatar();
       setState(() {});
     }
+  }
+
+  void insertAvatar() {
+    String base64Image = base64Encode(_image!.readAsBytesSync());
+    ProgressDialog progressDialog = ProgressDialog(context,
+        title: const Text("Processing..."),
+        message: const Text("Updating your Profile Picture"));
+    progressDialog.show();
+
+    print(widget.user.id.toString());
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_avatar.php"),
+        body: {
+          "user_id": widget.user.id.toString(),
+          "image": base64Image,
+        }).then((response) {
+      Fluttertoast.showToast(
+          msg: "Success",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 14.0);
+      progressDialog.dismiss();
+    });
   }
 }

@@ -24,8 +24,8 @@ $result = $conn->query($sqllogin);
 
 if($result -> num_rows > 0){
     while($row = $result->fetch_assoc()){
-        $usearray = array();
-        $usearray['id'] = $row['user_id'];
+        $userarray = array();
+        $userarray['id'] = $row['user_id'];
         $userarray['email'] = $row['user_email'];
 		$userarray['name'] = $row['user_name'];
 		$userarray['phone'] = $row['user_phone'];
