@@ -32,10 +32,10 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   List<String> itemList = [
     "Electronic Devices",
     "Vehicles",
-    "Furniture and Accessories",
-    "Books and Stationery",
+    "Furniture & Accessories",
+    "Books & Stationery",
     "Home Appliances",
-    "Fashion and Cosmetics",
+    "Fashion & Cosmetics",
     "Video Games & Consoles",
     "For Children",
     "Musical Instruments",
@@ -50,7 +50,9 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Insert New Catch")),
+      appBar: AppBar(
+          title: const Text(
+              style: TextStyle(color: Colors.white), "Insert New Catch")),
       body: Column(children: [
         Flexible(
             flex: 4,
@@ -85,6 +87,21 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    TextFormField(
+                        textInputAction: TextInputAction.next,
+                        validator: (val) => val!.isEmpty || (val.length < 3)
+                            ? "Catch name must be longer than 3"
+                            : null,
+                        onFieldSubmitted: (v) {},
+                        controller: _itemnameEditingController,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                            labelText: 'Catch Name',
+                            labelStyle: TextStyle(),
+                            icon: Icon(Icons.abc),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ))),
                     Row(
                       children: [
                         const Icon(Icons.type_specimen),
@@ -92,8 +109,10 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                           width: 16,
                         ),
                         SizedBox(
-                          height: 60,
+                          height: 65,
                           child: DropdownButton(
+                            padding: EdgeInsets.fromLTRB(
+                                0, screenHeight * 0.009, 0, 0),
                             //sorting dropdownoption
                             // Not necessary for Option 1
                             value: selectedType,
@@ -116,73 +135,13 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                         Expanded(
                           child: TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? "Catch name must be longer than 3"
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _itemnameEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Catch Name',
-                                  labelStyle: TextStyle(),
-                                  icon: Icon(Icons.abc),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ))),
-                        )
-                      ],
-                    ),
-                    TextFormField(
-                        textInputAction: TextInputAction.next,
-                        validator: (val) => val!.isEmpty
-                            ? "Catch description must be longer than 10"
-                            : null,
-                        onFieldSubmitted: (v) {},
-                        maxLines: 4,
-                        controller: _itemdescEditingController,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                            labelText: 'Catch Description',
-                            alignLabelWithHint: true,
-                            labelStyle: TextStyle(),
-                            icon: Icon(
-                              Icons.description,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2.0),
-                            ))),
-                    Row(
-                      children: [
-                        // Flexible(
-                        //   flex: 5,
-                        //   child: TextFormField(
-                        //       textInputAction: TextInputAction.next,
-                        //       validator: (val) => val!.isEmpty
-                        //           ? "Product price must contain value"
-                        //           : null,
-                        //       onFieldSubmitted: (v) {},
-                        //       controller: _catchpriceEditingController,
-                        //       keyboardType: TextInputType.number,
-                        //       decoration: const InputDecoration(
-                        //           labelText: 'Catch Price',
-                        //           labelStyle: TextStyle(),
-                        //           icon: Icon(Icons.money),
-                        //           focusedBorder: OutlineInputBorder(
-                        //             borderSide: BorderSide(width: 2.0),
-                        //           ))),
-                        // ),
-                        Flexible(
-                          flex: 5,
-                          child: TextFormField(
-                              textInputAction: TextInputAction.next,
                               validator: (val) => val!.isEmpty
                                   ? "Quantity should be more than 0"
                                   : null,
                               controller: _itemqtyEditingController,
                               keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
-                                  labelText: 'Catch Quantity',
+                                  labelText: 'Quantity',
                                   labelStyle: TextStyle(),
                                   icon: Icon(Icons.numbers),
                                   focusedBorder: OutlineInputBorder(
@@ -191,6 +150,25 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                         ),
                       ],
                     ),
+                    TextFormField(
+                        textInputAction: TextInputAction.next,
+                        validator: (val) => val!.isEmpty
+                            ? "item description must be longer than 10"
+                            : null,
+                        onFieldSubmitted: (v) {},
+                        maxLines: 4,
+                        controller: _itemdescEditingController,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                            labelText: 'Item Description',
+                            alignLabelWithHint: true,
+                            labelStyle: TextStyle(),
+                            icon: Icon(
+                              Icons.description,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ))),
                     const SizedBox(
                       height: 16,
                     ),
@@ -201,7 +179,9 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                           onPressed: () {
                             insertDialog();
                           },
-                          child: const Text("Insert Catch")),
+                          child: const Text(
+                              style: TextStyle(color: Colors.white),
+                              "Insert Catch")),
                     )
                   ],
                 ),
@@ -233,10 +213,10 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: _image!.path,
       aspectRatioPresets: [
-        // CropAspectRatioPreset.square,
+        CropAspectRatioPreset.square,
         // CropAspectRatioPreset.ratio3x2,
         // CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
+        // CropAspectRatioPreset.ratio4x3,
         // CropAspectRatioPreset.ratio16x9
       ],
       uiSettings: [
@@ -244,7 +224,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
             toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.ratio4x3,
+            initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: true),
         IOSUiSettings(
           title: 'Cropper',
