@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import "package:image_cropper/image_cropper.dart";
-import 'package:barterit/models/user.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:barterit/models/user.dart';
 import '../../myconfig.dart';
 
 class NewTradeScreen extends StatefulWidget {
@@ -28,6 +30,10 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       TextEditingController();
   final TextEditingController _itemqtyEditingController =
       TextEditingController();
+  final TextEditingController _prlocalEditingController =
+      TextEditingController();
+  final TextEditingController _prstateEditingController =
+      TextEditingController();
   String selectedType = "Electronic Devices";
   List<String> itemList = [
     "Electronic Devices",
@@ -43,6 +49,24 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     "Food & Nutrition",
     "Other",
   ];
+
+  late Position _currentPosition;
+  String curaddress = "Changlun";
+  String curstate = "Kedah";
+  String prlat = "6.460329";
+  String prlong = "100.5010041";
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePermission();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +180,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             ? "item description must be longer than 10"
                             : null,
                         onFieldSubmitted: (v) {},
-                        maxLines: 4,
+                        maxLines: 3,
                         controller: _itemdescEditingController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
@@ -169,6 +193,47 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(width: 2.0),
                             ))),
+                    Row(
+                      children: [
+                        Flexible(
+                            flex: 5,
+                            child: TextFormField(
+                              textInputAction: TextInputAction.next,
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? "Current State"
+                                      : null,
+                              enabled: false,
+                              controller: _prstateEditingController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  labelText: 'Current States',
+                                  labelStyle: TextStyle(),
+                                  icon: Icon(Icons.flag),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  )),
+                            )),
+                        Flexible(
+                            flex: 5,
+                            child: TextFormField(
+                                textInputAction: TextInputAction.next,
+                                enabled: false,
+                                validator: (val) =>
+                                    val!.isEmpty || (val.length < 3)
+                                        ? "Current Locality"
+                                        : null,
+                                controller: _prlocalEditingController,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                    labelText: 'Current Locality',
+                                    labelStyle: TextStyle(),
+                                    icon: Icon(Icons.map),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2.0),
+                                    )))),
+                      ],
+                    ),
                     const SizedBox(
                       height: 16,
                     ),
@@ -322,6 +387,39 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
             .showSnackBar(const SnackBar(content: Text("Insert Failed")));
         Navigator.pop(context);
       }
+    });
+  }
+
+  Future<Position> _determinePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied.');
+    }
+    _getAddress(_currentPosition);
+    return await Geolocator.getCurrentPosition();
+  }
+
+  _getAddress(Position pos) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(pos.latitude, pos.longitude);
+    setState(() {
+      _prlocalEditingController.text = placemarks[0].locality.toString();
+      _prstateEditingController.text =
+          placemarks[0].administrativeArea.toString();
+      prlat = _currentPosition.latitude.toString();
+      prlong = _currentPosition.longitude.toString();
     });
   }
 }

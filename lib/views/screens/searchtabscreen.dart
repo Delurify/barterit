@@ -16,6 +16,12 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
   late double screenWidth, screenHeight;
 
   @override
+  void dispose() {
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
@@ -94,7 +100,9 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          print("Hello");
+                        },
                         child: Container(
                           width: screenWidth * 0.25,
                           height: screenWidth * 0.25,
@@ -228,7 +236,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                           width: screenWidth * 0.25,
                           height: screenWidth * 0.25,
                           child: Card(
-                            elevation: 4,
+                            elevation: 2,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 side: const BorderSide(

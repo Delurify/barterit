@@ -35,12 +35,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    print("dispose");
-  }
-
-  @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
