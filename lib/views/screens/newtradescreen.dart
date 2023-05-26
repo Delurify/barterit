@@ -51,21 +51,15 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   ];
 
   late Position _currentPosition;
-  String curaddress = "Changlun";
-  String curstate = "Kedah";
-  String prlat = "6.460329";
-  String prlong = "100.5010041";
+  String curaddress = "";
+  String curstate = "";
+  String prlat = "";
+  String prlong = "";
 
   @override
   void initState() {
     super.initState();
     _determinePermission();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    print("dispose");
   }
 
   @override
@@ -363,7 +357,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     String itemqty = _itemqtyEditingController.text;
     String base64Image = base64Encode(_image!.readAsBytesSync());
 
-    http.post(Uri.parse("${MyConfig().SERVER}/mynelayan/php/insert_item.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_item.php"),
         body: {
           "itemname": itemname,
           "itemdesc": itemdesc,
@@ -390,7 +384,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     });
   }
 
-  Future<Position> _determinePermission() async {
+  void _determinePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -407,19 +401,26 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied.');
     }
+    _currentPosition = await Geolocator.getCurrentPosition();
     _getAddress(_currentPosition);
-    return await Geolocator.getCurrentPosition();
+    //return await Geolocator.getCurrentPosition();
   }
 
   _getAddress(Position pos) async {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(pos.latitude, pos.longitude);
-    setState(() {
+    if (placemarks.isEmpty) {
+      _prlocalEditingController.text = "Changlun";
+      _prstateEditingController.text = "Kedah";
+      prlat = "6.443455345";
+      prlong = "100.05488449";
+    } else {
       _prlocalEditingController.text = placemarks[0].locality.toString();
       _prstateEditingController.text =
           placemarks[0].administrativeArea.toString();
       prlat = _currentPosition.latitude.toString();
       prlong = _currentPosition.longitude.toString();
-    });
+    }
+    setState(() {});
   }
 }

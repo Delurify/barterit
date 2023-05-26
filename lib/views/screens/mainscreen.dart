@@ -8,7 +8,7 @@ import 'messagestabscreen.dart';
 import 'profiletabscreen.dart';
 
 //for buyer screen
-
+//Find Slide Navigation
 class MainScreen extends StatefulWidget {
   final User user;
 
