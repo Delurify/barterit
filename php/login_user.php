@@ -32,6 +32,7 @@ if($result -> num_rows > 0){
 		$userarray['password'] = $_POST['user_password'];
 		$userarray['otp'] = $row['user_otp'];
 		$userarray['datereg'] = $row['user_datereg'];
+        $userarray['hasavatar'] = $row['user_hasavatar'];
 		$response = array('status' => 'success', 'data' => $userarray);
 		sendJsonResponse($response);
     }

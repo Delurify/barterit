@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -25,10 +27,15 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   late double screenHeight, screenWidth, cardwitdh;
   File? _image;
   String avatarPath = "assets/images/profile-placeholder.png";
+  DateTime now = DateTime.now();
+  Random random = Random();
+  late int val;
+  bool imageExist = false;
 
   @override
   void initState() {
     super.initState();
+    val = random.nextInt(10000);
     Future.delayed(Duration.zero, () {
       checkLogin();
     });
@@ -76,11 +83,12 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                       children: [Text("0"), Text("Followers")],
                     ),
                     CircleAvatar(
-                      radius: screenHeight * 0.05,
-                      backgroundImage: _image == null
-                          ? AssetImage(avatarPath)
-                          : FileImage(_image!) as ImageProvider,
-                    ),
+                        radius: screenHeight * 0.05,
+                        backgroundImage: widget.user.hasavatar.toString() == "1"
+                            ? NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                            : NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
                     const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [Text("0"), Text("Following")],
@@ -245,7 +253,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       double sizeInMb = sizeInBytes! / (1024 * 1024);
       print(sizeInMb);
       insertAvatar();
-      setState(() {});
+      setState(() {
+        val++;
+        imageExist = true;
+        print(val);
+      });
     }
   }
 
@@ -255,8 +267,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         title: const Text("Processing..."),
         message: const Text("Updating your Profile Picture"));
     progressDialog.show();
-
-    print(widget.user.id.toString());
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_avatar.php"),
         body: {
           "user_id": widget.user.id.toString(),
@@ -270,5 +280,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           fontSize: 14.0);
       progressDialog.dismiss();
     });
+
+    if (widget.user.hasavatar == "0") widget.user.hasavatar = "1";
   }
 }

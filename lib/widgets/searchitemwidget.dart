@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SearchItemWidget extends StatelessWidget {
+class SearchItemWidget extends StatefulWidget {
   final Color color;
   final IconData icon;
   final String text;
-  late double screenHeight, screenWidth;
 
   SearchItemWidget(this.color, this.icon, this.text);
+
+  @override
+  State<SearchItemWidget> createState() => _SearchItemWidgetState();
+}
+
+class _SearchItemWidgetState extends State<SearchItemWidget> {
+  late double screenHeight, screenWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +33,12 @@ class SearchItemWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(
-              icon,
+              widget.icon,
               size: screenWidth * 0.1,
-              color: color,
+              color: widget.color,
             ),
             Text(
-              text,
+              widget.text,
               textAlign: TextAlign.center,
             )
           ],

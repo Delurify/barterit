@@ -81,7 +81,8 @@ class SplashScreenState extends State<SplashScreen> {
                 phone: "na",
                 datereg: "na",
                 password: "na",
-                otp: "na");
+                otp: "na",
+                hasavatar: "na");
             Timer(
                 const Duration(seconds: 3),
                 () => Navigator.pushReplacement(
@@ -103,7 +104,8 @@ class SplashScreenState extends State<SplashScreen> {
           phone: "na",
           datereg: "na",
           password: "na",
-          otp: "na");
+          otp: "na",
+          hasavatar: "na");
       Timer(
           const Duration(seconds: 5),
           () => Navigator.pushReplacement(context,
