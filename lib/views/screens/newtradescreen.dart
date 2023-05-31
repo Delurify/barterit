@@ -38,11 +38,11 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   List<String> itemList = [
     "Electronic Devices",
     "Vehicles",
-    "Furniture & Accessories",
+    "Furniture",
     "Books & Stationery",
     "Home Appliances",
     "Fashion & Cosmetics",
-    "Video Games & Consoles",
+    "Games & Consoles",
     "For Children",
     "Musical Instruments",
     "Sports",
@@ -70,7 +70,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-              style: TextStyle(color: Colors.white), "Insert New Catch")),
+              style: TextStyle(color: Colors.white), "Insert New Item")),
       body: Column(children: [
         Flexible(
             flex: 4,
@@ -108,13 +108,13 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                     TextFormField(
                         textInputAction: TextInputAction.next,
                         validator: (val) => val!.isEmpty || (val.length < 3)
-                            ? "Catch name must be longer than 3"
+                            ? "Item name must be longer than 3"
                             : null,
                         onFieldSubmitted: (v) {},
                         controller: _itemnameEditingController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
-                            labelText: 'Catch Name',
+                            labelText: 'Item Name',
                             labelStyle: TextStyle(),
                             icon: Icon(Icons.abc),
                             focusedBorder: OutlineInputBorder(
@@ -174,7 +174,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             ? "item description must be longer than 10"
                             : null,
                         onFieldSubmitted: (v) {},
-                        maxLines: 3,
+                        maxLines: screenHeight > 750 ? 4 : 3,
                         controller: _itemdescEditingController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
@@ -240,7 +240,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                           },
                           child: const Text(
                               style: TextStyle(color: Colors.white),
-                              "Insert Catch")),
+                              "Insert Item")),
                     )
                   ],
                 ),
@@ -272,8 +272,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: _image!.path,
       aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        // CropAspectRatioPreset.ratio3x2,
+        // CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
         // CropAspectRatioPreset.original,
         // CropAspectRatioPreset.ratio4x3,
         // CropAspectRatioPreset.ratio16x9
@@ -283,7 +283,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
             toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
+            initAspectRatio: CropAspectRatioPreset.ratio3x2,
             lockAspectRatio: true),
         IOSUiSettings(
           title: 'Cropper',
@@ -319,7 +319,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: const Text(
-            "Insert your catch?",
+            "Insert your item?",
             style: TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),
@@ -331,7 +331,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                insertCatch();
+                insertItem();
                 //registerUser();
               },
             ),
@@ -350,7 +350,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     );
   }
 
-  void insertCatch() {
+  void insertItem() {
     String itemname = _itemnameEditingController.text;
     String itemdesc = _itemdescEditingController.text;
     // String catchprice = _catchpriceEditingController.text;
