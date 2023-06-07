@@ -7,28 +7,27 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 $userid = $_POST['userid'];
-$sqlloadcatches = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
-$result = $conn->query($sqlloadcatches);
+$sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
+$result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {
-    $catches["catches"] = array();
+    $items["items"] = array();
 	
 while ($row = $result->fetch_assoc()) {
-        $catchlist = array();
-        $catchlist['catch_id'] = $row['catch_id'];
-        $catchlist['user_id'] = $row['user_id'];
-        $catchlist['catch_name'] = $row['catch_name'];
-        $catchlist['catch_type'] = $row['catch_type'];
-        $catchlist['catch_desc'] = $row['catch_desc'];
-        $catchlist['catch_price'] = $row['catch_price'];
-        $catchlist['catch_qty'] = $row['catch_qty'];
-        $catchlist['catch_lat'] = $row['catch_lat'];
-        $catchlist['catch_long'] = $row['catch_long'];
-        $catchlist['catch_state'] = $row['catch_state'];
-        $catchlist['catch_locality'] = $row['catch_locality'];
-		$catchlist['catch_date'] = $row['catch_date'];
-        array_push($catches["catches"],$catchlist);
+        $itemlist = array();
+        $itemlist['item_id'] = $row['item_id'];
+        $itemlist['user_id'] = $row['user_id'];
+        $itemlist['item_name'] = $row['item_name'];
+        $itemlist['item_type'] = $row['item_type'];
+        $itemlist['item_desc'] = $row['item_desc'];
+        $itemlist['item_qty'] = $row['item_qty'];
+        $itemlist['item_lat'] = $row['item_lat'];
+        $itemlist['item_long'] = $row['item_long'];
+        $itemlist['item_state'] = $row['item_state'];
+        $itemlist['item_locality'] = $row['item_locality'];
+		$itemlist['item_datereg'] = $row['item_datereg'];
+        array_push($items["items"],$itemlist);
     }
-    $response = array('status' => 'success', 'data' => $catches);
+    $response = array('status' => 'success', 'data' => $items);
     sendJsonResponse($response);
 }else{
      $response = array('status' => 'failed', 'data' => null);

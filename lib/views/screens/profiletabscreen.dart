@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:barterit/models/user.dart';
+import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
 import 'package:barterit/myconfig.dart';
@@ -23,6 +25,7 @@ class ProfileTabScreen extends StatefulWidget {
 
 class _ProfileTabScreenState extends State<ProfileTabScreen> {
   late List<Widget> tabchildren;
+  late int axiscount = 2;
   String maintitle = "Profile";
   late double screenHeight, screenWidth, cardwitdh;
   File? _image;
@@ -31,13 +34,18 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Random random = Random();
   late int val;
   bool imageExist = false;
+  List<Item> itemList = <Item>[];
 
   @override
   void initState() {
     super.initState();
+    // The val below is for profile picture function, randomly generate number for system to update to newest profile pic
     val = random.nextInt(10000);
     Future.delayed(Duration.zero, () {
       checkLogin();
+
+      // This is to load items in the database
+      loaduseritems();
     });
   }
 
@@ -45,6 +53,12 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth > screenHeight) {
+      axiscount = 3;
+    } else {
+      axiscount = 2;
+    }
     return Scaffold(
       appBar: widget.user.id.toString() != "na"
           ? AppBar(
@@ -119,18 +133,59 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
               ],
             ),
           ),
-          const Text(
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-              "No items added for barter :("),
-          SizedBox(height: screenHeight * 0.08),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-                screenWidth * 0.05, 0, screenWidth * 0.05, 0),
-            child: const Text(
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
-                "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
-          ),
+          Container(
+              child: itemList.isEmpty
+                  ? Column(
+                      children: [
+                        const Text(
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                            "No items added for barter :("),
+                        SizedBox(height: screenHeight * 0.08),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              screenWidth * 0.05, 0, screenWidth * 0.05, 0),
+                          child: const Text(
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey),
+                              "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
+                        ),
+                      ],
+                    )
+                  : Expanded(
+                      child: GridView.count(
+                          crossAxisCount: axiscount,
+                          children: List.generate(
+                            itemList.length,
+                            (index) {
+                              return Card(
+                                child: InkWell(
+                                  onLongPress: () {
+                                    onDeleteDialog(index);
+                                  },
+                                  child: Column(children: [
+                                    CachedNetworkImage(
+                                      width: screenWidth,
+                                      fit: BoxFit.cover,
+                                      imageUrl:
+                                          "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}.png",
+                                      placeholder: (context, url) =>
+                                          const LinearProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                    Text(
+                                      itemList[index].itemName.toString(),
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                    Text(
+                                      "${itemList[index].itemQty} available",
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ]),
+                                ),
+                              );
+                            },
+                          ))))
         ]),
       ),
       floatingActionButton: FloatingActionButton(
@@ -282,5 +337,86 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     });
 
     if (widget.user.hasavatar == "0") widget.user.hasavatar = "1";
+  }
+
+  void loaduseritems() {
+    if (widget.user.id == "na") {
+      return;
+    }
+
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
+        body: {"userid": widget.user.id}).then((response) {
+      itemList.clear();
+
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['items'].forEach((v) {
+          itemList.add(Item.fromJson(v));
+        });
+        print(itemList[0].itemName);
+      }
+      setState(() {});
+    });
+  }
+
+  void onDeleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Delete ${itemList[index].itemName}?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                deleteItem(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteItem(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/delete_item.php"),
+        body: {
+          "userid": widget.user.id,
+          "itemid": itemList[index].itemId
+        }).then((response) {
+      print(response.body);
+      //catchList.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Delete Success")));
+          loaduseritems();
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+      }
+    });
   }
 }

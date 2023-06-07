@@ -359,11 +359,16 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_item.php"),
         body: {
+          "userid" : widget.user.id,
           "itemname": itemname,
           "itemdesc": itemdesc,
           "itemqty": itemqty,
           "type": selectedType,
-          "image": base64Image
+          "image": base64Image,
+          "lat": prlat,
+          "long": prlong,
+          "state": _prstateEditingController.text,
+          "locality": _prlocalEditingController.text,
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
@@ -403,7 +408,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     }
     _currentPosition = await Geolocator.getCurrentPosition();
     _getAddress(_currentPosition);
-    //return await Geolocator.getCurrentPosition();
   }
 
   _getAddress(Position pos) async {
