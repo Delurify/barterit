@@ -8,12 +8,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:barterit/theme/theme_manager.dart';
+import 'package:barterit/main.dart';
 
 class ProfileTabScreen extends StatefulWidget {
   final User user;
@@ -54,7 +58,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
-    if (screenWidth > screenHeight) {
+    if (screenWidth > 600) {
       axiscount = 3;
     } else {
       axiscount = 2;
@@ -74,6 +78,10 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                               value: 0, child: Text('Profile')),
                           const PopupMenuItem<int>(
                             value: 1,
+                            child: Text('DarkMode'),
+                          ),
+                          const PopupMenuItem<int>(
+                            value: 2,
                             child: Text('Logout'),
                           ),
                         ])
@@ -86,7 +94,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         child: Column(children: [
           Container(
             padding: const EdgeInsets.all(8),
-            height: screenHeight * 0.25,
+            height: screenHeight * 0.17,
             width: screenWidth,
             child: Card(
               child: Row(
@@ -249,13 +257,28 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     }
   }
 
-  void onSelected(BuildContext context, int item) {
+  void onSelected(BuildContext context, int item) async {
     switch (item) {
       case 0:
         print('Clicked Profile');
 
         break;
       case 1:
+        print('Clicked Darkmode/Lightmode');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        bool? themeValue = prefs.getBool('theme');
+        setState(() {
+          if (themeValue == null || themeValue == true) {
+            MyAppState.themeManager.toggleTheme(false);
+            prefs.setBool('theme', false);
+          } else {
+            MyAppState.themeManager.toggleTheme(true);
+            prefs.setBool('theme', true);
+          }
+        });
+
+        break;
+      case 2:
         print('Clicked Logout');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (content) => const LoginScreen()));
@@ -311,7 +334,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       setState(() {
         val++;
         imageExist = true;
-        print(val);
       });
     }
   }

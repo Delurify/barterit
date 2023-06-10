@@ -26,8 +26,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.user.name);
-    print("MainScreen");
     tabchildren = [
       HomeTabScreen(
         user: widget.user,
