@@ -9,13 +9,14 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:barterit/models/user.dart';
+import 'package:barterit/views/screens/profiletabscreen.dart';
 import '../../myconfig.dart';
 
 class ImageConfig {
-  String? source;
-  String? path;
+  String source = "";
+  String path = "";
 
-  ImageConfig({this.source, this.path});
+  ImageConfig({required this.source, required this.path});
 }
 
 class NewTradeScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class NewTradeScreen extends StatefulWidget {
 
 class _NewTradeScreenState extends State<NewTradeScreen> {
   File? _image;
-  String pathValidation = "";
+  String stringValidation = "";
   String pathAsset = "assets/images/camera.png";
   List<ImageConfig> imgList = [
     ImageConfig(source: "asset", path: "assets/images/camera.png"),
@@ -83,46 +84,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
-    // Preparation for Image Sliders
-    imageSliders = imgList
-        .map(
-          (item) => Container(
-            margin: const EdgeInsets.all(5.0),
-            child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    pathValidate(item.path),
-                    item.source == "asset"
-                        ? Image.network(pathValidation,
-                            fit: BoxFit.cover, width: screenWidth* 0.8)
-                        : Image.file(File(pathValidation),
-                            fit: BoxFit.cover, width: screenWidth* 0.8),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(200, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20.0),
-                      ),
-                    ),
-                  ],
-                )),
-          ),
-        )
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -135,30 +96,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                 options: CarouselOptions(height: screenHeight * 0.4),
                 itemBuilder: (context, index, realIndex) {
                   var imgItem = imgList[index];
-
                   return buildImage(imgItem, index);
-                })
-            // child: GestureDetector(
-            //   onTap: () {
-            //     _selectFromCamera();
-            //   },
-            //   child: Padding(
-            //     padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-            //     child: Card(
-            //       child: Container(
-            //           width: screenWidth,
-            //           decoration: BoxDecoration(
-            //             image: DecorationImage(
-            //               image: _image == null
-            //                   ? AssetImage(pathAsset)
-            //                   : FileImage(_image!) as ImageProvider,
-            //               fit: BoxFit.contain,
-            //             ),
-            //           )),
-            //     ),
-            //   ),
-            // )
-            ),
+                })),
         Expanded(
           flex: 6,
           child: Padding(
@@ -194,7 +133,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                           child: DropdownButton(
                             padding: EdgeInsets.fromLTRB(
                                 0, screenHeight * 0.009, 0, 0),
-                            //sorting dropdownoption
+                            // sorting dropdownoption
                             // Not necessary for Option 1
                             value: selectedType,
                             onChanged: (newValue) {
@@ -315,7 +254,21 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     );
   }
 
-  Widget buildImage(ImageConfig imgItem, int index) => Container();
+  Widget buildImage(ImageConfig imgItem, int index) => GestureDetector(
+        onTap: () {
+          _selectFromCamera(index);
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          color: Colors.grey,
+          child: imgItem.source == "asset"
+              ? Image.asset(pathAsset)
+              : Image.file(File(imgItem.path),
+                  fit: BoxFit.cover, width: screenWidth * 0.8),
+        ),
+      );
+
+  validateString(String s) {}
 
   Future<void> _selectFromCamera(index) async {
     final picker = ImagePicker();
@@ -337,8 +290,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: _image!.path,
       aspectRatioPresets: [
-        // CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.square,
+        // CropAspectRatioPreset.ratio3x2,
         // CropAspectRatioPreset.original,
         // CropAspectRatioPreset.ratio4x3,
         // CropAspectRatioPreset.ratio16x9
@@ -361,11 +314,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
 
       // Update the imgList's item based on index selected
       ImageConfig imgItem = ImageConfig(source: "file", path: croppedFile.path);
-      imgList[imgList.indexOf(index)] = imgItem;
+      imgList[index] = imgItem;
 
-      // int? sizeInBytes = _image?.lengthSync();
-      // double sizeInMb = sizeInBytes! / (1024 * 1024);
-      // print(sizeInMb);
       setState(() {});
     }
   }
@@ -377,8 +327,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       return;
     }
     if (_image == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please take picture")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please take at least one picture")));
       return;
     }
     showDialog(
@@ -401,7 +351,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 insertItem();
-                //registerUser();
               },
             ),
             TextButton(
@@ -420,10 +369,18 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   }
 
   void insertItem() {
+    List<String> base64Images = [];
     String itemname = _itemnameEditingController.text;
     String itemdesc = _itemdescEditingController.text;
     String itemqty = _itemqtyEditingController.text;
-    String base64Image = base64Encode(_image!.readAsBytesSync());
+    // String base64Image = base64Encode(_image!.readAsBytesSync());
+
+    imgList.forEach((object) {
+      if (object.source == "file") {
+        File file = File(object.path);
+        base64Images.add(base64Encode(file.readAsBytesSync()));
+      }
+    });
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_item.php"),
         body: {
@@ -432,7 +389,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           "itemdesc": itemdesc,
           "itemqty": itemqty,
           "type": selectedType,
-          "image": base64Image,
+          "imagelist": base64Images.toString(),
+          "imagecount": base64Images.length.toString(),
           "lat": prlat,
           "long": prlong,
           "state": _prstateEditingController.text,
@@ -494,11 +452,5 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       prlong = _currentPosition.longitude.toString();
     }
     setState(() {});
-  }
-
-  pathValidate(String? path) {
-    // Update pathValidation variable 
-    // to path but "" if it is null.
-    pathValidation = path ?? "";
   }
 }

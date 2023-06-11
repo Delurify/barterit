@@ -119,7 +119,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(
-                screenWidth * 0.05, 8, screenWidth * 0.05, screenHeight * 0.08),
+                screenWidth * 0.05, 8, screenWidth * 0.05, screenHeight * 0.02),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -169,26 +169,33 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                   onLongPress: () {
                                     onDeleteDialog(index);
                                   },
-                                  child: Column(children: [
-                                    CachedNetworkImage(
-                                      width: screenWidth,
-                                      fit: BoxFit.cover,
-                                      imageUrl:
-                                          "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}.png",
-                                      placeholder: (context, url) =>
-                                          const LinearProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),
-                                    Text(
-                                      itemList[index].itemName.toString(),
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    Text(
-                                      "${itemList[index].itemQty} available",
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                  ]),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                          child: CachedNetworkImage(
+                                            width: screenWidth,
+                                            height: screenWidth,
+                                            fit: BoxFit.cover,
+                                            imageUrl:
+                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                            placeholder: (context, url) =>
+                                                const LinearProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
+                                        ),
+                                        Text(
+                                          itemList[index].itemName.toString(),
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                        Text(
+                                          "${itemList[index].itemQty} available",
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ]),
                                 ),
                               );
                             },
@@ -203,7 +210,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                   MaterialPageRoute(
                       builder: (content) => NewTradeScreen(
                             user: widget.user,
-                          )));
+                          ))).then((value) {
+                loaduseritems();
+              });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -263,7 +272,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
 
         break;
       case 1:
-        print('Clicked Darkmode/Lightmode');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         bool? themeValue = prefs.getBool('theme');
         setState(() {
@@ -426,7 +434,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           "itemid": itemList[index].itemId
         }).then((response) {
       print(response.body);
-      //catchList.clear();
+      itemList.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
