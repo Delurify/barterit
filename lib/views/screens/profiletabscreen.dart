@@ -16,7 +16,6 @@ import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
-import 'package:barterit/theme/theme_manager.dart';
 import 'package:barterit/main.dart';
 
 class ProfileTabScreen extends StatefulWidget {

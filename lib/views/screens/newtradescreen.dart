@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import "package:image_cropper/image_cropper.dart";
@@ -9,6 +10,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:barterit/models/user.dart';
 import '../../myconfig.dart';
+
+class ImageConfig {
+  String? source;
+  String? path;
+
+  ImageConfig({this.source, this.path});
+}
 
 class NewTradeScreen extends StatefulWidget {
   final User user;
@@ -21,7 +29,15 @@ class NewTradeScreen extends StatefulWidget {
 
 class _NewTradeScreenState extends State<NewTradeScreen> {
   File? _image;
-  var pathAsset = "assets/images/camera.png";
+  String pathValidation = "";
+  String pathAsset = "assets/images/camera.png";
+  List<ImageConfig> imgList = [
+    ImageConfig(source: "asset", path: "assets/images/camera.png"),
+    ImageConfig(source: "asset", path: "assets/images/camera.png"),
+    ImageConfig(source: "asset", path: "assets/images/camera.png"),
+  ];
+  List<Widget>? imageSliders;
+
   final _formKey = GlobalKey<FormState>();
   late double screenHeight, screenWidth, cardWidth;
   final TextEditingController _itemnameEditingController =
@@ -67,6 +83,46 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
+    // Preparation for Image Sliders
+    imageSliders = imgList
+        .map(
+          (item) => Container(
+            margin: const EdgeInsets.all(5.0),
+            child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                child: Stack(
+                  children: <Widget>[
+                    pathValidate(item.path),
+                    item.source == "asset"
+                        ? Image.network(pathValidation,
+                            fit: BoxFit.cover, width: screenWidth* 0.8)
+                        : Image.file(File(pathValidation),
+                            fit: BoxFit.cover, width: screenWidth* 0.8),
+                    Positioned(
+                      bottom: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(200, 0, 0, 0),
+                              Color.fromARGB(0, 0, 0, 0)
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 20.0),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        )
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -74,28 +130,35 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       body: Column(children: [
         Flexible(
             flex: 4,
-            // height: screenHeight / 2.5,
-            // width: screenWidth,
-            child: GestureDetector(
-              onTap: () {
-                _selectFromCamera();
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                child: Card(
-                  child: Container(
-                      width: screenWidth,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: _image == null
-                              ? AssetImage(pathAsset)
-                              : FileImage(_image!) as ImageProvider,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
-                ),
-              ),
-            )),
+            child: CarouselSlider.builder(
+                itemCount: imgList.length,
+                options: CarouselOptions(height: screenHeight * 0.4),
+                itemBuilder: (context, index, realIndex) {
+                  var imgItem = imgList[index];
+
+                  return buildImage(imgItem, index);
+                })
+            // child: GestureDetector(
+            //   onTap: () {
+            //     _selectFromCamera();
+            //   },
+            //   child: Padding(
+            //     padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            //     child: Card(
+            //       child: Container(
+            //           width: screenWidth,
+            //           decoration: BoxDecoration(
+            //             image: DecorationImage(
+            //               image: _image == null
+            //                   ? AssetImage(pathAsset)
+            //                   : FileImage(_image!) as ImageProvider,
+            //               fit: BoxFit.contain,
+            //             ),
+            //           )),
+            //     ),
+            //   ),
+            // )
+            ),
         Expanded(
           flex: 6,
           child: Padding(
@@ -252,7 +315,9 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     );
   }
 
-  Future<void> _selectFromCamera() async {
+  Widget buildImage(ImageConfig imgItem, int index) => Container();
+
+  Future<void> _selectFromCamera(index) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -262,13 +327,13 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
 
     if (pickedFile != null) {
       _image = File(pickedFile.path);
-      cropImage();
+      cropImage(index);
     } else {
       print('No image selected.');
     }
   }
 
-  Future<void> cropImage() async {
+  Future<void> cropImage(index) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: _image!.path,
       aspectRatioPresets: [
@@ -293,10 +358,14 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     if (croppedFile != null) {
       File imageFile = File(croppedFile.path);
       _image = imageFile;
-      int? sizeInBytes = _image?.lengthSync();
-      double sizeInMb = sizeInBytes! / (1024 * 1024);
-      print(sizeInMb);
 
+      // Update the imgList's item based on index selected
+      ImageConfig imgItem = ImageConfig(source: "file", path: croppedFile.path);
+      imgList[imgList.indexOf(index)] = imgItem;
+
+      // int? sizeInBytes = _image?.lengthSync();
+      // double sizeInMb = sizeInBytes! / (1024 * 1024);
+      // print(sizeInMb);
       setState(() {});
     }
   }
@@ -353,13 +422,12 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   void insertItem() {
     String itemname = _itemnameEditingController.text;
     String itemdesc = _itemdescEditingController.text;
-    // String catchprice = _catchpriceEditingController.text;
     String itemqty = _itemqtyEditingController.text;
     String base64Image = base64Encode(_image!.readAsBytesSync());
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_item.php"),
         body: {
-          "userid" : widget.user.id,
+          "userid": widget.user.id,
           "itemname": itemname,
           "itemdesc": itemdesc,
           "itemqty": itemqty,
@@ -426,5 +494,11 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       prlong = _currentPosition.longitude.toString();
     }
     setState(() {});
+  }
+
+  pathValidate(String? path) {
+    // Update pathValidation variable 
+    // to path but "" if it is null.
+    pathValidation = path ?? "";
   }
 }
