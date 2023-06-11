@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:barterit/models/user.dart';
@@ -174,19 +175,54 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                           CrossAxisAlignment.stretch,
                                       children: [
                                         Expanded(
-                                          child: CachedNetworkImage(
-                                            width: screenWidth,
-                                            height: screenWidth,
-                                            fit: BoxFit.cover,
-                                            imageUrl:
-                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                            placeholder: (context, url) =>
-                                                const LinearProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ),
-                                        ),
+                                            child: itemList[index]
+                                                        .itemImageCount ==
+                                                    "1"
+                                                ? CachedNetworkImage(
+                                                    width: screenWidth,
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const LinearProgressIndicator(),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  )
+                                                : itemList[index]
+                                                            .itemImageCount ==
+                                                        "2"
+                                                    ? ImageSlideshow(
+                                                        width: screenWidth,
+                                                        initialPage: 0,
+                                                        children: [
+                                                            Image.network(
+                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            Image.network(
+                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                              fit: BoxFit.cover,
+                                                            )
+                                                          ])
+                                                    : ImageSlideshow(
+                                                        width: screenWidth,
+                                                        initialPage: 0,
+                                                        children: [
+                                                            Image.network(
+                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            Image.network(
+                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            Image.network(
+                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ])),
                                         Text(
                                           itemList[index].itemName.toString(),
                                           style: const TextStyle(fontSize: 20),

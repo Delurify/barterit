@@ -18,6 +18,7 @@ while ($row = $result->fetch_assoc()) {
         $itemlist['user_id'] = $row['user_id'];
         $itemlist['item_name'] = $row['item_name'];
         $itemlist['item_type'] = $row['item_type'];
+        $itemlist['item_imagecount'] = $row['item_imagecount'];
         $itemlist['item_desc'] = $row['item_desc'];
         $itemlist['item_qty'] = $row['item_qty'];
         $itemlist['item_lat'] = $row['item_lat'];

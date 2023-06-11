@@ -3,6 +3,7 @@ class Item {
   String? userId;
   String? itemName;
   String? itemType;
+  String? itemImageCount;
   String? itemDesc;
   String? itemQty;
   String? itemLat;
@@ -16,6 +17,7 @@ class Item {
       this.userId,
       this.itemName,
       this.itemType,
+      this.itemImageCount,
       this.itemDesc,
       this.itemQty,
       this.itemLat,
@@ -29,6 +31,7 @@ class Item {
     userId = json['user_id'];
     itemName = json['item_name'];
     itemType = json['item_type'];
+    itemImageCount = json['item_imagecount'];
     itemDesc = json['item_desc'];
     itemQty = json['item_qty'];
     itemLat = json['item_lat'];
@@ -40,17 +43,18 @@ class Item {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['catch_id'] = itemId;
+    data['item_id'] = itemId;
     data['user_id'] = userId;
-    data['catch_name'] = itemName;
-    data['catch_type'] = itemType;
-    data['catch_desc'] = itemDesc;
-    data['catch_qty'] = itemQty;
-    data['catch_lat'] = itemLat;
-    data['catch_long'] = itemLong;
-    data['catch_state'] = itemState;
-    data['catch_locality'] = itemLocality;
-    data['catch_date'] = itemDate;
+    data['item_name'] = itemName;
+    data['item_type'] = itemType;
+    data['item_imagecount'] = itemImageCount;
+    data['item_desc'] = itemDesc;
+    data['item_qty'] = itemQty;
+    data['item_lat'] = itemLat;
+    data['item_long'] = itemLong;
+    data['item_state'] = itemState;
+    data['item_locality'] = itemLocality;
+    data['item_date'] = itemDate;
     return data;
   }
 }
