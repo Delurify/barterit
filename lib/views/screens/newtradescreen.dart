@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:barterit/models/user.dart';
-import 'package:barterit/views/screens/profiletabscreen.dart';
 import '../../myconfig.dart';
 
 class ImageConfig {
@@ -251,7 +250,9 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.red[400]),
+                            backgroundColor: isDark
+                                ? const Color.fromARGB(255, 145, 70, 70)
+                                : Colors.red[400]),
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -262,10 +263,13 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             // loaduseritems();
                           });
                         },
-                        child: const Text(
+                        child: Text(
                           "Add Barter Categories",
-                          style: TextStyle(color: Colors.white),
+                          style: isDark
+                              ? TextStyle(color: Colors.red[100])
+                              : const TextStyle(color: Colors.white),
                         )),
+                    const SizedBox(height: 15),
                     SizedBox(
                       width: screenWidth / 1.2,
                       height: 50,

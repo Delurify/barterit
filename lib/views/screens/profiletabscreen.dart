@@ -100,46 +100,47 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           child: Column(children: [
             Container(
               padding: const EdgeInsets.all(8),
-              height: screenHeight * 0.17,
+              height: screenHeight * 0.15,
               width: screenWidth,
-              child: Card(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("0"),
-                          Text(
-                            "Followers",
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("0"),
+                        Text(
+                          "Followers",
+                          style: _textTheme.bodyMedium
+                              ?.copyWith(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                    CircleAvatar(
+                        radius: screenHeight * 0.05,
+                        backgroundImage: widget.user.hasavatar.toString() == "1"
+                            ? NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                            : NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("0"),
+                        Text("Following",
                             style: _textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey),
-                          )
-                        ],
-                      ),
-                      CircleAvatar(
-                          radius: screenHeight * 0.05,
-                          backgroundImage: widget.user.hasavatar.toString() ==
-                                  "1"
-                              ? NetworkImage(
-                                  "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                              : NetworkImage(
-                                  "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("0"),
-                          Text("Following",
-                              style: _textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.grey))
-                        ],
-                      ),
-                    ]),
-              ),
+                                ?.copyWith(color: Colors.grey))
+                      ],
+                    ),
+                  ]),
             ),
+            Divider(
+                indent: 8,
+                endIndent: 8,
+                color: isDark ? Colors.grey[400] : Colors.black87),
             Padding(
-              padding: EdgeInsets.fromLTRB(screenWidth * 0.05, 8,
-                  screenWidth * 0.05, screenHeight * 0.02),
+              padding: EdgeInsets.fromLTRB(
+                  screenWidth * 0.05, 4, screenWidth * 0.05, 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
