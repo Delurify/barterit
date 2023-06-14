@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:barterit/views/screens/bartertoscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -83,24 +84,23 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
           title: const Text(
               style: TextStyle(color: Colors.white), "Insert New Item")),
-      body: Column(children: [
-        Flexible(
-            flex: 4,
-            child: CarouselSlider.builder(
-                itemCount: imgList.length,
-                options: CarouselOptions(height: screenHeight * 0.4),
-                itemBuilder: (context, index, realIndex) {
-                  var imgItem = imgList[index];
-                  return buildImage(imgItem, index);
-                })),
-        Expanded(
-          flex: 6,
-          child: Padding(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(children: [
+          CarouselSlider.builder(
+              itemCount: imgList.length,
+              options: CarouselOptions(height: screenHeight * 0.35),
+              itemBuilder: (context, index, realIndex) {
+                var imgItem = imgList[index];
+                return buildImage(imgItem, index);
+              }),
+          Padding(
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
             child: Form(
               key: _formKey,
@@ -156,7 +156,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                           child: TextFormField(
                               textInputAction: TextInputAction.next,
                               validator: (val) => val!.isEmpty
-                                  ? "Quantity should be more than 0"
+                                  ? "Quantity should be at least 1"
                                   : null,
                               controller: _itemqtyEditingController,
                               keyboardType: TextInputType.number,
@@ -231,8 +231,41 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                       ],
                     ),
                     const SizedBox(
+                      height: 32,
+                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Barter Section: ",
+                            style: Theme.of(context).textTheme.titleLarge)),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("- Add what item type you want barter to: ",
+                            style: Theme.of(context).textTheme.titleSmall)),
+                    const SizedBox(
                       height: 16,
                     ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Colors.red[400]),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (content) => BarterToScreen(
+                                        user: widget.user,
+                                      ))).then((value) {
+                            // loaduseritems();
+                          });
+                        },
+                        child: const Text(
+                          "Add Barter Categories",
+                          style: TextStyle(color: Colors.white),
+                        )),
                     SizedBox(
                       width: screenWidth / 1.2,
                       height: 50,
@@ -249,8 +282,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
               ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

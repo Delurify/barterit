@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-ThemeData lightTheme =
-    ThemeData(primarySwatch: Colors.orange, brightness: Brightness.light);
+const COLOR_PRIMARY = Colors.orange;
+var COLOR_ACCENT = Colors.orange[400];
 
-ThemeData darkTheme =
-    ThemeData(primarySwatch: Colors.orange, brightness: Brightness.dark);
+ThemeData lightTheme = ThemeData(
+    primarySwatch: COLOR_PRIMARY,
+    floatingActionButtonTheme:
+        FloatingActionButtonThemeData(backgroundColor: COLOR_ACCENT),
+    brightness: Brightness.light);
+
+ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    switchTheme: SwitchThemeData(
+        trackColor: MaterialStateProperty.all<Color>(Colors.grey),
+        thumbColor: MaterialStateProperty.all<Color>(Colors.white)));

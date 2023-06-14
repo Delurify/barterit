@@ -57,6 +57,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    TextTheme _textTheme = Theme.of(context).textTheme;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (screenWidth > 600) {
       axiscount = 3;
@@ -76,9 +78,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                     itemBuilder: (context) => [
                           const PopupMenuItem<int>(
                               value: 0, child: Text('Profile')),
-                          const PopupMenuItem<int>(
+                          PopupMenuItem<int>(
                             value: 1,
-                            child: Text('DarkMode'),
+                            child: isDark
+                                ? const Text('LightMode')
+                                : const Text('DarkMode'),
                           ),
                           const PopupMenuItem<int>(
                             value: 2,
@@ -90,155 +94,215 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           : AppBar(
               title: Text(maintitle),
             ),
-      body: Center(
-        child: Column(children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            height: screenHeight * 0.17,
-            width: screenWidth,
-            child: Card(
+      body: RefreshIndicator(
+        onRefresh: _pullRefresh,
+        child: Center(
+          child: Column(children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              height: screenHeight * 0.17,
+              width: screenWidth,
+              child: Card(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("0"),
+                          Text(
+                            "Followers",
+                            style: _textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey),
+                          )
+                        ],
+                      ),
+                      CircleAvatar(
+                          radius: screenHeight * 0.05,
+                          backgroundImage: widget.user.hasavatar.toString() ==
+                                  "1"
+                              ? NetworkImage(
+                                  "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                              : NetworkImage(
+                                  "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("0"),
+                          Text("Following",
+                              style: _textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey))
+                        ],
+                      ),
+                    ]),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(screenWidth * 0.05, 8,
+                  screenWidth * 0.05, screenHeight * 0.02),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text("0"), Text("Followers")],
-                    ),
-                    CircleAvatar(
-                        radius: screenHeight * 0.05,
-                        backgroundImage: widget.user.hasavatar.toString() == "1"
-                            ? NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                            : NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text("0"), Text("Following")],
-                    ),
-                  ]),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                      child: const Text(
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                          "Edit Avatar"),
+                      onTap: () {
+                        _selectFromGallery();
+                      }),
+                  InkWell(
+                      child: const Text(
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                          "Favorites"),
+                      onTap: () {})
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-                screenWidth * 0.05, 8, screenWidth * 0.05, screenHeight * 0.02),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                    child: const Text(
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                        "Edit Avatar"),
-                    onTap: () {
-                      _selectFromGallery();
-                    }),
-                InkWell(
-                    child: const Text(
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                        "Favorites"),
-                    onTap: () {})
-              ],
-            ),
-          ),
-          Container(
-              child: itemList.isEmpty
-                  ? Column(
-                      children: [
-                        const Text(
-                            style: TextStyle(color: Colors.grey, fontSize: 20),
-                            "No items added for barter :("),
-                        SizedBox(height: screenHeight * 0.08),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                              screenWidth * 0.05, 0, screenWidth * 0.05, 0),
-                          child: const Text(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
-                              "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
-                        ),
-                      ],
-                    )
-                  : Expanded(
-                      child: GridView.count(
-                          crossAxisCount: axiscount,
-                          children: List.generate(
-                            itemList.length,
-                            (index) {
-                              return Card(
-                                child: InkWell(
-                                  onLongPress: () {
-                                    onDeleteDialog(index);
-                                  },
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(
-                                            child: itemList[index]
-                                                        .itemImageCount ==
-                                                    "1"
-                                                ? CachedNetworkImage(
-                                                    width: screenWidth,
-                                                    fit: BoxFit.cover,
-                                                    imageUrl:
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        const LinearProgressIndicator(),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  )
-                                                : itemList[index]
-                                                            .itemImageCount ==
-                                                        "2"
-                                                    ? ImageSlideshow(
-                                                        width: screenWidth,
-                                                        initialPage: 0,
-                                                        children: [
-                                                            Image.network(
-                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                            Image.network(
-                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          ])
-                                                    : ImageSlideshow(
-                                                        width: screenWidth,
-                                                        initialPage: 0,
-                                                        children: [
-                                                            Image.network(
-                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                            Image.network(
-                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                            Image.network(
-                                                              "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ])),
-                                        Text(
-                                          itemList[index].itemName.toString(),
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                        Text(
-                                          "${itemList[index].itemQty} available",
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ]),
-                                ),
-                              );
-                            },
-                          ))))
-        ]),
+            Container(
+                child: itemList.isEmpty
+                    ? Column(
+                        children: [
+                          const Text(
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20),
+                              "No items added for barter :("),
+                          SizedBox(height: screenHeight * 0.08),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                screenWidth * 0.05, 0, screenWidth * 0.05, 0),
+                            child: const Text(
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey),
+                                "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
+                          ),
+                        ],
+                      )
+                    : Expanded(
+                        child: GridView.count(
+                            childAspectRatio: 4 / 5,
+                            crossAxisCount: axiscount,
+                            children: List.generate(
+                              itemList.length,
+                              (index) {
+                                return Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  clipBehavior: Clip.antiAlias,
+                                  elevation: 2,
+                                  child: InkWell(
+                                    onLongPress: () {
+                                      onDeleteDialog(index);
+                                    },
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(
+                                              child: itemList[index]
+                                                          .itemImageCount ==
+                                                      "1"
+                                                  ? CachedNetworkImage(
+                                                      width: screenWidth,
+                                                      fit: BoxFit.cover,
+                                                      imageUrl:
+                                                          "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          const LinearProgressIndicator(),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(
+                                                              Icons.error),
+                                                    )
+                                                  : itemList[index]
+                                                              .itemImageCount ==
+                                                          "2"
+                                                      ? ImageSlideshow(
+                                                          width: screenWidth,
+                                                          initialPage: 0,
+                                                          children: [
+                                                              Image.network(
+                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                              Image.network(
+                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            ])
+                                                      : ImageSlideshow(
+                                                          width: screenWidth,
+                                                          initialPage: 0,
+                                                          children: [
+                                                              Image.network(
+                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                              Image.network(
+                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                              Image.network(
+                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ])),
+                                          Row(
+                                            children: [
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  // for horizontal scrolling
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+
+                                                  child: Text(
+                                                    itemList[index]
+                                                        .itemName
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                        fontSize: 18),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              // Add fovorite icon in here later
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Text(
+                                                "${itemList[index].itemQty} available",
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ]),
+                                  ),
+                                );
+                              },
+                            ))))
+          ]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
+          backgroundColor:
+              isDark ? Colors.white : Theme.of(context).primaryColor,
           onPressed: () {
             if (widget.user.id != "na") {
               Navigator.push(
@@ -254,11 +318,18 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                   content: Text("Please login/register an account")));
             }
           },
-          child: const Text(
+          child: Text(
             "+",
-            style: TextStyle(fontSize: 32, color: Colors.white),
+            style: TextStyle(
+                fontSize: 32, color: isDark ? Colors.black87 : Colors.white),
           )),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      loaduseritems();
+    });
   }
 
   void checkLogin() {
@@ -309,9 +380,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         break;
       case 1:
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        bool? themeValue = prefs.getBool('theme');
+        bool themeValue = prefs.getBool('theme') ?? true;
         setState(() {
-          if (themeValue == null || themeValue == true) {
+          if (themeValue == true) {
             MyAppState.themeManager.toggleTheme(false);
             prefs.setBool('theme', false);
           } else {

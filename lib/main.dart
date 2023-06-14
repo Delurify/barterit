@@ -5,13 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/theme_manager.dart';
 import 'theme/theme_constants.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 // ignore: must_be_immutable
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
-
-  bool lightTheme = true;
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -19,6 +17,7 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   static ThemeManager themeManager = ThemeManager();
+  bool isDark = true;
 
   @override
   void dispose() {
@@ -28,6 +27,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    getDefaultTheme();
     themeManager.addListener(themeListener);
     super.initState;
   }
@@ -46,6 +46,15 @@ class MyAppState extends State<MyApp> {
   themeListener() {
     if (mounted) {
       setState(() {});
+    }
+  }
+
+  void getDefaultTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isDark = prefs.getBool('theme') ?? false;
+
+    if (isDark) {
+      MyAppState.themeManager.toggleTheme(true);
     }
   }
 }
