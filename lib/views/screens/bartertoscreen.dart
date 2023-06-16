@@ -32,6 +32,7 @@ class BarterTo {
       required this.sport,
       required this.foodNutrition,
       required this.other});
+
 }
 
 // ignore: must_be_immutable
@@ -95,9 +96,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
           Wrap(
             spacing: 5,
             children: [
-              Visibility(
-                visible: widget.isSelected.electDevice,
-                child: Chip(
+              if (widget.isSelected.electDevice)
+                Chip(
                     label: const Text("Electronic Devices"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -107,10 +107,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.electDevice = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.vehicle,
-                child: Chip(
+              if (widget.isSelected.vehicle)
+                Chip(
                     label: const Text("Vehicles"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -120,10 +118,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.vehicle = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.furniture,
-                child: Chip(
+              if (widget.isSelected.furniture)
+                Chip(
                     label: const Text("Furniture & Accessories"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -133,10 +129,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.furniture = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.bookStation,
-                child: Chip(
+              if (widget.isSelected.bookStation)
+                Chip(
                     label: const Text("Books & Stationery"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -146,10 +140,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.bookStation = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.homeAppliance,
-                child: Chip(
+              if (widget.isSelected.homeAppliance)
+                Chip(
                     label: const Text("Home Appliances"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -159,10 +151,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.homeAppliance = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.fashionCosmetic,
-                child: Chip(
+              if (widget.isSelected.fashionCosmetic)
+                Chip(
                     label: const Text("Fashion & Cosmetics"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -172,10 +162,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.fashionCosmetic = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.gameConsole,
-                child: Chip(
+              if (widget.isSelected.gameConsole)
+                Chip(
                     label: const Text("Video Game & Consoles"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -185,10 +173,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.gameConsole = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.forChildren,
-                child: Chip(
+              if (widget.isSelected.forChildren)
+                Chip(
                     label: const Text("For Children"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -198,10 +184,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.forChildren = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.musicalInstrument,
-                child: Chip(
+              if (widget.isSelected.musicalInstrument)
+                Chip(
                     label: const Text("Musical Instruments"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -211,10 +195,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.musicalInstrument = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.sport,
-                child: Chip(
+              if (widget.isSelected.sport)
+                Chip(
                     label: const Text("Sports"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -224,10 +206,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.sport = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.foodNutrition,
-                child: Chip(
+              if (widget.isSelected.foodNutrition)
+                Chip(
                     label: const Text("Food & Nutrition"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -237,10 +217,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.foodNutrition = false;
                       });
                     }),
-              ),
-              Visibility(
-                visible: widget.isSelected.other,
-                child: Chip(
+              if (widget.isSelected.other)
+                Chip(
                     label: const Text("Other"),
                     deleteIcon: Icon(Icons.cancel,
                         color: isDark ? Colors.black : Colors.red[400]),
@@ -250,7 +228,6 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         widget.isSelected.other = false;
                       });
                     }),
-              ),
             ],
           ),
           const SizedBox(height: 20),

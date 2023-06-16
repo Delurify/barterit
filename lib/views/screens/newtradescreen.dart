@@ -293,9 +293,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                     Wrap(
                       spacing: 5,
                       children: [
-                        Visibility(
-                          visible: isSelected.electDevice,
-                          child: Chip(
+                        if (isSelected.electDevice)
+                          Chip(
                               label: const Text("Electronic Devices"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -305,10 +304,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.electDevice = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.vehicle,
-                          child: Chip(
+                        if (isSelected.vehicle)
+                          Chip(
                               label: const Text("Vehicles"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -318,10 +315,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.vehicle = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.furniture,
-                          child: Chip(
+                        if (isSelected.furniture)
+                          Chip(
                               label: const Text("Furniture & Accessories"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -331,10 +326,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.furniture = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.bookStation,
-                          child: Chip(
+                        if (isSelected.bookStation)
+                          Chip(
                               label: const Text("Books & Stationery"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -344,10 +337,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.bookStation = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.homeAppliance,
-                          child: Chip(
+                        if (isSelected.homeAppliance)
+                          Chip(
                               label: const Text("Home Appliances"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -357,10 +348,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.homeAppliance = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.fashionCosmetic,
-                          child: Chip(
+                        if (isSelected.fashionCosmetic)
+                          Chip(
                               label: const Text("Fashion & Cosmetics"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -370,10 +359,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.fashionCosmetic = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.gameConsole,
-                          child: Chip(
+                        if (isSelected.gameConsole)
+                          Chip(
                               label: const Text("Video Game & Consoles"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -383,10 +370,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.gameConsole = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.forChildren,
-                          child: Chip(
+                        if (isSelected.forChildren)
+                          Chip(
                               label: const Text("For Children"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -396,10 +381,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.forChildren = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.musicalInstrument,
-                          child: Chip(
+                        if (isSelected.musicalInstrument)
+                          Chip(
                               label: const Text("Musical Instruments"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -409,10 +392,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.musicalInstrument = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.sport,
-                          child: Chip(
+                        if (isSelected.sport)
+                          Chip(
                               label: const Text("Sports"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -422,10 +403,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.sport = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.foodNutrition,
-                          child: Chip(
+                        if (isSelected.foodNutrition)
+                          Chip(
                               label: const Text("Food & Nutrition"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -435,10 +414,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.foodNutrition = false;
                                 });
                               }),
-                        ),
-                        Visibility(
-                          visible: isSelected.other,
-                          child: Chip(
+                        if (isSelected.other)
+                          Chip(
                               label: const Text("Other"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
@@ -448,7 +425,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                   isSelected.other = false;
                                 });
                               }),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 15),
@@ -617,6 +593,18 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           "long": prlong,
           "state": _prstateEditingController.text,
           "locality": _prlocalEditingController.text,
+          "electronicdevice": isSelected.electDevice.toString(),
+          "vehicle": isSelected.vehicle.toString(),
+          "furniture": isSelected.furniture.toString(),
+          "bookstationery": isSelected.bookStation.toString(),
+          "homeappliance": isSelected.homeAppliance.toString(),
+          "fashioncosmetic": isSelected.fashionCosmetic.toString(),
+          "videogameconsole": isSelected.gameConsole.toString(),
+          "forchildren": isSelected.forChildren.toString(),
+          "musicalinstrument": isSelected.musicalInstrument.toString(),
+          "sport": isSelected.sport.toString(),
+          "foodnutrition": isSelected.foodNutrition.toString(),
+          "other": isSelected.other.toString()
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
