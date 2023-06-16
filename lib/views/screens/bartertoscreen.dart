@@ -304,7 +304,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -361,7 +361,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           setState(() {
                             if (widget.isSelected.selected < limit) {
@@ -420,7 +420,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -477,7 +477,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -534,7 +534,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -591,7 +591,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -648,7 +648,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -705,7 +705,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -762,7 +762,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -819,7 +819,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
@@ -876,7 +876,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             backgroundColor: isDark
                                 ? Colors.grey[800]
-                                : Color.fromARGB(255, 246, 232, 222)),
+                                : const Color.fromARGB(255, 246, 232, 222)),
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;

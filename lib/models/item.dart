@@ -11,6 +11,18 @@ class Item {
   String? itemState;
   String? itemLocality;
   String? itemDate;
+  String? bartertoElectronicDevice;
+  String? bartertoVehicle;
+  String? bartertoFurniture;
+  String? bartertoBookStationery;
+  String? bartertoHomeAppliance;
+  String? bartertoFashionCosmetic;
+  String? bartertoVideoGameConsole;
+  String? bartertoForChildren;
+  String? bartertoMusicalInstrument;
+  String? bartertoSport;
+  String? bartertoFoodNutrition;
+  String? bartertoOther;
 
   Item(
       {this.itemId,
@@ -24,7 +36,19 @@ class Item {
       this.itemLong,
       this.itemState,
       this.itemLocality,
-      this.itemDate});
+      this.itemDate,
+      this.bartertoElectronicDevice,
+      this.bartertoVehicle,
+      this.bartertoFurniture,
+      this.bartertoBookStationery,
+      this.bartertoHomeAppliance,
+      this.bartertoFashionCosmetic,
+      this.bartertoVideoGameConsole,
+      this.bartertoForChildren,
+      this.bartertoMusicalInstrument,
+      this.bartertoSport,
+      this.bartertoFoodNutrition,
+      this.bartertoOther});
 
   Item.fromJson(Map<String, dynamic> json) {
     itemId = json['item_id'];
@@ -39,6 +63,18 @@ class Item {
     itemState = json['item_state'];
     itemLocality = json['item_locality'];
     itemDate = json['item_date'];
+    bartertoElectronicDevice = json['item_barterto_electronicdevice'];
+    bartertoVehicle = json['item_barterto_vehicle'];
+    bartertoFurniture = json['item_barterto_furniture'];
+    bartertoBookStationery = json['item_barterto_book&stationery'];
+    bartertoHomeAppliance = json['item_barterto_homeappliance'];
+    bartertoFashionCosmetic = json['item_barterto_fashion&cosmetic'];
+    bartertoVideoGameConsole = json['item_barterto_videogame&console'];
+    bartertoForChildren = json['item_barterto_forchildren'];
+    bartertoMusicalInstrument = json['item_barterto_musicalinstrument'];
+    bartertoSport = json['item_barterto_sport'];
+    bartertoFoodNutrition = json['item_barterto_food&nutrition'];
+    bartertoOther = json['item_barterto_other'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +91,18 @@ class Item {
     data['item_state'] = itemState;
     data['item_locality'] = itemLocality;
     data['item_date'] = itemDate;
+    data['item_barterto_electronicdevice'] = bartertoElectronicDevice;
+    data['item_barterto_vehicle'] = bartertoVehicle;
+    data['item_barterto_furniture'] = bartertoFurniture;
+    data['item_barterto_book&stationery'] = bartertoBookStationery;
+    data['item_barterto_homeappliance'] = bartertoHomeAppliance;
+    data['item_barterto_fashion&cosmetic'] = bartertoFashionCosmetic;
+    data['item_barterto_videogame&console'] = bartertoVideoGameConsole;
+    data['item_barterto_forchildren'] = bartertoForChildren;
+    data['item_barterto_musicalinstrument'] = bartertoMusicalInstrument;
+    data['item_barterto_sport'] = bartertoSport;
+    data['item_barterto_food&nutrition'] = bartertoFoodNutrition;
+    data['item_barterto_other'] = bartertoOther;
     return data;
   }
 }

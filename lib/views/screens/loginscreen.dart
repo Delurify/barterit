@@ -184,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     String email = _emailEditingController.text;
     String pass = _passEditingController.text;
-    print(pass);
     try {
       http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/login_user.php"),
           body: {

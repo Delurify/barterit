@@ -26,6 +26,18 @@ while ($row = $result->fetch_assoc()) {
         $itemlist['item_state'] = $row['item_state'];
         $itemlist['item_locality'] = $row['item_locality'];
 		$itemlist['item_datereg'] = $row['item_datereg'];
+        $itemlist['item_barterto_electronicdevice'] = $row['item_barterto_electronicdevice'];
+        $itemlist['item_barterto_vehicle'] = $row['item_barterto_vehicle'];
+        $itemlist['item_barterto_furniture'] = $row['item_barterto_furniture'];
+        $itemlist['item_barterto_book&stationery'] = $row['item_barterto_book&stationery'];
+        $itemlist['item_barterto_homeappliance'] = $row['item_barterto_homeappliance'];
+        $itemlist['item_barterto_fashion&cosmetic'] = $row['item_barterto_fashion&cosmetic'];
+        $itemlist['item_barterto_videogame&console'] = $row['item_barterto_videogame&console'];
+        $itemlist['item_barterto_forchildren'] = $row['item_barterto_forchildren'];
+        $itemlist['item_barterto_musicalinstrument'] = $row['item_barterto_musicalinstrument'];
+        $itemlist['item_barterto_sport'] = $row['item_barterto_sport'];
+        $itemlist['item_barterto_food&nutrition'] = $row['item_barterto_food&nutrition'];
+        $itemlist['item_barterto_other'] = $row['item_barterto_other'];
         array_push($items["items"],$itemlist);
     }
     $response = array('status' => 'success', 'data' => $items);

@@ -15,6 +15,7 @@ import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
+import 'package:barterit/views/screens/edititemscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:barterit/main.dart';
@@ -195,6 +196,12 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                   child: InkWell(
                                     onLongPress: () {
                                       onDeleteDialog(index);
+                                    },
+                                    onTap: () async {
+                                      Item singleitem = Item.fromJson(
+                                          itemList[index].toJson());
+                                      await Navigator.push(context, MaterialPageRoute(builder: (content) => EditItemScreen(user: widget.user,
+                                      useritem: singleitem)));
                                     },
                                     child: Column(
                                         crossAxisAlignment:
@@ -492,7 +499,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         extractdata['items'].forEach((v) {
           itemList.add(Item.fromJson(v));
         });
-        print(itemList[0].itemName);
       }
       setState(() {});
     });

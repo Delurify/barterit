@@ -5,7 +5,7 @@ class SearchItemWidget extends StatefulWidget {
   final IconData icon;
   final String text;
 
-  SearchItemWidget(this.color, this.icon, this.text);
+  const SearchItemWidget(this.color, this.icon, this.text);
 
   @override
   State<SearchItemWidget> createState() => _SearchItemWidgetState();

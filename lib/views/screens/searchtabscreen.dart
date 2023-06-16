@@ -72,8 +72,8 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     children: [
                       InkWell(
                           onTap: () {},
-                          child: SearchItemWidget(Colors.blue, Icons.devices,
-                              "Electronic Devices")),
+                          child: const SearchItemWidget(Colors.blue,
+                              Icons.devices, "Electronic Devices")),
                       InkWell(
                           onTap: () {
                             print("Hello");
@@ -82,7 +82,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                               Icons.car_rental, "Vehicles")),
                       InkWell(
                           onTap: () {},
-                          child: SearchItemWidget(Colors.orange,
+                          child: const SearchItemWidget(Colors.orange,
                               Icons.table_bar, "Furniture & Accessories"))
                     ],
                   ),
@@ -99,7 +99,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                               Icons.book, "Books & Stationery")),
                       InkWell(
                           onTap: () {},
-                          child: SearchItemWidget(
+                          child: const SearchItemWidget(
                               Colors.grey, Icons.blender, "Home Appliances")),
                       InkWell(
                           onTap: () {},
@@ -116,7 +116,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     children: [
                       InkWell(
                           onTap: () {},
-                          child: SearchItemWidget(Colors.greenAccent,
+                          child: const SearchItemWidget(Colors.greenAccent,
                               Icons.games, "Video Game & Consoles")),
                       InkWell(
                           onTap: () {},
@@ -145,7 +145,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                               Icons.food_bank, "Food & Nutrition")),
                       InkWell(
                           onTap: () {},
-                          child: SearchItemWidget(
+                          child: const SearchItemWidget(
                               Colors.black38, Icons.question_mark, "Other"))
                     ],
                   ),

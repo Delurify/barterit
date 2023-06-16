@@ -32,6 +32,7 @@ $barterto_foodnutrition = $_POST['foodnutrition'];
 $barterto_other = $_POST['other'];
 
 // converting 'true' or 'false' to 1 and 0
+// This is for barterto columns
 $barterto_electronicdevice = $barterto_electronicdevice === "true" ? "1" : "0";
 $barterto_vehicle = $barterto_vehicle === "true" ? "1" : "0";
 $barterto_furniture = $barterto_furniture === "true" ? "1" : "0";
