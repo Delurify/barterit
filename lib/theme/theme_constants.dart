@@ -13,4 +13,5 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     switchTheme: SwitchThemeData(
         trackColor: MaterialStateProperty.all<Color>(Colors.grey),
-        thumbColor: MaterialStateProperty.all<Color>(Colors.white)));
+        thumbColor: MaterialStateProperty.all<Color>(Colors.white)),
+    colorScheme: const ColorScheme.dark().copyWith(primary: Colors.orange));

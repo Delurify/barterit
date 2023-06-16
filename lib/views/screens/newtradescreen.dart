@@ -29,6 +29,21 @@ class NewTradeScreen extends StatefulWidget {
 }
 
 class _NewTradeScreenState extends State<NewTradeScreen> {
+  int selected = 0;
+  late BarterTo isSelected = BarterTo(
+      selected: 0,
+      electDevice: false,
+      vehicle: false,
+      furniture: false,
+      bookStation: false,
+      homeAppliance: false,
+      fashionCosmetic: false,
+      gameConsole: false,
+      forChildren: false,
+      musicalInstrument: false,
+      sport: false,
+      foodNutrition: false,
+      other: false);
   File? _image;
   String stringValidation = "";
   String pathAsset = "assets/images/camera.png";
@@ -259,7 +274,12 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               MaterialPageRoute(
                                   builder: (content) => BarterToScreen(
                                         user: widget.user,
+                                        isSelected: isSelected,
                                       ))).then((value) {
+                            // fetch the isSelected object from BarterTo
+                            setState(() {
+                              isSelected = value;
+                            });
                             // loaduseritems();
                           });
                         },
@@ -269,6 +289,168 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               ? TextStyle(color: Colors.red[100])
                               : const TextStyle(color: Colors.white),
                         )),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 5,
+                      children: [
+                        Visibility(
+                          visible: isSelected.electDevice,
+                          child: Chip(
+                              label: const Text("Electronic Devices"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.electDevice = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.vehicle,
+                          child: Chip(
+                              label: const Text("Vehicles"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.vehicle = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.furniture,
+                          child: Chip(
+                              label: const Text("Furniture & Accessories"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.furniture = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.bookStation,
+                          child: Chip(
+                              label: const Text("Books & Stationery"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.bookStation = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.homeAppliance,
+                          child: Chip(
+                              label: const Text("Home Appliances"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.homeAppliance = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.fashionCosmetic,
+                          child: Chip(
+                              label: const Text("Fashion & Cosmetics"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.fashionCosmetic = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.gameConsole,
+                          child: Chip(
+                              label: const Text("Video Game & Consoles"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.gameConsole = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.forChildren,
+                          child: Chip(
+                              label: const Text("For Children"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.forChildren = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.musicalInstrument,
+                          child: Chip(
+                              label: const Text("Musical Instruments"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.musicalInstrument = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.sport,
+                          child: Chip(
+                              label: const Text("Sports"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.sport = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.foodNutrition,
+                          child: Chip(
+                              label: const Text("Food & Nutrition"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.foodNutrition = false;
+                                });
+                              }),
+                        ),
+                        Visibility(
+                          visible: isSelected.other,
+                          child: Chip(
+                              label: const Text("Other"),
+                              deleteIcon: Icon(Icons.cancel,
+                                  color:
+                                      isDark ? Colors.black : Colors.red[400]),
+                              onDeleted: () {
+                                setState(() {
+                                  isSelected.other = false;
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 15),
                     SizedBox(
                       width: screenWidth / 1.2,
@@ -304,8 +486,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                   fit: BoxFit.cover, width: screenWidth * 0.8),
         ),
       );
-
-  validateString(String s) {}
 
   Future<void> _selectFromCamera(index) async {
     final picker = ImagePicker();
@@ -366,6 +546,11 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     if (_image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please take at least one picture")));
+      return;
+    }
+    if (isSelected.selected == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Please select at least one barter category")));
       return;
     }
     showDialog(
