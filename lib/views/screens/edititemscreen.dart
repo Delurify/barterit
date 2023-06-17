@@ -47,11 +47,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
   bool imgCheck = false;
   String pathAsset = "assets/images/no-photo.png";
   late List<ImageConfig> imgList;
-  // = [
-  //   ImageConfig(source: "asset", path: "assets/images/camera.png"),
-  //   ImageConfig(source: "asset", path: "assets/images/camera.png"),
-  //   ImageConfig(source: "asset", path: "assets/images/camera.png"),
-  // ];
   List<Widget>? imageSliders;
 
   final _formKey = GlobalKey<FormState>();
@@ -531,10 +526,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
     widget.useritem.itemName = _itemnameEditingController.text;
     widget.useritem.itemDesc = _itemdescEditingController.text;
     widget.useritem.itemQty = _itemqtyEditingController.text;
-    int imgCount = 0;
-    // String base64Image = base64Encode(_image!.readAsBytesSync());
-
-    widget.useritem.itemImageCount = imgCount.toString();
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_item.php"),
         body: {
