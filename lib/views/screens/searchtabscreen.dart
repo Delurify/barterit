@@ -117,7 +117,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                       InkWell(
                           onTap: () {},
                           child: const SearchItemWidget(Colors.greenAccent,
-                              Icons.games, "Video Game & Consoles")),
+                              Icons.games, "Video Game \n& Consoles")),
                       InkWell(
                           onTap: () {},
                           child: SearchItemWidget(Colors.orange.shade300,

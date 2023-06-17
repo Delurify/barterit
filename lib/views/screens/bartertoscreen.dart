@@ -32,7 +32,6 @@ class BarterTo {
       required this.sport,
       required this.foodNutrition,
       required this.other});
-
 }
 
 // ignore: must_be_immutable
@@ -100,7 +99,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Electronic Devices"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -111,7 +110,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Vehicles"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -122,7 +121,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Furniture & Accessories"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -133,7 +132,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Books & Stationery"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -144,7 +143,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Home Appliances"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -155,7 +154,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Fashion & Cosmetics"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -166,7 +165,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Video Game & Consoles"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -177,7 +176,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("For Children"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -188,7 +187,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Musical Instruments"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -199,7 +198,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Sports"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -210,7 +209,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Food & Nutrition"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;
@@ -221,7 +220,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                 Chip(
                     label: const Text("Other"),
                     deleteIcon: Icon(Icons.cancel,
-                        color: isDark ? Colors.black : Colors.red[400]),
+                        color: isDark ? Colors.white : Colors.red[400]),
                     onDeleted: () {
                       setState(() {
                         widget.isSelected.selected--;

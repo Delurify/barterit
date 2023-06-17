@@ -15,7 +15,7 @@ import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
-import 'package:barterit/views/screens/edititemscreen.dart';
+import 'package:barterit/views/screens/itemdetailscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:barterit/main.dart';
@@ -117,6 +117,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                         )
                       ],
                     ),
+                    // Profile picture
                     CircleAvatar(
                         radius: screenHeight * 0.05,
                         backgroundImage: widget.user.hasavatar.toString() == "1"
@@ -200,8 +201,13 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                     onTap: () async {
                                       Item singleitem = Item.fromJson(
                                           itemList[index].toJson());
-                                      await Navigator.push(context, MaterialPageRoute(builder: (content) => EditItemScreen(user: widget.user,
-                                      useritem: singleitem)));
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (content) =>
+                                                  ItemDetailScreen(
+                                                      user: widget.user,
+                                                      useritem: singleitem)));
                                     },
                                     child: Column(
                                         crossAxisAlignment:

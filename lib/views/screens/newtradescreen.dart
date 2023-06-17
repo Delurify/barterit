@@ -102,6 +102,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
               style: TextStyle(color: Colors.white), "Insert New Item")),
       body: SingleChildScrollView(
@@ -298,7 +299,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Electronic Devices"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.electDevice = false;
@@ -309,7 +310,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Vehicles"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.vehicle = false;
@@ -320,7 +321,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Furniture & Accessories"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.furniture = false;
@@ -331,7 +332,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Books & Stationery"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.bookStation = false;
@@ -342,7 +343,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Home Appliances"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.homeAppliance = false;
@@ -353,7 +354,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Fashion & Cosmetics"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.fashionCosmetic = false;
@@ -364,7 +365,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Video Game & Consoles"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.gameConsole = false;
@@ -375,7 +376,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("For Children"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.forChildren = false;
@@ -386,7 +387,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Musical Instruments"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.musicalInstrument = false;
@@ -397,7 +398,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Sports"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.sport = false;
@@ -408,7 +409,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Food & Nutrition"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.foodNutrition = false;
@@ -419,7 +420,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               label: const Text("Other"),
                               deleteIcon: Icon(Icons.cancel,
                                   color:
-                                      isDark ? Colors.black : Colors.red[400]),
+                                      isDark ? Colors.white : Colors.red[400]),
                               onDeleted: () {
                                 setState(() {
                                   isSelected.other = false;
