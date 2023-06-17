@@ -189,7 +189,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                     ),
                                   ])),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(screenWidth * 0.05, 20, 0, 0),
+                  padding: EdgeInsets.fromLTRB(screenWidth * 0.05, 20, 0, 10),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Row(
@@ -207,11 +207,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (content) => EditItemScreen(
-                                          user: widget.user,
-                                          useritem: widget.useritem)));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (content) => EditItemScreen(
+                                              user: widget.user,
+                                              useritem: widget.useritem)))
+                                  .then((value) {
+                                setState(() {});
+                              });
                             },
                             child: const Icon(
                               Icons.edit,
@@ -223,7 +226,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(
-                      screenWidth * 0.05, 15, screenWidth * 0.05, 0),
+                      screenWidth * 0.05, 5, screenWidth * 0.05, 0),
                   child: Table(
                     columnWidths: const {
                       0: FlexColumnWidth(1),

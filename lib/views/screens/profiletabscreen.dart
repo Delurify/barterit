@@ -202,12 +202,16 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                       Item singleitem = Item.fromJson(
                                           itemList[index].toJson());
                                       await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (content) =>
-                                                  ItemDetailScreen(
-                                                      user: widget.user,
-                                                      useritem: singleitem)));
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (content) =>
+                                                      ItemDetailScreen(
+                                                          user: widget.user,
+                                                          useritem:
+                                                              singleitem)))
+                                          .then((value) {
+                                        loaduseritems();
+                                      });
                                     },
                                     child: Column(
                                         crossAxisAlignment:
@@ -553,7 +557,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           "userid": widget.user.id,
           "itemid": itemList[index].itemId
         }).then((response) {
-      print(response.body);
       itemList.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);

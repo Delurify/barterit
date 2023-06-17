@@ -8,16 +8,11 @@ if (!isset($_POST)) {
 include_once("dbconnect.php");
 
 $user_id = $_POST['userid'];
+$item_id = $_POST['itemid'];
 $item_name = $_POST['itemname'];
 $item_desc = $_POST['itemdesc'];
 $item_qty = $_POST['itemqty'];
 $item_type = $_POST['type'];
-$image_string = $_POST['imagelist'];
-$item_imagecount = $_POST['imagecount'];
-$item_lat = $_POST['lat'];
-$item_long = $_POST['long'];
-$item_state = $_POST['state'];
-$item_locality = $_POST['locality'];
 $barterto_electronicdevice = $_POST['electronicdevice'];
 $barterto_vehicle = $_POST['vehicle'];
 $barterto_furniture = $_POST['furniture'];
@@ -47,27 +42,10 @@ $barterto_foodnutrition = $barterto_foodnutrition === "true" ? "1" : "0";
 $barterto_other = $barterto_other === "true" ? "1" : "0";
 
 
-$sqlinsert = "INSERT INTO `tbl_items`(`user_id`, `item_name`, `item_desc`, `item_type`, `item_imagecount`, `item_qty`, `item_lat`, `item_long`, `item_state`, `item_locality`, `item_barterto_electronicdevice`, `item_barterto_vehicle`, `item_barterto_furniture`, `item_barterto_book&stationery`, `item_barterto_homeappliance`, `item_barterto_fashion&cosmetic`, `item_barterto_videogame&console`, `item_barterto_forchildren`, `item_barterto_musicalinstrument`, `item_barterto_sport`, `item_barterto_food&nutrition`, `item_barterto_other`) VALUES ('$user_id','$item_name','$item_desc','$item_type', '$item_imagecount','$item_qty', '$item_lat', '$item_long', '$item_state', '$item_locality', '$barterto_electronicdevice', '$barterto_vehicle', '$barterto_furniture', '$barterto_bookstationery', '$barterto_homeappliance', '$barterto_fashioncosmetic', '$barterto_videogameconsole', '$barterto_forchildren', '$barterto_musicalinstrument', '$barterto_sport', '$barterto_foodnutrition', '$barterto_other')";
+$sqlinsert = "UPDATE `tbl_items` SET `item_name` = '$item_name', `item_desc` = '$item_desc', `item_type` = '$item_type', `item_qty` = '$item_qty', `item_barterto_electronicdevice` = '$barterto_electronicdevice', `item_barterto_vehicle` = '$barterto_vehicle', `item_barterto_furniture` = '$barterto_furniture', `item_barterto_book&stationery` = '$barterto_bookstationery', `item_barterto_homeappliance` = '$barterto_homeappliance', `item_barterto_fashion&cosmetic` = '$barterto_fashioncosmetic', `item_barterto_videogame&console` = '$barterto_videogameconsole', `item_barterto_forchildren` = '$barterto_forchildren', `item_barterto_musicalinstrument` = '$barterto_musicalinstrument', `item_barterto_sport` = '$barterto_sport', `item_barterto_food&nutrition` = '$barterto_foodnutrition', `item_barterto_other` = '$barterto_other' WHERE `item_id` = '$item_id'";
 
 if ($conn->query($sqlinsert) === TRUE) {
-	$filename = mysqli_insert_id($conn);
 	$response = array('status' => 'success', 'data' => null);
-
-	// remove unecessary characters from the string
-	$image_string = str_replace(array("[", "]", " "), "", $image_string);
-
-	// seperate the elements in string and assign them into array
-	$image_list = explode(",",$image_string);
-
-	// decode and save each image into the server
-	$int = 1;
-	foreach($image_list as $key){
-		$decoded_string = base64_decode($key);
-		$path = '../assets/items/'.$filename.'-'.$int.'.png';
-		file_put_contents($path, $decoded_string);
-		$int++;
-	}
-	
     sendJsonResponse($response);
 }else{
 	$response = array('status' => 'failed', 'data' => null);
