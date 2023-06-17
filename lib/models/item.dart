@@ -62,7 +62,7 @@ class Item {
     itemLong = json['item_long'];
     itemState = json['item_state'];
     itemLocality = json['item_locality'];
-    itemDate = json['item_date'];
+    itemDate = json['item_datereg'];
     bartertoElectronicDevice = json['item_barterto_electronicdevice'];
     bartertoVehicle = json['item_barterto_vehicle'];
     bartertoFurniture = json['item_barterto_furniture'];
@@ -90,7 +90,7 @@ class Item {
     data['item_long'] = itemLong;
     data['item_state'] = itemState;
     data['item_locality'] = itemLocality;
-    data['item_date'] = itemDate;
+    data['item_datereg'] = itemDate;
     data['item_barterto_electronicdevice'] = bartertoElectronicDevice;
     data['item_barterto_vehicle'] = bartertoVehicle;
     data['item_barterto_furniture'] = bartertoFurniture;

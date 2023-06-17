@@ -18,6 +18,8 @@ class _SearchItemWidgetState extends State<SearchItemWidget> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: screenWidth * 0.25,
       height: screenWidth * 0.25,
@@ -35,7 +37,9 @@ class _SearchItemWidgetState extends State<SearchItemWidget> {
             Icon(
               widget.icon,
               size: screenWidth * 0.1,
-              color: widget.color,
+              color: widget.color == Colors.black38 && isDark
+                  ? Colors.grey
+                  : widget.color,
             ),
             Text(
               widget.text,

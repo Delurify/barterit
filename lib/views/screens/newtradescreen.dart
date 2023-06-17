@@ -46,6 +46,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       other: false);
   File? _image;
   String stringValidation = "";
+  bool imgCheck = false;
   String pathAsset = "assets/images/camera.png";
   List<ImageConfig> imgList = [
     ImageConfig(source: "asset", path: "assets/images/camera.png"),
@@ -154,7 +155,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             onChanged: (newValue) {
                               setState(() {
                                 selectedType = newValue!;
-                                print(selectedType);
                               });
                             },
                             items: itemList.map((selectedType) {
@@ -454,6 +454,11 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
         onTap: () {
           _selectFromCamera(index);
         },
+        onLongPress: () {
+          if (imgItem.source == "file") {
+            deleteDialog(index);
+          }
+        },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           color: Colors.grey,
@@ -514,13 +519,70 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     }
   }
 
+  void deleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Delete this image?",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteImage(index);
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteImage(int index) {
+    // Update the imgList's item based on index selected
+    ImageConfig imgItem =
+        ImageConfig(source: "asset", path: "assets/images/camera.png");
+    imgList[index] = imgItem;
+    setState(() {});
+  }
+
   void insertDialog() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Check your input")));
       return;
     }
-    if (_image == null) {
+
+    // Check whether there are image to be uploaded
+    for (var element in imgList) {
+      if (element.source == "file") {
+        imgCheck = true;
+        break;
+      } else {
+        imgCheck = false;
+      }
+    }
+
+    if (imgCheck == false) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please take at least one picture")));
       return;
