@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/widgets/searchitemwidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchTabScreen extends StatefulWidget {
   final User user;
@@ -26,20 +27,31 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
         appBar: AppBar(
           title: Text(maintitle, style: const TextStyle(color: Colors.white)),
         ),
-        body: Center(
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Center(
             child: Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(screenWidth * 0.05,
+                      screenHeight * 0.03, screenWidth * 0.05, 0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Search for an item",
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                       screenWidth * 0.05,
                       screenHeight * 0.03,
                       screenWidth * 0.05,
-                      screenHeight * 0.03),
+                      screenHeight * 0.05),
                   child: TextFormField(
                       textInputAction: TextInputAction.next,
                       validator: (val) => val!.isEmpty
@@ -50,7 +62,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                       controller: _searchitemEditingController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        labelText: 'Search',
+                        labelText: 'eg: Television',
                         labelStyle: const TextStyle(),
                         prefixIcon: const Icon(Icons.search),
                         focusedBorder: OutlineInputBorder(

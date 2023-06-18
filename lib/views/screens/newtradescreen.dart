@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:barterit/models/user.dart';
+import 'package:barterit/models/barterto.dart';
 import '../../myconfig.dart';
 
 class ImageConfig {

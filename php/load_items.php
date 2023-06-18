@@ -6,8 +6,15 @@ if (!isset($_POST)) {
 }
 
 include_once("dbconnect.php");
-$userid = $_POST['userid'];
-$sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
+
+if(isset($_POST['userid'])){
+    $userid = $_POST['userid'];
+    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
+}if(isset($_POST['itemid'])){
+    $itemid = $_POST['itemid'];
+    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE item_id = '$itemid'";
+}
+
 $result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {
     $items["items"] = array();

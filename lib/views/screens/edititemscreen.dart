@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
+import 'package:barterit/models/barterto.dart';
 import 'package:barterit/views/screens/bartertoscreen.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -503,7 +504,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 style: TextStyle(),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(isSelected);
+                updateuseritem();
                 insertItem();
               },
             ),
@@ -671,5 +673,44 @@ class _EditItemScreenState extends State<EditItemScreen> {
     //fetch location data
     _prlocalEditingController.text = widget.useritem.itemLocality.toString();
     _prstateEditingController.text = widget.useritem.itemState.toString();
+  }
+
+  void updateuseritem() {
+    isSelected.electDevice == true
+        ? widget.useritem.bartertoElectronicDevice = "1"
+        : widget.useritem.bartertoElectronicDevice = "0";
+    isSelected.vehicle == true
+        ? widget.useritem.bartertoVehicle = "1"
+        : widget.useritem.bartertoVehicle = "0";
+    isSelected.furniture == true
+        ? widget.useritem.bartertoFurniture = "1"
+        : widget.useritem.bartertoFurniture = "0";
+    isSelected.bookStation == true
+        ? widget.useritem.bartertoBookStationery = "1"
+        : widget.useritem.bartertoBookStationery = "0";
+    isSelected.homeAppliance == true
+        ? widget.useritem.bartertoHomeAppliance = "1"
+        : widget.useritem.bartertoHomeAppliance = "0";
+    isSelected.fashionCosmetic == true
+        ? widget.useritem.bartertoFashionCosmetic = "1"
+        : widget.useritem.bartertoFashionCosmetic = "0";
+    isSelected.gameConsole == true
+        ? widget.useritem.bartertoVideoGameConsole = "1"
+        : widget.useritem.bartertoVideoGameConsole = "0";
+    isSelected.forChildren == true
+        ? widget.useritem.bartertoForChildren = "1"
+        : widget.useritem.bartertoForChildren = "0";
+    isSelected.musicalInstrument == true
+        ? widget.useritem.bartertoMusicalInstrument = "1"
+        : widget.useritem.bartertoMusicalInstrument = "0";
+    isSelected.sport == true
+        ? widget.useritem.bartertoSport = "1"
+        : widget.useritem.bartertoSport = "0";
+    isSelected.foodNutrition == true
+        ? widget.useritem.bartertoFoodNutrition = "1"
+        : widget.useritem.bartertoFoodNutrition = "0";
+    isSelected.other == true
+        ? widget.useritem.bartertoOther = "1"
+        : widget.useritem.bartertoOther = "0";
   }
 }

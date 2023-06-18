@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:barterit/models/barterto.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -67,77 +68,77 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     const SizedBox(width: 8),
                     Text(widget.user.name.toString()),
                     Expanded(child: Container()),
-                    Container(
-                        width: screenHeight * 0.04,
-                        height: screenHeight * 0.04,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey)),
-                        child: widget.useritem.itemType == "Electronic Devices"
-                            ? Icon(
-                                Icons.devices,
-                                color: isDark ? Colors.grey : Colors.blue,
-                              )
-                            : widget.useritem.itemType == "Vehicles"
-                                ? Icon(Icons.car_rental,
-                                    color: isDark
-                                        ? Colors.grey
-                                        : Colors.purple.shade300)
-                                : widget.useritem.itemType == "Furniture"
-                                    ? Icon(Icons.table_bar,
-                                        color: isDark
-                                            ? Colors.grey
-                                            : Colors.orange)
-                                    : widget.useritem.itemType ==
-                                            "Books & Stationery"
-                                        ? Icon(Icons.book,
-                                            color: isDark
-                                                ? Colors.grey
-                                                : Colors.green.shade300)
-                                        : widget.useritem.itemType ==
-                                                "Home Appliances"
-                                            ? Icon(Icons.blender,
-                                                color: isDark
-                                                    ? Colors.grey
-                                                    : Colors.grey)
-                                            : widget.useritem.itemType ==
-                                                    "Fashion & Cosmetics"
-                                                ? Icon(Icons.face,
-                                                    color: isDark
-                                                        ? Colors.grey
-                                                        : Colors.pinkAccent
-                                                            .shade100)
-                                                : widget.useritem.itemType ==
-                                                        "Games & Consoles"
-                                                    ? Icon(Icons.games,
-                                                        color: isDark
-                                                            ? Colors.grey
-                                                            : Colors
-                                                                .greenAccent)
-                                                    : widget.useritem.itemType ==
-                                                            "For Children"
-                                                        ? Icon(Icons.child_care,
-                                                            color: isDark
-                                                                ? Colors.grey
-                                                                : Colors.orange
-                                                                    .shade300)
-                                                        : widget.useritem.itemType ==
-                                                                "Musical Instruments"
-                                                            ? Icon(Icons.music_note,
-                                                                color: isDark
-                                                                    ? Colors
-                                                                        .grey
-                                                                    : Colors
-                                                                        .blue
-                                                                        .shade300)
-                                                            : widget.useritem.itemType ==
-                                                                    "Sports"
-                                                                ? Icon(
-                                                                    Icons.run_circle,
-                                                                    color: isDark ? Colors.grey : Colors.red.shade300)
-                                                                : widget.useritem.itemType == "Food & Nutrition"
-                                                                    ? Icon(Icons.food_bank, color: isDark ? Colors.grey : Colors.red.shade200)
-                                                                    : Icon(Icons.question_mark, color: isDark ? Colors.grey : Colors.black38)),
+                    GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text(widget.useritem.itemType.toString())));
+                      },
+                      child: Container(
+                          width: screenHeight * 0.04,
+                          height: screenHeight * 0.04,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.grey)),
+                          child: widget.useritem.itemType ==
+                                  "Electronic Devices"
+                              ? Icon(
+                                  Icons.devices,
+                                  color: isDark ? Colors.grey : Colors.blue,
+                                )
+                              : widget.useritem.itemType == "Vehicles"
+                                  ? Icon(Icons.car_rental,
+                                      color: isDark
+                                          ? Colors.grey
+                                          : Colors.purple.shade300)
+                                  : widget.useritem.itemType == "Furniture"
+                                      ? Icon(Icons.table_bar,
+                                          color: isDark
+                                              ? Colors.grey
+                                              : Colors.orange)
+                                      : widget.useritem.itemType ==
+                                              "Books & Stationery"
+                                          ? Icon(Icons.book,
+                                              color: isDark
+                                                  ? Colors.grey
+                                                  : Colors.green.shade300)
+                                          : widget.useritem.itemType ==
+                                                  "Home Appliances"
+                                              ? Icon(Icons.blender,
+                                                  color: isDark
+                                                      ? Colors.grey
+                                                      : Colors.grey)
+                                              : widget.useritem.itemType ==
+                                                      "Fashion & Cosmetics"
+                                                  ? Icon(Icons.face,
+                                                      color: isDark
+                                                          ? Colors.grey
+                                                          : Colors.pinkAccent
+                                                              .shade100)
+                                                  : widget.useritem.itemType ==
+                                                          "Games & Consoles"
+                                                      ? Icon(Icons.games,
+                                                          color: isDark
+                                                              ? Colors.grey
+                                                              : Colors
+                                                                  .greenAccent)
+                                                      : widget.useritem.itemType ==
+                                                              "For Children"
+                                                          ? Icon(Icons.child_care,
+                                                              color: isDark
+                                                                  ? Colors.grey
+                                                                  : Colors
+                                                                      .orange
+                                                                      .shade300)
+                                                          : widget.useritem.itemType ==
+                                                                  "Musical Instruments"
+                                                              ? Icon(Icons.music_note, color: isDark ? Colors.grey : Colors.blue.shade300)
+                                                              : widget.useritem.itemType == "Sports"
+                                                                  ? Icon(Icons.run_circle, color: isDark ? Colors.grey : Colors.red.shade300)
+                                                                  : widget.useritem.itemType == "Food & Nutrition"
+                                                                      ? Icon(Icons.food_bank, color: isDark ? Colors.grey : Colors.red.shade200)
+                                                                      : Icon(Icons.question_mark, color: isDark ? Colors.grey : Colors.black38)),
+                    ),
                     SizedBox(width: screenWidth * 0.05)
                   ],
                 ),
@@ -213,6 +214,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                               user: widget.user,
                                               useritem: widget.useritem)))
                                   .then((value) {
+                                getbarterto();
                                 setState(() {});
                               });
                             },
@@ -302,7 +304,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         ));
   }
 
+  // Adding the items into barterto list<String>
   void getbarterto() {
+    barterTo.clear();
+    print("I`m HERE!!!!$barterTo");
+
     widget.useritem.bartertoElectronicDevice == "1"
         ? barterTo.add("Electronic Devices")
         : null;
@@ -326,7 +332,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         : null;
 
     widget.useritem.bartertoVideoGameConsole == "1"
-        ? barterTo.add("Games & Consoles")
+        ? barterTo.add("Video Games & Consoles")
         : null;
 
     widget.useritem.bartertoForChildren == "1"
@@ -344,5 +350,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         : null;
 
     widget.useritem.bartertoOther == "1" ? barterTo.add("Other") : null;
+    print("Finished adding them $barterTo");
   }
 }
