@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/widgets/searchitemwidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchTabScreen extends StatefulWidget {
   final User user;

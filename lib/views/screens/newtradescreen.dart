@@ -45,6 +45,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       sport: false,
       foodNutrition: false,
       other: false);
+  List<String> barterto = [];
   File? _image;
   String stringValidation = "";
   bool imgCheck = false;
@@ -280,7 +281,9 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                       ))).then((value) {
                             // fetch the isSelected object from BarterTo
                             setState(() {
-                              isSelected = value;
+                              BoxedReturns box = value;
+                              isSelected = box.isSelected;
+                              barterto = box.barterto;
                             });
                             // loaduseritems();
                           });
@@ -304,6 +307,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.electDevice = false;
+                                  barterto.remove("Electronic Devices");
                                 });
                               }),
                         if (isSelected.vehicle)
@@ -315,6 +319,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.vehicle = false;
+                                  barterto.remove("Vehicles");
                                 });
                               }),
                         if (isSelected.furniture)
@@ -326,6 +331,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.furniture = false;
+                                  barterto.remove("Furniture & Accessories");
                                 });
                               }),
                         if (isSelected.bookStation)
@@ -337,6 +343,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.bookStation = false;
+                                  barterto.remove("Books & Stationery");
                                 });
                               }),
                         if (isSelected.homeAppliance)
@@ -348,6 +355,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.homeAppliance = false;
+                                  barterto.remove("Home Appliances");
                                 });
                               }),
                         if (isSelected.fashionCosmetic)
@@ -359,6 +367,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.fashionCosmetic = false;
+                                  barterto.remove("Fashion & Cosmetics");
                                 });
                               }),
                         if (isSelected.gameConsole)
@@ -370,6 +379,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.gameConsole = false;
+                                  barterto.remove("Video Game & Consoles");
                                 });
                               }),
                         if (isSelected.forChildren)
@@ -381,6 +391,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.forChildren = false;
+                                  barterto.remove("For Children");
                                 });
                               }),
                         if (isSelected.musicalInstrument)
@@ -392,6 +403,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.musicalInstrument = false;
+                                  barterto.remove("Musical Instruments");
                                 });
                               }),
                         if (isSelected.sport)
@@ -403,6 +415,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.sport = false;
+                                  barterto.remove("Sports");
                                 });
                               }),
                         if (isSelected.foodNutrition)
@@ -414,6 +427,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.foodNutrition = false;
+                                  barterto.remove("Food & Nutrition");
                                 });
                               }),
                         if (isSelected.other)
@@ -425,6 +439,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.other = false;
+                                  barterto.remove("Other");
                                 });
                               }),
                       ],
@@ -637,12 +652,12 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     String itemqty = _itemqtyEditingController.text;
     // String base64Image = base64Encode(_image!.readAsBytesSync());
 
-    imgList.forEach((object) {
+    for (var object in imgList) {
       if (object.source == "file") {
         File file = File(object.path);
         base64Images.add(base64Encode(file.readAsBytesSync()));
       }
-    });
+    }
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_item.php"),
         body: {
@@ -657,18 +672,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           "long": prlong,
           "state": _prstateEditingController.text,
           "locality": _prlocalEditingController.text,
-          "electronicdevice": isSelected.electDevice.toString(),
-          "vehicle": isSelected.vehicle.toString(),
-          "furniture": isSelected.furniture.toString(),
-          "bookstationery": isSelected.bookStation.toString(),
-          "homeappliance": isSelected.homeAppliance.toString(),
-          "fashioncosmetic": isSelected.fashionCosmetic.toString(),
-          "videogameconsole": isSelected.gameConsole.toString(),
-          "forchildren": isSelected.forChildren.toString(),
-          "musicalinstrument": isSelected.musicalInstrument.toString(),
-          "sport": isSelected.sport.toString(),
-          "foodnutrition": isSelected.foodNutrition.toString(),
-          "other": isSelected.other.toString()
+          "barterto": barterto.toString(),
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {

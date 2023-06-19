@@ -43,6 +43,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       sport: false,
       foodNutrition: false,
       other: false);
+  List<String> barterto = [];
 
   String stringValidation = "";
   bool imgCheck = false;
@@ -268,9 +269,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
                                         user: widget.user,
                                         isSelected: isSelected,
                                       ))).then((value) {
+                            BoxedReturns box = value;
                             // fetch the isSelected object from BarterTo
                             setState(() {
-                              isSelected = value;
+                              isSelected = box.isSelected;
+                              barterto.addAll(box.barterto);
+                              print(barterto.toString());
                             });
                             // loaduseritems();
                           });
@@ -294,6 +298,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.electDevice = false;
+                                  barterto.remove("Electronic Devices");
                                 });
                               }),
                         if (isSelected.vehicle)
@@ -305,6 +310,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.vehicle = false;
+                                  barterto.remove("Vehicles");
                                 });
                               }),
                         if (isSelected.furniture)
@@ -316,6 +322,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.furniture = false;
+                                  barterto.remove("Furniture & Accessories");
                                 });
                               }),
                         if (isSelected.bookStation)
@@ -327,6 +334,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.bookStation = false;
+                                  barterto.remove("Books & Stationery");
                                 });
                               }),
                         if (isSelected.homeAppliance)
@@ -338,6 +346,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.homeAppliance = false;
+                                  barterto.remove("Home Appliances");
                                 });
                               }),
                         if (isSelected.fashionCosmetic)
@@ -349,6 +358,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.fashionCosmetic = false;
+                                  barterto.remove("Fashion & Cosmetics");
                                 });
                               }),
                         if (isSelected.gameConsole)
@@ -360,6 +370,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.gameConsole = false;
+                                  barterto.remove("Video Game & Consoles");
                                 });
                               }),
                         if (isSelected.forChildren)
@@ -371,6 +382,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.forChildren = false;
+                                  barterto.remove("For Children");
                                 });
                               }),
                         if (isSelected.musicalInstrument)
@@ -382,6 +394,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.musicalInstrument = false;
+                                  barterto.remove("Musical Instruments");
                                 });
                               }),
                         if (isSelected.sport)
@@ -393,6 +406,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.sport = false;
+                                  barterto.remove("Sports");
                                 });
                               }),
                         if (isSelected.foodNutrition)
@@ -404,6 +418,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.foodNutrition = false;
+                                  barterto.remove("Food & Nutrition");
                                 });
                               }),
                         if (isSelected.other)
@@ -415,6 +430,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                               onDeleted: () {
                                 setState(() {
                                   isSelected.other = false;
+                                  barterto.remove("Other");
                                 });
                               }),
                       ],
@@ -505,7 +521,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop(isSelected);
-                updateuseritem();
                 insertItem();
               },
             ),
@@ -528,6 +543,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     widget.useritem.itemName = _itemnameEditingController.text;
     widget.useritem.itemDesc = _itemdescEditingController.text;
     widget.useritem.itemQty = _itemqtyEditingController.text;
+    widget.useritem.itemBarterto = barterto.toString();
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_item.php"),
         body: {
@@ -537,18 +553,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           "itemdesc": widget.useritem.itemDesc,
           "itemqty": widget.useritem.itemQty,
           "type": widget.useritem.itemType,
-          "electronicdevice": isSelected.electDevice.toString(),
-          "vehicle": isSelected.vehicle.toString(),
-          "furniture": isSelected.furniture.toString(),
-          "bookstationery": isSelected.bookStation.toString(),
-          "homeappliance": isSelected.homeAppliance.toString(),
-          "fashioncosmetic": isSelected.fashionCosmetic.toString(),
-          "videogameconsole": isSelected.gameConsole.toString(),
-          "forchildren": isSelected.forChildren.toString(),
-          "musicalinstrument": isSelected.musicalInstrument.toString(),
-          "sport": isSelected.sport.toString(),
-          "foodnutrition": isSelected.foodNutrition.toString(),
-          "other": isSelected.other.toString()
+          "barterto": barterto.toString(),
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
@@ -570,66 +575,80 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void fetchBarterto() {
-    if (widget.useritem.bartertoElectronicDevice == "1") {
+    if (widget.useritem.itemBarterto!.contains("Electronic Devices")) {
+      barterto.add("Electronic Devices");
       isSelected.electDevice = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoVehicle == "1") {
+    if (widget.useritem.itemBarterto!.contains("Vehicles")) {
+      barterto.add("Vehicles");
       isSelected.vehicle = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoFurniture == "1") {
+    if (widget.useritem.itemBarterto!.contains("Furniture & Accessories")) {
+      barterto.add("Furniture & Accessories");
       isSelected.furniture = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoBookStationery == "1") {
+    if (widget.useritem.itemBarterto!.contains("Books & Stationery")) {
+      barterto.add("Books & Stationery");
       isSelected.bookStation = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoHomeAppliance == "1") {
+    if (widget.useritem.itemBarterto!.contains("Home Appliances")) {
+      barterto.add("Home Appliances");
       isSelected.homeAppliance = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoFashionCosmetic == "1") {
+    if (widget.useritem.itemBarterto!.contains("Fashion & Cosmetics")) {
+      barterto.add("Fashion & Cosmetics");
       isSelected.fashionCosmetic = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoVideoGameConsole == "1") {
+    if (widget.useritem.itemBarterto!.contains("Video Game & Consoles")) {
+      barterto.add("Video Game & Consoles");
       isSelected.gameConsole = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoForChildren == "1") {
+    if (widget.useritem.itemBarterto!.contains("For Children")) {
+      barterto.add("For Children");
       isSelected.forChildren = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoMusicalInstrument == "1") {
+    if (widget.useritem.itemBarterto!.contains("Musical Instruments")) {
+      barterto.add("Musical Instruments");
       isSelected.musicalInstrument = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoSport == "1") {
+    if (widget.useritem.itemBarterto!.contains("Sports")) {
+      barterto.add("Sports");
       isSelected.sport = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoFoodNutrition == "1") {
+    if (widget.useritem.itemBarterto!.contains("Food & Nutrition")) {
+      barterto.add("Food & Nutrition");
       isSelected.foodNutrition = true;
       isSelected.selected++;
     }
 
-    if (widget.useritem.bartertoOther == "1") {
+    if (widget.useritem.itemBarterto!.contains("Other")) {
+      barterto.add("Other");
       isSelected.other = true;
       isSelected.selected++;
     }
   }
+
+  void updateBarterto() {}
 
   void fetchitemData() {
     // fetch image(s)
@@ -673,44 +692,5 @@ class _EditItemScreenState extends State<EditItemScreen> {
     //fetch location data
     _prlocalEditingController.text = widget.useritem.itemLocality.toString();
     _prstateEditingController.text = widget.useritem.itemState.toString();
-  }
-
-  void updateuseritem() {
-    isSelected.electDevice == true
-        ? widget.useritem.bartertoElectronicDevice = "1"
-        : widget.useritem.bartertoElectronicDevice = "0";
-    isSelected.vehicle == true
-        ? widget.useritem.bartertoVehicle = "1"
-        : widget.useritem.bartertoVehicle = "0";
-    isSelected.furniture == true
-        ? widget.useritem.bartertoFurniture = "1"
-        : widget.useritem.bartertoFurniture = "0";
-    isSelected.bookStation == true
-        ? widget.useritem.bartertoBookStationery = "1"
-        : widget.useritem.bartertoBookStationery = "0";
-    isSelected.homeAppliance == true
-        ? widget.useritem.bartertoHomeAppliance = "1"
-        : widget.useritem.bartertoHomeAppliance = "0";
-    isSelected.fashionCosmetic == true
-        ? widget.useritem.bartertoFashionCosmetic = "1"
-        : widget.useritem.bartertoFashionCosmetic = "0";
-    isSelected.gameConsole == true
-        ? widget.useritem.bartertoVideoGameConsole = "1"
-        : widget.useritem.bartertoVideoGameConsole = "0";
-    isSelected.forChildren == true
-        ? widget.useritem.bartertoForChildren = "1"
-        : widget.useritem.bartertoForChildren = "0";
-    isSelected.musicalInstrument == true
-        ? widget.useritem.bartertoMusicalInstrument = "1"
-        : widget.useritem.bartertoMusicalInstrument = "0";
-    isSelected.sport == true
-        ? widget.useritem.bartertoSport = "1"
-        : widget.useritem.bartertoSport = "0";
-    isSelected.foodNutrition == true
-        ? widget.useritem.bartertoFoodNutrition = "1"
-        : widget.useritem.bartertoFoodNutrition = "0";
-    isSelected.other == true
-        ? widget.useritem.bartertoOther = "1"
-        : widget.useritem.bartertoOther = "0";
   }
 }

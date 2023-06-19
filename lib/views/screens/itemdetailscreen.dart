@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:barterit/models/barterto.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +24,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   void initState() {
     super.initState();
 
-    getbarterto();
+    String filter =
+        widget.useritem.itemBarterto!.replaceAll('[', '').replaceAll(']', '');
+    barterTo = filter.split(', ');
   }
 
   final df = DateFormat('dd-MM-yyyy');
@@ -214,7 +215,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                               user: widget.user,
                                               useritem: widget.useritem)))
                                   .then((value) {
-                                getbarterto();
+                                String filter = widget.useritem.itemBarterto!
+                                    .replaceAll('[', '')
+                                    .replaceAll(']', '');
+                                barterTo = filter.split(', ');
                                 setState(() {});
                               });
                             },
@@ -302,54 +306,5 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
           ),
         ));
-  }
-
-  // Adding the items into barterto list<String>
-  void getbarterto() {
-    barterTo.clear();
-    print("I`m HERE!!!!$barterTo");
-
-    widget.useritem.bartertoElectronicDevice == "1"
-        ? barterTo.add("Electronic Devices")
-        : null;
-
-    widget.useritem.bartertoVehicle == "1" ? barterTo.add("Vehicles") : null;
-
-    widget.useritem.bartertoFurniture == "1"
-        ? barterTo.add("Furniture & Accessories")
-        : null;
-
-    widget.useritem.bartertoBookStationery == "1"
-        ? barterTo.add("Books & Stationery")
-        : null;
-
-    widget.useritem.bartertoHomeAppliance == "1"
-        ? barterTo.add("Home & Appliances")
-        : null;
-
-    widget.useritem.bartertoFashionCosmetic == "1"
-        ? barterTo.add("Fashion & Cosmetics")
-        : null;
-
-    widget.useritem.bartertoVideoGameConsole == "1"
-        ? barterTo.add("Video Games & Consoles")
-        : null;
-
-    widget.useritem.bartertoForChildren == "1"
-        ? barterTo.add("For Children")
-        : null;
-
-    widget.useritem.bartertoMusicalInstrument == "1"
-        ? barterTo.add("Musical Instruments")
-        : null;
-
-    widget.useritem.bartertoSport == "1" ? barterTo.add("Sports") : null;
-
-    widget.useritem.bartertoFoodNutrition == "1"
-        ? barterTo.add("Food & Nutrition")
-        : null;
-
-    widget.useritem.bartertoOther == "1" ? barterTo.add("Other") : null;
-    print("Finished adding them $barterTo");
   }
 }

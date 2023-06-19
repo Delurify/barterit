@@ -4,7 +4,12 @@ import 'package:barterit/models/barterto.dart';
 // import 'package:barterit/widgets/bartertoselectedwidget.dart';
 // import 'package:barterit/widgets/bartertowidget.dart';
 
+class BoxedReturns{
+    final BarterTo isSelected;
+    final List<String> barterto;
 
+    BoxedReturns(this.isSelected, this.barterto);
+}
 
 // ignore: must_be_immutable
 class BarterToScreen extends StatefulWidget {
@@ -20,6 +25,7 @@ class BarterToScreen extends StatefulWidget {
 class _BarterToScreenState extends State<BarterToScreen> {
   late double screenHeight, screenWidth;
   int limit = 5;
+  List<String> barterto = [];
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +57,8 @@ class _BarterToScreenState extends State<BarterToScreen> {
                             : Theme.of(context).primaryColor),
                     onPressed: () {
                       // pass isSelected back to TradeScreen
-                      Navigator.of(context).pop(widget.isSelected);
+                      Navigator.of(context).pop(BoxedReturns(
+                        widget.isSelected, barterto));
                     },
                     child: Text(
                       "   Done   ",
@@ -76,6 +83,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.electDevice = false;
+                        barterto.remove("Electronic Devices");
                       });
                     }),
               if (widget.isSelected.vehicle)
@@ -87,6 +95,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.vehicle = false;
+                        barterto.remove("Vehicles");
                       });
                     }),
               if (widget.isSelected.furniture)
@@ -98,6 +107,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.furniture = false;
+                        barterto.remove("Furniture & Accessories");
                       });
                     }),
               if (widget.isSelected.bookStation)
@@ -109,6 +119,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.bookStation = false;
+                        barterto.remove("Books & Stationery");
                       });
                     }),
               if (widget.isSelected.homeAppliance)
@@ -120,6 +131,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.homeAppliance = false;
+                        barterto.remove("Home Appliances");
                       });
                     }),
               if (widget.isSelected.fashionCosmetic)
@@ -131,6 +143,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.fashionCosmetic = false;
+                        barterto.remove("Fashion & Cosmetics");
                       });
                     }),
               if (widget.isSelected.gameConsole)
@@ -142,6 +155,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.gameConsole = false;
+                        barterto.remove("Video Game & Consoles");
                       });
                     }),
               if (widget.isSelected.forChildren)
@@ -153,6 +167,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.forChildren = false;
+                        barterto.remove("For Children");
                       });
                     }),
               if (widget.isSelected.musicalInstrument)
@@ -164,6 +179,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.musicalInstrument = false;
+                        barterto.remove("Musical Instruments");
                       });
                     }),
               if (widget.isSelected.sport)
@@ -175,6 +191,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.sport = false;
+                        barterto.remove("Sports");
                       });
                     }),
               if (widget.isSelected.foodNutrition)
@@ -186,6 +203,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.foodNutrition = false;
+                        barterto.remove("Food & Nutrition");
                       });
                     }),
               if (widget.isSelected.other)
@@ -197,6 +215,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                       setState(() {
                         widget.isSelected.selected--;
                         widget.isSelected.other = false;
+                        barterto.remove("Other");
                       });
                     }),
             ],
@@ -222,6 +241,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Electronic Devices");
                             setState(() {
                               widget.isSelected.electDevice = true;
                             });
@@ -245,6 +265,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Electronic Devices");
                             setState(() {
                               widget.isSelected.electDevice = true;
                             });
@@ -279,6 +300,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Vehicles");
                             setState(() {
                               widget.isSelected.vehicle = true;
                             });
@@ -302,6 +324,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Vehicles");
                             setState(() {
                               widget.isSelected.vehicle = true;
                             });
@@ -337,6 +360,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                           setState(() {
                             if (widget.isSelected.selected < limit) {
                               widget.isSelected.selected++;
+                              barterto.add("Furniture & Accessories");
                               setState(() {
                                 widget.isSelected.furniture = true;
                               });
@@ -361,6 +385,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Furniture & Accessories");
                             setState(() {
                               widget.isSelected.furniture = true;
                             });
@@ -395,6 +420,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Books & Stationery");
                             setState(() {
                               widget.isSelected.bookStation = true;
                             });
@@ -418,6 +444,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Books & Stationery");
                             setState(() {
                               widget.isSelected.bookStation = true;
                             });
@@ -452,6 +479,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Home Appliances");
                             setState(() {
                               widget.isSelected.homeAppliance = true;
                             });
@@ -475,6 +503,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Home Appliances");
                             setState(() {
                               widget.isSelected.homeAppliance = true;
                             });
@@ -509,6 +538,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Fashion & Cosmetics");
                             setState(() {
                               widget.isSelected.fashionCosmetic = true;
                             });
@@ -532,6 +562,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Fashion & Cosmetics");
                             setState(() {
                               widget.isSelected.fashionCosmetic = true;
                             });
@@ -566,6 +597,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Video Game & Consoles");
                             setState(() {
                               widget.isSelected.gameConsole = true;
                             });
@@ -589,6 +621,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Video Game & Consoles");
                             setState(() {
                               widget.isSelected.gameConsole = true;
                             });
@@ -623,6 +656,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("For Children");
                             setState(() {
                               widget.isSelected.forChildren = true;
                             });
@@ -646,6 +680,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("For Children");
                             setState(() {
                               widget.isSelected.forChildren = true;
                             });
@@ -680,6 +715,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Musical Instruments");
                             setState(() {
                               widget.isSelected.musicalInstrument = true;
                             });
@@ -703,6 +739,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Musical Instruments");
                             setState(() {
                               widget.isSelected.musicalInstrument = true;
                             });
@@ -737,6 +774,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Sports");
                             setState(() {
                               widget.isSelected.sport = true;
                             });
@@ -760,6 +798,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Sports");
                             setState(() {
                               widget.isSelected.sport = true;
                             });
@@ -794,6 +833,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Food & Nutrition");
                             setState(() {
                               widget.isSelected.foodNutrition = true;
                             });
@@ -817,6 +857,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Food & Nutrition");
                             setState(() {
                               widget.isSelected.foodNutrition = true;
                             });
@@ -851,6 +892,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onPressed: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Other");
                             setState(() {
                               widget.isSelected.other = true;
                             });
@@ -874,6 +916,7 @@ class _BarterToScreenState extends State<BarterToScreen> {
                         onTap: () {
                           if (widget.isSelected.selected < limit) {
                             widget.isSelected.selected++;
+                            barterto.add("Other");
                             setState(() {
                               widget.isSelected.other = true;
                             });

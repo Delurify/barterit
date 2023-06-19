@@ -18,36 +18,11 @@ $item_lat = $_POST['lat'];
 $item_long = $_POST['long'];
 $item_state = $_POST['state'];
 $item_locality = $_POST['locality'];
-$barterto_electronicdevice = $_POST['electronicdevice'];
-$barterto_vehicle = $_POST['vehicle'];
-$barterto_furniture = $_POST['furniture'];
-$barterto_bookstationery = $_POST['bookstationery'];
-$barterto_homeappliance = $_POST['homeappliance'];
-$barterto_fashioncosmetic = $_POST['fashioncosmetic'];
-$barterto_videogameconsole = $_POST['videogameconsole'];
-$barterto_forchildren = $_POST['forchildren'];
-$barterto_musicalinstrument = $_POST['musicalinstrument'];
-$barterto_sport = $_POST['sport'];
-$barterto_foodnutrition = $_POST['foodnutrition'];
-$barterto_other = $_POST['other'];
-
-// converting 'true' or 'false' to 1 and 0
-// This is for barterto columns
-$barterto_electronicdevice = $barterto_electronicdevice === "true" ? "1" : "0";
-$barterto_vehicle = $barterto_vehicle === "true" ? "1" : "0";
-$barterto_furniture = $barterto_furniture === "true" ? "1" : "0";
-$barterto_bookstationery = $barterto_bookstationery === "true" ? "1" : "0";
-$barterto_homeappliance = $barterto_homeappliance === "true" ? "1" : "0";
-$barterto_fashioncosmetic = $barterto_fashioncosmetic === "true" ? "1" : "0";
-$barterto_videogameconsole = $barterto_videogameconsole === "true" ? "1" : "0";
-$barterto_forchildren = $barterto_forchildren === "true" ? "1" : "0";
-$barterto_musicalinstrument = $barterto_musicalinstrument === "true" ? "1" : "0";
-$barterto_sport = $barterto_sport === "true" ? "1" : "0";
-$barterto_foodnutrition = $barterto_foodnutrition === "true" ? "1" : "0";
-$barterto_other = $barterto_other === "true" ? "1" : "0";
+$item_barterto = $_POST['barterto'];
 
 
-$sqlinsert = "INSERT INTO `tbl_items`(`user_id`, `item_name`, `item_desc`, `item_type`, `item_imagecount`, `item_qty`, `item_lat`, `item_long`, `item_state`, `item_locality`, `item_barterto_electronicdevice`, `item_barterto_vehicle`, `item_barterto_furniture`, `item_barterto_book&stationery`, `item_barterto_homeappliance`, `item_barterto_fashion&cosmetic`, `item_barterto_videogame&console`, `item_barterto_forchildren`, `item_barterto_musicalinstrument`, `item_barterto_sport`, `item_barterto_food&nutrition`, `item_barterto_other`) VALUES ('$user_id','$item_name','$item_desc','$item_type', '$item_imagecount','$item_qty', '$item_lat', '$item_long', '$item_state', '$item_locality', '$barterto_electronicdevice', '$barterto_vehicle', '$barterto_furniture', '$barterto_bookstationery', '$barterto_homeappliance', '$barterto_fashioncosmetic', '$barterto_videogameconsole', '$barterto_forchildren', '$barterto_musicalinstrument', '$barterto_sport', '$barterto_foodnutrition', '$barterto_other')";
+
+$sqlinsert = "INSERT INTO `tbl_items`(`user_id`, `item_name`, `item_desc`, `item_type`, `item_imagecount`, `item_qty`, `item_lat`, `item_long`, `item_state`, `item_locality`, `item_barterto`) VALUES ('$user_id','$item_name','$item_desc','$item_type', '$item_imagecount','$item_qty', '$item_lat', '$item_long', '$item_state', '$item_locality', '$item_barterto')";
 
 if ($conn->query($sqlinsert) === TRUE) {
 	$filename = mysqli_insert_id($conn);
