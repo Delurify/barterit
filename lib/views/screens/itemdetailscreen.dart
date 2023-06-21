@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +8,7 @@ import 'package:barterit/myconfig.dart';
 import 'package:barterit/views/screens/edititemscreen.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
+import 'package:http/http.dart' as http;
 
 class ItemDetailScreen extends StatefulWidget {
   final User user;
@@ -23,6 +25,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   @override
   void initState() {
     super.initState();
+    loadUserItem();
+    loadFavorite();
 
     String filter =
         widget.useritem.itemBarterto!.replaceAll('[', '').replaceAll(']', '');
@@ -33,6 +37,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   late double screenHeight, screenWidth;
   List<String> barterTo = [];
   String result = "";
+  User singleUser = User();
+
+  // isFavorited is to see whether the item is previously favorited by the user
+  // favorite is to see whether user favorite or unfavorite the item
+  bool isFavorited = true;
+  bool favorite = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +52,17 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
     return Scaffold(
         appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  if (favorite == true && favorite != isFavorited) {
+                    addFavorite();
+                  }
+                  if (favorite == false && favorite != isFavorited) {
+                    removeFavorite();
+                  }
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
             iconTheme:
                 IconThemeData(color: isDark ? Colors.grey : Colors.white),
             title: Text(
@@ -61,13 +82,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     SizedBox(width: screenWidth * 0.05),
                     CircleAvatar(
                         radius: screenHeight * 0.02,
-                        backgroundImage: widget.user.hasavatar.toString() == "1"
+                        backgroundImage: singleUser.hasavatar.toString() == "1"
                             ? NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png")
+                                "${MyConfig().SERVER}/barterit/assets/avatars/${singleUser.id}.png")
                             : NetworkImage(
                                 "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
                     const SizedBox(width: 8),
-                    Text(widget.user.name.toString()),
+                    Text(singleUser.name.toString()),
                     Expanded(child: Container()),
                     GestureDetector(
                       onTap: () {
@@ -206,25 +227,51 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                         ),
                         SizedBox(width: screenWidth * 0.1),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (content) => EditItemScreen(
-                                              user: widget.user,
-                                              useritem: widget.useritem)))
-                                  .then((value) {
-                                String filter = widget.useritem.itemBarterto!
-                                    .replaceAll('[', '')
-                                    .replaceAll(']', '');
-                                barterTo = filter.split(', ');
+                        if (widget.user.name == singleUser.name)
+                          // This is for editing the page
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (content) => EditItemScreen(
+                                            user: widget.user,
+                                            useritem: widget.useritem))).then(
+                                    (value) {
+                                  String filter = widget.useritem.itemBarterto!
+                                      .replaceAll('[', '')
+                                      .replaceAll(']', '');
+                                  barterTo = filter.split(', ');
+                                  setState(() {});
+                                });
+                              },
+                              child: const Icon(
+                                Icons.edit,
+                              )),
+                        if (widget.user.name != singleUser.name &&
+                            favorite == false)
+                          GestureDetector(
+                              onTap: () {
+                                favorite = true;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Added to favorites")));
                                 setState(() {});
-                              });
-                            },
-                            child: const Icon(
-                              Icons.edit,
-                            )),
+                              },
+                              child: const Icon(
+                                Icons.favorite_border,
+                              )),
+                        if (widget.user.name != singleUser.name &&
+                            favorite == true)
+                          GestureDetector(
+                              onTap: () {
+                                favorite = false;
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.favorite,
+                                color: isDark ? null : Colors.red[400],
+                              )),
                         SizedBox(width: screenWidth * 0.06),
                       ],
                     ),
@@ -306,5 +353,75 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
           ),
         ));
+  }
+
+  // This is to load user information based on the item selected
+  void loadUserItem() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/login_user.php"),
+        body: {
+          "user_id": widget.useritem.userId,
+        }).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        singleUser = User.fromJson(jsondata['data']);
+      }
+      setState(() {});
+    });
+  }
+
+  // This is to see whether the user favorited the item
+  void loadFavorite() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_favorite.php"),
+        body: {
+          "user_id": widget.user.id,
+          "item_id": widget.useritem.itemId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        isFavorited = true;
+        favorite = isFavorited;
+      } else {
+        isFavorited = false;
+        favorite = isFavorited;
+      }
+      setState(() {});
+    });
+  }
+
+  void addFavorite() {
+    http.post(
+        Uri.parse("${MyConfig().SERVER}/barterit/php/manage_favorite.php"),
+        body: {
+          "manage_favorite": "addFavorite",
+          "user_id": widget.user.id,
+          "item_id": widget.useritem.itemId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        print("favorite added successfully");
+      } else {
+        print("failed to add favorite");
+      }
+      setState(() {});
+    });
+  }
+
+  void removeFavorite() {
+    http.post(
+        Uri.parse("${MyConfig().SERVER}/barterit/php/manage_favorite.php"),
+        body: {
+          "manage_favorite": "deleteFavorite",
+          "user_id": widget.user.id,
+          "item_id": widget.useritem.itemId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        print("favorite deleted successfully");
+      } else {
+        print("failed to delete favorite");
+      }
+      setState(() {});
+    });
   }
 }

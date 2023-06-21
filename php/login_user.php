@@ -10,8 +10,10 @@ if(!isset($_POST)){
 
 // fetch 拿来的$_POST file然后assign email 和 password
 // 不过password是encrypted的
-$email = $_POST['email'];
-$pass = sha1($_POST['user_password']);
+if(isset($_POST['email'])) {
+    $email = $_POST['email'];
+    $pass = sha1($_POST['user_password']);
+}
 
 // make connection to database, once means if connection is made once, 
 // it wont make the same connection again
@@ -19,20 +21,33 @@ include_once("dbconnect.php");
 
 // Obtain data from table using query
 // $conn variable is from dbconnect.php
-$sqllogin = "SELECT * FROM `tbl_users` WHERE user_email = '$email' AND user_password =++ '$pass'";
-$result = $conn->query($sqllogin);
+if(isset($_POST['user_id'])){
+    $userid = $_POST['user_id'];
+    $sqllogin = "SELECT `user_id`, `user_name`, `user_phone`, `user_hasavatar` FROM `tbl_users` WHERE user_id = '$userid'";
+}else{
+    $sqllogin = "SELECT * FROM `tbl_users` WHERE user_email = '$email' AND user_password =++ '$pass'";
+}
 
+$result = $conn->query($sqllogin);
 if($result -> num_rows > 0){
     while($row = $result->fetch_assoc()){
         $userarray = array();
         $userarray['id'] = $row['user_id'];
-        $userarray['email'] = $row['user_email'];
 		$userarray['name'] = $row['user_name'];
 		$userarray['phone'] = $row['user_phone'];
-		$userarray['password'] = $_POST['user_password'];
-		$userarray['otp'] = $row['user_otp'];
-		$userarray['datereg'] = $row['user_datereg'];
         $userarray['hasavatar'] = $row['user_hasavatar'];
+
+        if(isset($_POST['user_id'])){
+            $userarray['email'] = "na";
+            $userarray['password'] = "na";
+            $userarray['otp'] = "na";
+            $userarray['datereg'] = "na";
+        }else{
+            $userarray['email'] = $row['user_email'];
+            $userarray['password'] = $_POST['user_password'];
+            $userarray['otp'] = $row['user_otp'];
+            $userarray['datereg'] = $row['user_datereg'];
+        }
 		$response = array('status' => 'success', 'data' => $userarray);
 		sendJsonResponse($response);
     }

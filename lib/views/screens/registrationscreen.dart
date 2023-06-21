@@ -263,7 +263,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           "phone": phone,
           "password": passa,
         }).then((response) {
-      print("This is the response.body: " + response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {

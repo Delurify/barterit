@@ -1,7 +1,7 @@
-import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -10,32 +10,33 @@ import 'package:http/http.dart' as http;
 import '../../myconfig.dart';
 import 'itemdetailscreen.dart';
 
-class HomeTabScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget {
   final User user;
-  const HomeTabScreen({super.key, required this.user});
+
+  const FavoriteScreen({super.key, required this.user});
 
   @override
-  State<HomeTabScreen> createState() => _HomeTabScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _HomeTabScreenState extends State<HomeTabScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen> {
   late double screenWidth, screenHeight;
-  List<Item> itemList = <Item>[];
   late int axiscount;
+  List<Item> itemList = <Item>[];
   Item singleItem = Item();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    loaduseritems();
+    loadfavorites();
   }
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (screenWidth > 600) {
       axiscount = 3;
@@ -45,7 +46,9 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text(style: TextStyle(color: Colors.white), "Home"),
+          title: Text("Favorites",
+              style: TextStyle(color: isDark ? Colors.grey : Colors.white)),
+          iconTheme: IconThemeData(color: isDark ? Colors.grey : Colors.white),
         ),
         body: Center(
             child: Column(
@@ -72,7 +75,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                       builder: (content) => ItemDetailScreen(
                                           user: widget.user,
                                           useritem: singleitem))).then((value) {
-                                loaduseritems();
+                                loadfavorites();
                               });
                             },
                             child: Column(
@@ -167,9 +170,9 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
         )));
   }
 
-  void loaduseritems() {
+  void loadfavorites() {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
-        body: {}).then((response) {
+        body: {"favorite_userid": widget.user.id}).then((response) {
       itemList.clear();
 
       print(response.body);
@@ -184,5 +187,4 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
       setState(() {});
     });
   }
-
 }

@@ -26,7 +26,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    // bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
         appBar: AppBar(

@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
+import 'package:barterit/views/screens/favoritescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
 import 'package:barterit/views/screens/itemdetailscreen.dart';
 import 'package:barterit/myconfig.dart';
@@ -58,7 +59,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
-    TextTheme _textTheme = Theme.of(context).textTheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (screenWidth > 600) {
@@ -67,6 +68,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       axiscount = 2;
     }
     return Scaffold(
+      //The app bar will have different layout based on whether user logged into the system
       appBar: widget.user.id.toString() != "na"
           ? AppBar(
               centerTitle: true,
@@ -112,7 +114,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                         Text("0"),
                         Text(
                           "Followers",
-                          style: _textTheme.bodyMedium
+                          style: textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey),
                         )
                       ],
@@ -130,16 +132,18 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                       children: [
                         Text("0"),
                         Text("Following",
-                            style: _textTheme.bodyMedium
+                            style: textTheme.bodyMedium
                                 ?.copyWith(color: Colors.grey))
                       ],
                     ),
                   ]),
             ),
+            // This is just design to seperate profile information with item information
             Divider(
                 indent: 8,
                 endIndent: 8,
                 color: isDark ? Colors.grey[400] : Colors.black87),
+            // Options to edit avatar or see favorited items
             Padding(
               padding: EdgeInsets.fromLTRB(
                   screenWidth * 0.05, 4, screenWidth * 0.05, 4),
@@ -155,11 +159,21 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                         _selectFromGallery();
                       }),
                   InkWell(
-                      child: const Text(
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
-                          "Favorites"),
-                      onTap: () {})
+                    child: const Text(
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                        "Favorites"),
+                    onTap: () {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (content) =>
+                                      FavoriteScreen(user: widget.user)))
+                          .then((value) {
+                        loaduseritems();
+                      });
+                    },
+                  )
                 ],
               ),
             ),

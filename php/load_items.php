@@ -10,9 +10,14 @@ include_once("dbconnect.php");
 if(isset($_POST['userid'])){
     $userid = $_POST['userid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
-}if(isset($_POST['itemid'])){
+}else if(isset($_POST['itemid'])){
     $itemid = $_POST['itemid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE item_id = '$itemid'";
+}else if(isset($_POST['favorite_userid'])){
+    $userid = $_POST['favorite_userid'];
+    $sqlloaditems = "SELECT * FROM `tbl_items` INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` WHERE `tbl_favorites`.`user_id` = '$userid'";
+} else{
+    $sqlloaditems = "SELECT * FROM `tbl_items`";
 }
 
 $result = $conn->query($sqlloaditems);
