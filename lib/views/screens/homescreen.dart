@@ -11,6 +11,8 @@ import '../../myconfig.dart';
 import 'itemdetailscreen.dart';
 import 'package:intl/intl.dart';
 
+import 'newtradescreen.dart';
+
 class HomeTabScreen extends StatefulWidget {
   final User user;
   const HomeTabScreen({super.key, required this.user});
@@ -66,183 +68,206 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(style: TextStyle(color: Colors.white), "Home"),
-        ),
-        body: Center(
-            child: Column(
-          children: [
-            Expanded(
-                child: RefreshIndicator(
-              onRefresh: refresh,
-              child: GridView.count(
-                  childAspectRatio: 4 / 5,
-                  crossAxisCount: axiscount,
-                  controller: controller,
-                  children: List.generate(
-                    itemList.length + 1,
-                    (index) {
-                      if (index < itemList.length) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 2,
-                          child: InkWell(
-                            onTap: () async {
-                              Item singleitem =
-                                  Item.fromJson(itemList[index].toJson());
-                              await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (content) => ItemDetailScreen(
-                                          user: widget.user,
-                                          useritem: singleitem))).then((value) {
-                                loaduseritems();
-                              });
-                            },
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                      child: itemList[index].itemImageCount ==
-                                              "1"
-                                          ? CachedNetworkImage(
-                                              width: screenWidth,
-                                              fit: BoxFit.cover,
-                                              imageUrl:
-                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                              placeholder: (context, url) =>
-                                                  const LinearProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Icon(Icons.error),
-                                            )
-                                          : itemList[index].itemImageCount ==
-                                                  "2"
-                                              ? ImageSlideshow(
-                                                  width: screenWidth,
-                                                  initialPage: 0,
-                                                  children: [
-                                                      Image.network(
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      Image.network(
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                        fit: BoxFit.cover,
-                                                      )
-                                                    ])
-                                              : ImageSlideshow(
-                                                  width: screenWidth,
-                                                  initialPage: 0,
-                                                  children: [
-                                                      Image.network(
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      Image.network(
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      Image.network(
-                                                        "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ])),
-                                  Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          // for horizontal scrolling
-                                          scrollDirection: Axis.horizontal,
+      appBar: AppBar(
+        title: const Text(style: TextStyle(color: Colors.white), "Home"),
+      ),
+      body: Center(
+          child: Column(
+        children: [
+          Expanded(
+              child: RefreshIndicator(
+            onRefresh: refresh,
+            child: GridView.count(
+                childAspectRatio: 4 / 5,
+                crossAxisCount: axiscount,
+                controller: controller,
+                children: List.generate(
+                  itemList.length + 1,
+                  (index) {
+                    if (index < itemList.length) {
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        clipBehavior: Clip.antiAlias,
+                        elevation: 2,
+                        child: InkWell(
+                          onTap: () async {
+                            Item singleitem =
+                                Item.fromJson(itemList[index].toJson());
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => ItemDetailScreen(
+                                        user: widget.user,
+                                        useritem: singleitem))).then((value) {
+                              loaduseritems();
+                            });
+                          },
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                    child: itemList[index].itemImageCount == "1"
+                                        ? CachedNetworkImage(
+                                            width: screenWidth,
+                                            fit: BoxFit.cover,
+                                            imageUrl:
+                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                            placeholder: (context, url) =>
+                                                const LinearProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          )
+                                        : itemList[index].itemImageCount == "2"
+                                            ? ImageSlideshow(
+                                                width: screenWidth,
+                                                initialPage: 0,
+                                                children: [
+                                                    Image.network(
+                                                      "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Image.network(
+                                                      "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  ])
+                                            : ImageSlideshow(
+                                                width: screenWidth,
+                                                initialPage: 0,
+                                                children: [
+                                                    Image.network(
+                                                      "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Image.network(
+                                                      "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Image.network(
+                                                      "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ])),
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        // for horizontal scrolling
+                                        scrollDirection: Axis.horizontal,
 
+                                        child: Text(
+                                          itemList[index].itemName.toString(),
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          width: screenWidth * 0.25,
                                           child: Text(
-                                            itemList[index].itemName.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 18),
+                                            "${itemList[index].itemLocality} - ${itemList[index].itemState}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                      Column(
-                                        children: [
-                                          SizedBox(
-                                            width: screenWidth * 0.25,
-                                            child: Text(
-                                              "${itemList[index].itemLocality} - ${itemList[index].itemState}",
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: screenWidth * 0.25,
-                                            child: Text(
-                                              df.format(DateTime.parse(
-                                                  itemList[index]
-                                                      .itemDate
-                                                      .toString())),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.orange),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        width: screenWidth * 0.2,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0), // Adjust the border radius as needed
-                                          color: isDark
-                                              ? Colors.black54
-                                              : Colors.grey[
-                                                  300], // Background color of the rounded rectangle
-                                        ),
-                                        padding: const EdgeInsets.all(
-                                            5.0), // Adjust the padding as needed
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0), // Same border radius as the container
+                                        SizedBox(
+                                          width: screenWidth * 0.25,
                                           child: Text(
-                                            'RM ${double.parse(itemList[index].itemPrice.toString())}',
+                                            df.format(DateTime.parse(
+                                                itemList[index]
+                                                    .itemDate
+                                                    .toString())),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.orange),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ]),
-                          ),
-                        );
-                      } else {
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32),
-                            child: Center(
-                                child: hasMore
-                                    ? const CircularProgressIndicator()
-                                    : null));
-                      }
-                    },
-                  )),
-            )),
-          ],
-        )));
+                                      ],
+                                    ),
+                                    Container(
+                                      width: screenWidth * 0.2,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), // Adjust the border radius as needed
+                                        color: isDark
+                                            ? Colors.black54
+                                            : Colors.grey[
+                                                300], // Background color of the rounded rectangle
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                          5.0), // Adjust the padding as needed
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), // Same border radius as the container
+                                        child: Text(
+                                          'RM ${double.parse(itemList[index].itemPrice.toString())}',
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ]),
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          child: Center(
+                              child: hasMore
+                                  ? const CircularProgressIndicator()
+                                  : null));
+                    }
+                  },
+                )),
+          )),
+        ],
+      )),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor:
+              isDark ? Colors.white : Theme.of(context).primaryColor,
+          onPressed: () {
+            if (widget.user.id != "na") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => NewTradeScreen(
+                            user: widget.user,
+                          ))).then((value) {
+                itemList.clear();
+                offset = 0;
+                loaduseritems();
+              });
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Please login/register an account")));
+            }
+          },
+          child: Text(
+            "+",
+            style: TextStyle(
+                fontSize: 32, color: isDark ? Colors.black87 : Colors.white),
+          )),
+    );
   }
 
   Future loaduseritems() async {

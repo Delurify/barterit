@@ -182,7 +182,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         extractdata['items'].forEach((v) {
           singleItem = Item.fromJson(v);
           itemList.add(singleItem);
-          print(singleItem.userId);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

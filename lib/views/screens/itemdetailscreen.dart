@@ -298,7 +298,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         TableCell(
                           verticalAlignment: TableCellVerticalAlignment.middle,
                           child: Text(
-                            "Price: ${widget.useritem.itemPrice}\n",
+                            "Price: RM ${double.parse(widget.useritem.itemPrice.toString())}\n",
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
