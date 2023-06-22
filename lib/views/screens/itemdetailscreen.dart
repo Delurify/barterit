@@ -381,7 +381,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         body: {
           "user_id": widget.useritem.userId,
         }).then((response) {
-      print(response.body);
+      print("This is the response body: " + response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         singleUser = User.fromJson(jsondata['data']);

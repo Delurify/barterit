@@ -14,9 +14,12 @@ if(isset($_POST['userid'])){
 }else if(isset($_POST['itemid'])){
     $itemid = $_POST['itemid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE item_id = '$itemid'";
-}else if(isset($_POST['favorite_userid'])){
+}else if (isset($_POST['favorite_userid'])) {
     $userid = $_POST['favorite_userid'];
-    $sqlloaditems = "SELECT * FROM `tbl_items` INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` WHERE `tbl_favorites`.`user_id` = '$userid'";
+    $sqlloaditems = "SELECT `tbl_items`.`user_id`, `tbl_items`.`item_id`, `tbl_items`.`item_name`, `tbl_items`.`item_price`, `tbl_items`.`item_type`, `tbl_items`.`item_imagecount`, `tbl_items`.`item_desc`, `tbl_items`.`item_qty`, `tbl_items`.`item_lat`, `tbl_items`.`item_long`, `tbl_items`.`item_state`, `tbl_items`.`item_locality`, `tbl_items`.`item_datereg`, `tbl_items`.`item_barterto` 
+                    FROM `tbl_items` 
+                    INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` 
+                    WHERE `tbl_favorites`.`user_id` = '$userid'";
 } else{
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];

@@ -47,6 +47,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   int offset = 0;
   bool isLoading = false;
   bool hasMore = true;
+  bool gotFavorite = false;
   final df = DateFormat('d MMM');
 
   @override
@@ -56,7 +57,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     val = random.nextInt(10000);
     Future.delayed(Duration.zero, () {
       checkLogin();
-
+      loadfavorites();
       // This is to load items in the database
       loaduseritems();
     });
@@ -181,16 +182,23 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                             color: Colors.blue, fontWeight: FontWeight.bold),
                         "Favorites"),
                     onTap: () {
-                      Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (content) =>
-                                      FavoriteScreen(user: widget.user)))
-                          .then((value) {
-                        offset = 0;
-                        itemList.clear();
-                        loaduseritems();
-                      });
+                      if (gotFavorite) {
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) =>
+                                        FavoriteScreen(user: widget.user)))
+                            .then((value) {
+                          offset = 0;
+                          itemList.clear();
+                          loaduseritems();
+                          loadfavorites();
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("No Favorited item(s)")));
+                      }
                     },
                   )
                 ],
@@ -664,6 +672,19 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
         }
+      }
+    });
+  }
+
+  Future loadfavorites() async {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
+        body: {"favorite_userid": widget.user.id}).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        gotFavorite = true;
+      } else {
+        gotFavorite = false;
       }
     });
   }
