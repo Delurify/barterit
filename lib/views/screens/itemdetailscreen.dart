@@ -248,7 +248,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                               child: const Icon(
                                 Icons.edit,
                               )),
-                        if (widget.user.name != singleUser.name &&
+                        if (widget.user.id != "na" &&
+                            widget.user.name != singleUser.name &&
                             favorite == false)
                           GestureDetector(
                               onTap: () {
@@ -261,7 +262,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                               child: const Icon(
                                 Icons.favorite_border,
                               )),
-                        if (widget.user.name != singleUser.name &&
+                        if (widget.user.id != "na" &&
+                            widget.user.name != singleUser.name &&
                             favorite == true)
                           GestureDetector(
                               onTap: () {
@@ -286,6 +288,24 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       1: FlexColumnWidth(9)
                     },
                     children: [
+                      TableRow(children: [
+                        const TableCell(
+                          child: Icon(
+                            Icons.currency_pound,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        TableCell(
+                          verticalAlignment: TableCellVerticalAlignment.middle,
+                          child: Text(
+                            "Price: ${widget.useritem.itemPrice}\n",
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange),
+                          ),
+                        ),
+                      ]),
                       TableRow(children: [
                         const TableCell(
                           child: Icon(Icons.article_outlined),

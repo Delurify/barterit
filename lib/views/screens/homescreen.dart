@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../myconfig.dart';
 import 'itemdetailscreen.dart';
+import 'package:intl/intl.dart';
 
 class HomeTabScreen extends StatefulWidget {
   final User user;
@@ -21,21 +22,42 @@ class HomeTabScreen extends StatefulWidget {
 class _HomeTabScreenState extends State<HomeTabScreen> {
   late double screenWidth, screenHeight;
   List<Item> itemList = <Item>[];
+  List<Item> newItems = <Item>[];
   late int axiscount;
   Item singleItem = Item();
+  final controller = ScrollController();
+  int offset = 0;
+  int limit = 10;
+  final df = DateFormat('d MMM');
+  bool isLoading = false;
+  bool hasMore = true;
+  bool firstLoad = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    hasMore = true;
     loaduseritems();
+    controller.addListener(() {
+      if (controller.position.maxScrollExtent == controller.offset) {
+        loaduseritems();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (screenWidth > 600) {
       axiscount = 3;
@@ -51,12 +73,16 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
             child: Column(
           children: [
             Expanded(
-                child: GridView.count(
-                    childAspectRatio: 4 / 5,
-                    crossAxisCount: axiscount,
-                    children: List.generate(
-                      itemList.length,
-                      (index) {
+                child: RefreshIndicator(
+              onRefresh: refresh,
+              child: GridView.count(
+                  childAspectRatio: 4 / 5,
+                  crossAxisCount: axiscount,
+                  controller: controller,
+                  children: List.generate(
+                    itemList.length + 1,
+                    (index) {
+                      if (index < itemList.length) {
                         return Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -144,7 +170,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                       const SizedBox(
                                         width: 4,
                                       ),
-                                      // Add fovorite icon in here later
                                     ],
                                   ),
                                   Row(
@@ -152,25 +177,89 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                       const SizedBox(
                                         width: 4,
                                       ),
-                                      Text(
-                                        "${itemList[index].itemQty} available",
-                                        style: const TextStyle(fontSize: 14),
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.25,
+                                            child: Text(
+                                              "${itemList[index].itemLocality} - ${itemList[index].itemState}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: screenWidth * 0.25,
+                                            child: Text(
+                                              df.format(DateTime.parse(
+                                                  itemList[index]
+                                                      .itemDate
+                                                      .toString())),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.orange),
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                      Container(
+                                        width: screenWidth * 0.2,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Adjust the border radius as needed
+                                          color: isDark
+                                              ? Colors.black54
+                                              : Colors.grey[
+                                                  300], // Background color of the rounded rectangle
+                                        ),
+                                        padding: const EdgeInsets.all(
+                                            5.0), // Adjust the padding as needed
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Same border radius as the container
+                                          child: Text(
+                                            'RM ${double.parse(itemList[index].itemPrice.toString())}',
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ]),
                           ),
                         );
-                      },
-                    ))),
+                      } else {
+                        return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32),
+                            child: Center(
+                                child: hasMore
+                                    ? const CircularProgressIndicator()
+                                    : null));
+                      }
+                    },
+                  )),
+            )),
           ],
         )));
   }
 
-  void loaduseritems() {
+  Future loaduseritems() async {
+    if (isLoading) return;
+    isLoading = true;
+
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
-        body: {}).then((response) {
-      itemList.clear();
+        body: {
+          "offset": offset.toString(),
+          "limit": limit.toString(),
+        }).then((response) {
+      offset = offset + limit;
+      newItems.clear();
+      if (firstLoad) {
+        itemList.clear();
+        firstLoad = false;
+      }
 
       print(response.body);
       var jsondata = jsonDecode(response.body);
@@ -178,11 +267,29 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
         var extractdata = jsondata['data'];
         extractdata['items'].forEach((v) {
           singleItem = Item.fromJson(v);
+          newItems.add(singleItem);
           itemList.add(singleItem);
         });
       }
-      setState(() {});
+
+      setState(() {
+        isLoading = false;
+
+        if (newItems.length < limit) {
+          hasMore = false;
+        }
+      });
     });
   }
 
+  Future refresh() async {
+    setState(() {
+      isLoading = false;
+      hasMore = true;
+      offset = 0;
+      itemList.clear();
+    });
+
+    loaduseritems();
+  }
 }

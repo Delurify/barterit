@@ -59,6 +59,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
       TextEditingController();
   final TextEditingController _itemqtyEditingController =
       TextEditingController();
+  final TextEditingController _itempriceEditingController =
+      TextEditingController();
   final TextEditingController _prlocalEditingController =
       TextEditingController();
   final TextEditingController _prstateEditingController =
@@ -193,6 +195,22 @@ class _EditItemScreenState extends State<EditItemScreen> {
                             icon: Icon(
                               Icons.description,
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ))),
+                    TextFormField(
+                        maxLength: 5,
+                        textInputAction: TextInputAction.next,
+                        validator: (val) => val!.isEmpty || (val.length < 3)
+                            ? "Price cannot be empty"
+                            : null,
+                        onFieldSubmitted: (v) {},
+                        controller: _itempriceEditingController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            labelText: 'Price per item',
+                            labelStyle: TextStyle(),
+                            icon: Icon(Icons.currency_pound),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(width: 2.0),
                             ))),
@@ -543,6 +561,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     widget.useritem.itemName = _itemnameEditingController.text;
     widget.useritem.itemDesc = _itemdescEditingController.text;
     widget.useritem.itemQty = _itemqtyEditingController.text;
+    widget.useritem.itemPrice = _itempriceEditingController.text;
     widget.useritem.itemBarterto = barterto.toString();
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_item.php"),
@@ -550,6 +569,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           "userid": widget.user.id,
           "itemid": widget.useritem.itemId,
           "itemname": widget.useritem.itemName,
+          "itemprice": widget.useritem.itemPrice,
           "itemdesc": widget.useritem.itemDesc,
           "itemqty": widget.useritem.itemQty,
           "type": widget.useritem.itemType,
@@ -685,6 +705,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
     // fetch quantity
     _itemqtyEditingController.text = widget.useritem.itemQty.toString();
+
+    //fetch item price
+    _itempriceEditingController.text = widget.useritem.itemPrice.toString();
 
     // fetch description
     _itemdescEditingController.text = widget.useritem.itemDesc.toString();

@@ -20,6 +20,7 @@ import 'package:barterit/views/screens/itemdetailscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:barterit/main.dart';
+import 'package:intl/intl.dart';
 
 class ProfileTabScreen extends StatefulWidget {
   final User user;
@@ -32,6 +33,7 @@ class ProfileTabScreen extends StatefulWidget {
 class _ProfileTabScreenState extends State<ProfileTabScreen> {
   late List<Widget> tabchildren;
   late int axiscount = 2;
+  int posts = 0;
   String maintitle = "Profile";
   late double screenHeight, screenWidth, cardwitdh;
   File? _image;
@@ -41,6 +43,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   late int val;
   bool imageExist = false;
   List<Item> itemList = <Item>[];
+  int limit = 10;
+  int offset = 0;
+  bool isLoading = false;
+  bool hasMore = true;
+  final df = DateFormat('d MMM');
 
   @override
   void initState() {
@@ -71,7 +78,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       //The app bar will have different layout based on whether user logged into the system
       appBar: widget.user.id.toString() != "na"
           ? AppBar(
-              centerTitle: true,
               title: Text(
                   style: const TextStyle(color: Colors.white),
                   widget.user.name.toString()),
@@ -108,6 +114,25 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    // Profile picture
+                    CircleAvatar(
+                        radius: screenHeight * 0.05,
+                        backgroundImage: widget.user.hasavatar.toString() == "1"
+                            ? NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                            : NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(posts.toString()),
+                        Text(
+                          "Posts",
+                          style: textTheme.bodyMedium
+                              ?.copyWith(color: Colors.grey),
+                        )
+                      ],
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -119,14 +144,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                         )
                       ],
                     ),
-                    // Profile picture
-                    CircleAvatar(
-                        radius: screenHeight * 0.05,
-                        backgroundImage: widget.user.hasavatar.toString() == "1"
-                            ? NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                            : NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -170,6 +187,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                   builder: (content) =>
                                       FavoriteScreen(user: widget.user)))
                           .then((value) {
+                        offset = 0;
+                        itemList.clear();
                         loaduseritems();
                       });
                     },
@@ -204,129 +223,180 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                               itemList.length,
                               (index) {
                                 return Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2,
-                                  child: InkWell(
-                                    onLongPress: () {
-                                      onDeleteDialog(index);
-                                    },
-                                    onTap: () async {
-                                      Item singleitem = Item.fromJson(
-                                          itemList[index].toJson());
-                                      await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (content) =>
-                                                      ItemDetailScreen(
-                                                          user: widget.user,
-                                                          useritem:
-                                                              singleitem)))
-                                          .then((value) {
-                                        loaduseritems();
-                                      });
-                                    },
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Expanded(
-                                              child: itemList[index]
-                                                          .itemImageCount ==
-                                                      "1"
-                                                  ? CachedNetworkImage(
-                                                      width: screenWidth,
-                                                      fit: BoxFit.cover,
-                                                      imageUrl:
-                                                          "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          const LinearProgressIndicator(),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
-                                                              Icons.error),
-                                                    )
-                                                  : itemList[index]
-                                                              .itemImageCount ==
-                                                          "2"
-                                                      ? ImageSlideshow(
-                                                          width: screenWidth,
-                                                          initialPage: 0,
-                                                          children: [
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              )
-                                                            ])
-                                                      : ImageSlideshow(
-                                                          width: screenWidth,
-                                                          initialPage: 0,
-                                                          children: [
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ])),
-                                          Row(
-                                            children: [
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              Expanded(
-                                                child: SingleChildScrollView(
-                                                  // for horizontal scrolling
-                                                  scrollDirection:
-                                                      Axis.horizontal,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 2,
+                                    child: InkWell(
+                                      onLongPress: () {
+                                        onDeleteDialog(index);
+                                      },
+                                      onTap: () async {
+                                        Item singleitem = Item.fromJson(
+                                            itemList[index].toJson());
+                                        await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (content) =>
+                                                        ItemDetailScreen(
+                                                            user: widget.user,
+                                                            useritem:
+                                                                singleitem)))
+                                            .then((value) {
+                                          itemList.clear();
+                                          offset = 0;
+                                          loaduseritems();
+                                        });
+                                      },
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Expanded(
+                                                child: itemList[index]
+                                                            .itemImageCount ==
+                                                        "1"
+                                                    ? CachedNetworkImage(
+                                                        width: screenWidth,
+                                                        fit: BoxFit.cover,
+                                                        imageUrl:
+                                                            "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            const LinearProgressIndicator(),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
+                                                      )
+                                                    : itemList[index]
+                                                                .itemImageCount ==
+                                                            "2"
+                                                        ? ImageSlideshow(
+                                                            width: screenWidth,
+                                                            initialPage: 0,
+                                                            children: [
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                )
+                                                              ])
+                                                        : ImageSlideshow(
+                                                            width: screenWidth,
+                                                            initialPage: 0,
+                                                            children: [
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ])),
+                                            Row(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    // for horizontal scrolling
+                                                    scrollDirection:
+                                                        Axis.horizontal,
 
-                                                  child: Text(
-                                                    itemList[index]
-                                                        .itemName
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
+                                                    child: Text(
+                                                      itemList[index]
+                                                          .itemName
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontSize: 18),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              // Add fovorite icon in here later
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              Text(
-                                                "${itemList[index].itemQty} available",
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
-                                        ]),
-                                  ),
-                                );
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                // Add fovorite icon in here later
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: screenWidth * 0.25,
+                                                      child: Text(
+                                                        "${itemList[index].itemLocality} - ${itemList[index].itemState}",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: screenWidth * 0.25,
+                                                      child: Text(
+                                                        df.format(DateTime
+                                                            .parse(itemList[
+                                                                    index]
+                                                                .itemDate
+                                                                .toString())),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.orange),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  width: screenWidth * 0.2,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0), // Adjust the border radius as needed
+                                                    color: isDark
+                                                        ? Colors.black54
+                                                        : Colors.grey[
+                                                            300], // Background color of the rounded rectangle
+                                                  ),
+                                                  padding: const EdgeInsets.all(
+                                                      5.0), // Adjust the padding as needed
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0), // Same border radius as the container
+                                                    child: Text(
+                                                      'RM ${double.parse(itemList[index].itemPrice.toString())}',
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ]),
+                                    ));
                               },
                             ))))
           ]),
@@ -343,6 +413,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                       builder: (content) => NewTradeScreen(
                             user: widget.user,
                           ))).then((value) {
+                itemList.clear();
+                offset = 0;
                 loaduseritems();
               });
             } else {
@@ -359,9 +431,16 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
 
   Future<void> _pullRefresh() async {
-    setState(() {
+    Future refresh() async {
+      setState(() {
+        isLoading = false;
+        hasMore = true;
+        offset = 0;
+        itemList.clear();
+      });
+
       loaduseritems();
-    });
+    }
   }
 
   void checkLogin() {
@@ -513,13 +592,16 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     }
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
-        body: {"userid": widget.user.id}).then((response) {
-      itemList.clear();
-
+        body: {
+          "userid": widget.user.id,
+          "limit": limit.toString(),
+          "offset": offset.toString()
+        }).then((response) {
       print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
+        posts = jsondata['posts'];
         extractdata['items'].forEach((v) {
           itemList.add(Item.fromJson(v));
         });

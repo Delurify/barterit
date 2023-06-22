@@ -63,6 +63,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       TextEditingController();
   final TextEditingController _itemdescEditingController =
       TextEditingController();
+  final TextEditingController _itempriceEditingController =
+      TextEditingController();
   final TextEditingController _itemqtyEditingController =
       TextEditingController();
   final TextEditingController _prlocalEditingController =
@@ -203,6 +205,22 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                             icon: Icon(
                               Icons.description,
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ))),
+                    TextFormField(
+                        maxLength: 5,
+                        textInputAction: TextInputAction.next,
+                        validator: (val) => val!.isEmpty || (val.length < 3)
+                            ? "Price cannot be empty"
+                            : null,
+                        onFieldSubmitted: (v) {},
+                        controller: _itempriceEditingController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            labelText: 'Price per item',
+                            labelStyle: TextStyle(),
+                            icon: Icon(Icons.currency_pound),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(width: 2.0),
                             ))),
@@ -646,7 +664,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     String itemname = _itemnameEditingController.text;
     String itemdesc = _itemdescEditingController.text;
     String itemqty = _itemqtyEditingController.text;
-    // String base64Image = base64Encode(_image!.readAsBytesSync());
+    String itemprice = _itempriceEditingController.text;
 
     for (var object in imgList) {
       if (object.source == "file") {
@@ -661,6 +679,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           "itemname": itemname,
           "itemdesc": itemdesc,
           "itemqty": itemqty,
+          "itemprice": itemprice,
           "type": selectedType,
           "imagelist": base64Images.toString(),
           "imagecount": base64Images.length.toString(),

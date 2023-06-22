@@ -7,6 +7,7 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
+
 if(isset($_POST['userid'])){
     $userid = $_POST['userid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid'";
@@ -17,18 +18,22 @@ if(isset($_POST['userid'])){
     $userid = $_POST['favorite_userid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` WHERE `tbl_favorites`.`user_id` = '$userid'";
 } else{
-    $sqlloaditems = "SELECT * FROM `tbl_items`";
+    $offset = $_POST['offset'];
+    $limit = $_POST['limit'];
+    $sqlloaditems = "SELECT * FROM `tbl_items` LIMIT $limit OFFSET $offset";
 }
 
 $result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {
     $items["items"] = array();
+    $row_count = mysqli_num_rows($result);
 	
 while ($row = $result->fetch_assoc()) {
         $itemlist = array();
         $itemlist['item_id'] = $row['item_id'];
         $itemlist['user_id'] = $row['user_id'];
         $itemlist['item_name'] = $row['item_name'];
+        $itemlist['item_price'] = $row['item_price'];
         $itemlist['item_type'] = $row['item_type'];
         $itemlist['item_imagecount'] = $row['item_imagecount'];
         $itemlist['item_desc'] = $row['item_desc'];
@@ -41,7 +46,7 @@ while ($row = $result->fetch_assoc()) {
         $itemlist['item_barterto'] = $row['item_barterto'];
         array_push($items["items"],$itemlist);
     }
-    $response = array('status' => 'success', 'data' => $items);
+    $response = array('status' => 'success', 'data' => $items, 'posts' => $row_count);
     sendJsonResponse($response);
 }else{
      $response = array('status' => 'failed', 'data' => null);
