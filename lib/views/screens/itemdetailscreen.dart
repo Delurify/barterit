@@ -55,6 +55,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         appBar: AppBar(
             leading: IconButton(
                 onPressed: () {
+                  // This is to check whether user change favorite, if yes, update to server
                   if (favorite == true && favorite != isFavorited) {
                     addFavorite();
                   }
@@ -400,7 +401,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         body: {
           "user_id": widget.useritem.userId,
         }).then((response) {
-      print("This is the response body: " + response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         singleUser = User.fromJson(jsondata['data']);

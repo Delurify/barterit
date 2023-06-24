@@ -426,6 +426,8 @@ class _TraderScreenState extends State<TraderScreen> {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         following = jsondata['follow'];
+      } else {
+        following = 0;
       }
       setState(() {});
     });

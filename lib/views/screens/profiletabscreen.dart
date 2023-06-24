@@ -22,6 +22,8 @@ import 'package:ndialog/ndialog.dart';
 import 'package:barterit/main.dart';
 import 'package:intl/intl.dart';
 
+import 'followlistscreen.dart';
+
 class ProfileTabScreen extends StatefulWidget {
   final User user;
   const ProfileTabScreen({super.key, required this.user});
@@ -144,15 +146,15 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (content) =>
-                                            FavoriteScreen(user: widget.user)))
-                                .then((value) {
-                              offset = 0;
-                              itemList.clear();
-                              loaduseritems();
-                              loadfavorites();
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => FollowListScreen(
+                                        user: widget.user,
+                                        page: "follower"))).then((value) {
+                              setState(() {
+                                loadfollowers();
+                                loadfollowing();
+                              });
                             });
                           },
                           child: Column(
@@ -724,6 +726,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         followers = jsondata['follow'];
+      } else {
+        followers = 0;
       }
       setState(() {});
     });
