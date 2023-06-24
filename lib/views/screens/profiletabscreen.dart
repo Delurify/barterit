@@ -33,21 +33,23 @@ class ProfileTabScreen extends StatefulWidget {
 class _ProfileTabScreenState extends State<ProfileTabScreen> {
   late List<Widget> tabchildren;
   late int axiscount = 2;
-  int posts = 0;
-  String maintitle = "Profile";
-  late double screenHeight, screenWidth, cardwitdh;
-  File? _image;
-  String avatarPath = "assets/images/profile-placeholder.png";
-  DateTime now = DateTime.now();
-  Random random = Random();
   late int val;
-  bool imageExist = false;
-  List<Item> itemList = <Item>[];
+  late double screenHeight, screenWidth, cardwitdh;
+  String maintitle = "Profile";
+  String avatarPath = "assets/images/profile-placeholder.png";
   int limit = 10;
   int offset = 0;
+  int posts = 0;
+  int followers = 0;
+  int following = 0;
   bool isLoading = false;
   bool hasMore = true;
   bool gotFavorite = false;
+  bool imageExist = false;
+  File? _image;
+  DateTime now = DateTime.now();
+  Random random = Random();
+  List<Item> itemList = <Item>[];
   final df = DateFormat('d MMM');
 
   @override
@@ -60,6 +62,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       loadfavorites();
       // This is to load items in the database
       loaduseritems();
+
+      loadfollowers();
+      loadfollowing();
     });
   }
 
@@ -76,372 +81,387 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       axiscount = 2;
     }
     return Scaffold(
-      //The app bar will have different layout based on whether user logged into the system
-      appBar: widget.user.id.toString() != "na"
-          ? AppBar(
-              title: Text(
-                  style: const TextStyle(color: Colors.white),
-                  widget.user.name.toString()),
-              actions: [
-                PopupMenuButton<int>(
-                    onSelected: (item) => onSelected(context, item),
-                    itemBuilder: (context) => [
-                          const PopupMenuItem<int>(
-                              value: 0, child: Text('Profile')),
-                          PopupMenuItem<int>(
-                            value: 1,
-                            child: isDark
-                                ? const Text('LightMode')
-                                : const Text('DarkMode'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 2,
-                            child: Text('Logout'),
-                          ),
-                        ])
-              ],
-            )
-          : AppBar(
-              title: Text(maintitle),
-            ),
-      body: RefreshIndicator(
-        onRefresh: _pullRefresh,
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                height: screenHeight * 0.15,
-                width: screenWidth,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Profile picture
-                      CircleAvatar(
-                          radius: screenHeight * 0.05,
-                          backgroundImage: widget.user.hasavatar.toString() ==
-                                  "1"
-                              ? NetworkImage(
-                                  "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                              : NetworkImage(
-                                  "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(posts.toString()),
-                          Text(
-                            "Posts",
-                            style: textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey),
-                          )
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("0"),
-                          Text(
-                            "Followers",
-                            style: textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey),
-                          )
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("0"),
-                          Text("Following",
-                              style: textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.grey))
-                        ],
-                      ),
-                    ]),
+        //The app bar will have different layout based on whether user logged into the system
+        appBar: widget.user.id.toString() != "na"
+            ? AppBar(
+                title: Text(
+                    style: const TextStyle(color: Colors.white),
+                    widget.user.name.toString()),
+                actions: [
+                  PopupMenuButton<int>(
+                      onSelected: (item) => onSelected(context, item),
+                      itemBuilder: (context) => [
+                            const PopupMenuItem<int>(
+                                value: 0, child: Text('Profile')),
+                            PopupMenuItem<int>(
+                              value: 1,
+                              child: isDark
+                                  ? const Text('LightMode')
+                                  : const Text('DarkMode'),
+                            ),
+                            const PopupMenuItem<int>(
+                              value: 2,
+                              child: Text('Logout'),
+                            ),
+                          ])
+                ],
+              )
+            : AppBar(
+                title: Text(maintitle),
               ),
-              // This is just design to seperate profile information with item information
-              Divider(
-                  indent: 8,
-                  endIndent: 8,
-                  color: isDark ? Colors.grey[400] : Colors.black87),
-              // Options to edit avatar or see favorited items
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    screenWidth * 0.05, 4, screenWidth * 0.05, 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
+        body: RefreshIndicator(
+          onRefresh: _pullRefresh,
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  height: screenHeight * 0.15,
+                  width: screenWidth,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Profile picture
+                        CircleAvatar(
+                            radius: screenHeight * 0.05,
+                            backgroundImage: widget.user.hasavatar.toString() ==
+                                    "1"
+                                ? NetworkImage(
+                                    "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                                : NetworkImage(
+                                    "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(posts.toString()),
+                            Text(
+                              "Posts",
+                              style: textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey),
+                            )
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (content) =>
+                                            FavoriteScreen(user: widget.user)))
+                                .then((value) {
+                              offset = 0;
+                              itemList.clear();
+                              loaduseritems();
+                              loadfavorites();
+                            });
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(followers.toString()),
+                              Text(
+                                "Followers",
+                                style: textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(following.toString()),
+                            Text("Following",
+                                style: textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey))
+                          ],
+                        ),
+                      ]),
+                ),
+
+                // This is just design to seperate profile information with item information
+                Divider(
+                    indent: 8,
+                    endIndent: 8,
+                    color: isDark ? Colors.grey[400] : Colors.black87),
+                // Options to edit avatar or see favorited items
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      screenWidth * 0.05, 4, screenWidth * 0.05, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                          child: const Text(
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                              "Edit Avatar"),
+                          onTap: () {
+                            _selectFromGallery();
+                          }),
+                      InkWell(
                         child: const Text(
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold),
-                            "Edit Avatar"),
+                            "Favorites"),
                         onTap: () {
-                          _selectFromGallery();
-                        }),
-                    InkWell(
-                      child: const Text(
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
-                          "Favorites"),
-                      onTap: () {
-                        if (gotFavorite) {
-                          Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (content) =>
-                                          FavoriteScreen(user: widget.user)))
-                              .then((value) {
-                            offset = 0;
-                            itemList.clear();
-                            loaduseritems();
-                            loadfavorites();
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("No Favorited item(s)")));
-                        }
-                      },
-                    )
-                  ],
+                          if (gotFavorite) {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (content) =>
+                                            FavoriteScreen(user: widget.user)))
+                                .then((value) {
+                              offset = 0;
+                              itemList.clear();
+                              loaduseritems();
+                              loadfavorites();
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("No Favorited item(s)")));
+                          }
+                        },
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                  child: itemList.isEmpty
-                      ? Column(
-                          children: [
-                            const Text(
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 20),
-                                "No items added for barter :("),
-                            SizedBox(height: screenHeight * 0.08),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  screenWidth * 0.05, 0, screenWidth * 0.05, 0),
-                              child: const Text(
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.grey),
-                                  "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
-                            ),
-                          ],
-                        )
-                      : GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          childAspectRatio: 5 / 6,
-                          crossAxisCount: axiscount,
-                          children: List.generate(
-                            itemList.length,
-                            (index) {
-                              return Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2,
-                                  child: InkWell(
-                                    onLongPress: () {
-                                      onDeleteDialog(index);
-                                    },
-                                    onTap: () async {
-                                      Item singleitem = Item.fromJson(
-                                          itemList[index].toJson());
-                                      await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (content) =>
-                                                      ItemDetailScreen(
-                                                          user: widget.user,
-                                                          useritem:
-                                                              singleitem)))
-                                          .then((value) {
-                                        itemList.clear();
-                                        offset = 0;
-                                        loaduseritems();
-                                      });
-                                    },
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Expanded(
-                                              child: itemList[index]
-                                                          .itemImageCount ==
-                                                      "1"
-                                                  ? CachedNetworkImage(
-                                                      width: screenWidth,
-                                                      fit: BoxFit.cover,
-                                                      imageUrl:
-                                                          "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          const LinearProgressIndicator(),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
-                                                              Icons.error),
-                                                    )
-                                                  : itemList[index]
-                                                              .itemImageCount ==
-                                                          "2"
-                                                      ? ImageSlideshow(
-                                                          width: screenWidth,
-                                                          initialPage: 0,
-                                                          children: [
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              )
-                                                            ])
-                                                      : ImageSlideshow(
-                                                          width: screenWidth,
-                                                          initialPage: 0,
-                                                          children: [
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                              Image.network(
-                                                                "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ])),
-                                          Row(
-                                            children: [
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              Expanded(
-                                                child: SingleChildScrollView(
-                                                  // for horizontal scrolling
-                                                  scrollDirection:
-                                                      Axis.horizontal,
+                Container(
+                    child: itemList.isEmpty
+                        ? Column(
+                            children: [
+                              const Text(
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 20),
+                                  "No items added for barter :("),
+                              SizedBox(height: screenHeight * 0.08),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(screenWidth * 0.05,
+                                    0, screenWidth * 0.05, 0),
+                                child: const Text(
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey),
+                                    "As a start!😆\nLook for items that you don't need or bored from at your home and add them to your barter list. Then you can trade with others!"),
+                              ),
+                            ],
+                          )
+                        : GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            childAspectRatio: 5 / 6,
+                            crossAxisCount: axiscount,
+                            children: List.generate(
+                              itemList.length,
+                              (index) {
+                                return Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 2,
+                                    child: InkWell(
+                                      onLongPress: () {
+                                        onDeleteDialog(index);
+                                      },
+                                      onTap: () async {
+                                        Item singleitem = Item.fromJson(
+                                            itemList[index].toJson());
+                                        await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (content) =>
+                                                        ItemDetailScreen(
+                                                            user: widget.user,
+                                                            useritem:
+                                                                singleitem)))
+                                            .then((value) {
+                                          itemList.clear();
+                                          offset = 0;
+                                          loaduseritems();
+                                        });
+                                      },
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Expanded(
+                                                child: itemList[index]
+                                                            .itemImageCount ==
+                                                        "1"
+                                                    ? CachedNetworkImage(
+                                                        width: screenWidth,
+                                                        fit: BoxFit.cover,
+                                                        imageUrl:
+                                                            "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            const LinearProgressIndicator(),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
+                                                      )
+                                                    : itemList[index]
+                                                                .itemImageCount ==
+                                                            "2"
+                                                        ? ImageSlideshow(
+                                                            width: screenWidth,
+                                                            initialPage: 0,
+                                                            children: [
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                )
+                                                              ])
+                                                        : ImageSlideshow(
+                                                            width: screenWidth,
+                                                            initialPage: 0,
+                                                            children: [
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-1.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-2.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                                Image.network(
+                                                                  "${MyConfig().SERVER}/barterit/assets/items/${itemList[index].itemId}-3.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ])),
+                                            Row(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    // for horizontal scrolling
+                                                    scrollDirection:
+                                                        Axis.horizontal,
 
-                                                  child: Text(
-                                                    itemList[index]
-                                                        .itemName
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              // Add fovorite icon in here later
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              const SizedBox(
-                                                width: 4,
-                                              ),
-                                              Column(
-                                                children: [
-                                                  SizedBox(
-                                                    width: screenWidth * 0.25,
                                                     child: Text(
-                                                      "${itemList[index].itemLocality} - ${itemList[index].itemState}",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      itemList[index]
+                                                          .itemName
+                                                          .toString(),
                                                       style: const TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.grey),
+                                                          fontSize: 18),
                                                     ),
                                                   ),
-                                                  SizedBox(
-                                                    width: screenWidth * 0.25,
+                                                ),
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                // Add fovorite icon in here later
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: screenWidth * 0.25,
+                                                      child: Text(
+                                                        "${itemList[index].itemLocality} - ${itemList[index].itemState}",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: screenWidth * 0.25,
+                                                      child: Text(
+                                                        df.format(DateTime
+                                                            .parse(itemList[
+                                                                    index]
+                                                                .itemDate
+                                                                .toString())),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            color:
+                                                                Colors.orange),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  width: screenWidth * 0.2,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0), // Adjust the border radius as needed
+                                                    color: isDark
+                                                        ? Colors.black54
+                                                        : Colors.grey[
+                                                            300], // Background color of the rounded rectangle
+                                                  ),
+                                                  padding: const EdgeInsets.all(
+                                                      5.0), // Adjust the padding as needed
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0), // Same border radius as the container
                                                     child: Text(
-                                                      df.format(DateTime.parse(
-                                                          itemList[index]
-                                                              .itemDate
-                                                              .toString())),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.orange),
+                                                      'RM ${double.parse(itemList[index].itemPrice.toString())}',
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                              Container(
-                                                width: screenWidth * 0.2,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0), // Adjust the border radius as needed
-                                                  color: isDark
-                                                      ? Colors.black54
-                                                      : Colors.grey[
-                                                          300], // Background color of the rounded rectangle
-                                                ),
-                                                padding: const EdgeInsets.all(
-                                                    5.0), // Adjust the padding as needed
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0), // Same border radius as the container
-                                                  child: Text(
-                                                    'RM ${double.parse(itemList[index].itemPrice.toString())}',
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ]),
-                                  ));
-                            },
-                          )))
-            ]),
+                                                )
+                                              ],
+                                            ),
+                                          ]),
+                                    ));
+                              },
+                            )))
+              ]),
+            ),
           ),
         ),
-      ),
-
-      floatingActionButton: posts < 4
-          ? FloatingActionButton(
-              backgroundColor:
-                  isDark ? Colors.white : Theme.of(context).primaryColor,
-              onPressed: () {
-                if (widget.user.id != "na") {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (content) => NewTradeScreen(
-                                user: widget.user,
-                              ))).then((value) {
-                    itemList.clear();
-                    offset = 0;
-                    loaduseritems();
-                  });
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Please login/register an account")));
-                }
-              },
-              child: Text(
-                "+",
-                style: TextStyle(
-                    fontSize: 32,
-                    color: isDark ? Colors.black87 : Colors.white),
-              ))
-          : null,
-    );
+        floatingActionButton: FloatingActionButton(
+            backgroundColor:
+                isDark ? Colors.white : Theme.of(context).primaryColor,
+            onPressed: () {
+              if (widget.user.id != "na") {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (content) => NewTradeScreen(
+                              user: widget.user,
+                            ))).then((value) {
+                  itemList.clear();
+                  offset = 0;
+                  loaduseritems();
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Please login/register an account")));
+              }
+            },
+            child: Text(
+              "+",
+              style: TextStyle(
+                  fontSize: 32, color: isDark ? Colors.black87 : Colors.white),
+            )));
   }
 
   Future<void> _pullRefresh() async {
@@ -692,6 +712,34 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       } else {
         gotFavorite = false;
       }
+    });
+  }
+
+  // This is to calculate the number of followers
+  void loadfollowers() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_follower.php"),
+        body: {
+          "traderid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        followers = jsondata['follow'];
+      }
+      setState(() {});
+    });
+  }
+
+  // This is to calculate the number trader the user is following
+  void loadfollowing() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_follower.php"),
+        body: {
+          "userid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        following = jsondata['follow'];
+      }
+      setState(() {});
     });
   }
 }

@@ -738,12 +738,12 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       prlat = "6.443455345";
       prlong = "100.05488449";
     } else {
+      print(placemarks[0].locality.toString());
       _prlocalEditingController.text = placemarks[0].locality.toString();
       _prstateEditingController.text =
           placemarks[0].administrativeArea.toString();
       prlat = _currentPosition.latitude.toString();
       prlong = _currentPosition.longitude.toString();
     }
-    setState(() {});
   }
 }

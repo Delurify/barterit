@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:barterit/views/screens/traderscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -80,15 +81,33 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(width: screenWidth * 0.05),
-                    CircleAvatar(
-                        radius: screenHeight * 0.02,
-                        backgroundImage: singleUser.hasavatar.toString() == "1"
-                            ? NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/avatars/${singleUser.id}.png")
-                            : NetworkImage(
-                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                    const SizedBox(width: 8),
-                    Text(singleUser.name.toString()),
+                    GestureDetector(
+                      onTap: () {
+                        if (singleUser.id != widget.user.id) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (content) => TraderScreen(
+                                      user: widget.user,
+                                      trader: singleUser))).then((value) {});
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                              radius: screenHeight * 0.02,
+                              backgroundImage: singleUser.hasavatar
+                                          .toString() ==
+                                      "1"
+                                  ? NetworkImage(
+                                      "${MyConfig().SERVER}/barterit/assets/avatars/${singleUser.id}.png")
+                                  : NetworkImage(
+                                      "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                          const SizedBox(width: 8),
+                          Text(singleUser.name.toString()),
+                        ],
+                      ),
+                    ),
                     Expanded(child: Container()),
                     GestureDetector(
                       onTap: () {
@@ -249,7 +268,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 Icons.edit,
                               )),
                         if (widget.user.id != "na" &&
-                            widget.user.name != singleUser.name &&
+                            widget.user.id != singleUser.id &&
                             favorite == false)
                           GestureDetector(
                               onTap: () {
@@ -263,7 +282,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 Icons.favorite_border,
                               )),
                         if (widget.user.id != "na" &&
-                            widget.user.name != singleUser.name &&
+                            widget.user.id != singleUser.id &&
                             favorite == true)
                           GestureDetector(
                               onTap: () {
