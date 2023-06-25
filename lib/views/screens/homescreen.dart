@@ -101,6 +101,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                         user: widget.user,
                                         useritem: singleitem,
                                         page: "user"))).then((value) {
+                              itemList[index] = value;
                               loaduseritems();
                             });
                           },
@@ -319,4 +320,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
 
     loaduseritems();
   }
+
+  void updateitem(int index) {}
 }

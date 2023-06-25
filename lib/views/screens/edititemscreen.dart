@@ -201,7 +201,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     TextFormField(
                         maxLength: 5,
                         textInputAction: TextInputAction.next,
-                        validator: (val) => val!.isEmpty || (val.length < 3)
+                        validator: (val) => val!.isEmpty || (val.length < 2)
                             ? "Price cannot be empty"
                             : null,
                         onFieldSubmitted: (v) {},
@@ -539,7 +539,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop(isSelected);
-                insertItem();
+                updateItem();
               },
             ),
             TextButton(
@@ -557,7 +557,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
   }
 
-  void insertItem() {
+  void updateItem() {
     widget.useritem.itemName = _itemnameEditingController.text;
     widget.useritem.itemDesc = _itemdescEditingController.text;
     widget.useritem.itemQty = _itemqtyEditingController.text;
@@ -667,8 +667,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
       isSelected.selected++;
     }
   }
-
-  void updateBarterto() {}
 
   void fetchitemData() {
     // fetch image(s)

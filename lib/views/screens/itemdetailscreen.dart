@@ -66,7 +66,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   if (favorite == false && favorite != isFavorited) {
                     removeFavorite();
                   }
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(widget.useritem);
                 },
                 icon: const Icon(Icons.arrow_back)),
             iconTheme:

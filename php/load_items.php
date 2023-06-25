@@ -20,6 +20,13 @@ if(isset($_POST['userid'])){
                     FROM `tbl_items` 
                     INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` 
                     WHERE `tbl_favorites`.`user_id` = '$userid'";
+} else if(isset($_POST['search'])){
+    $search = $_POST['search'];
+    $offset = $_POST['offset'];
+    $limit = $_POST['limit'];
+    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE `item_name` LIKE '%$search%' LIMIT $limit OFFSET $offset";
+
+    
 } else{
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];

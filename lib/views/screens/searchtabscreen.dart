@@ -58,11 +58,13 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                           ? "Please provide input for searching items"
                           : null,
                       onFieldSubmitted: (v) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (content) => SearchScreen(
-                                    user: widget.user, search: v)));
+                        if (v.isNotEmpty) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (content) => SearchScreen(
+                                      user: widget.user, search: v)));
+                        }
                       },
                       maxLines: 1,
                       controller: _searchitemEditingController,
