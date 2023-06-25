@@ -320,8 +320,6 @@ class _SearchScreenState extends State<SearchScreen>
         itemList.clear();
         firstLoad = false;
       }
-
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
@@ -353,4 +351,6 @@ class _SearchScreenState extends State<SearchScreen>
 
     searchitems(_searchEditingController.text);
   }
+
+  void searchUsers(String search) {}
 }
