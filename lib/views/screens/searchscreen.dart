@@ -38,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen>
   bool hasMore = true;
   final df = DateFormat('d MMM');
   final controller = ScrollController();
-
+  final FocusNode _focusNode = FocusNode();
   final TextEditingController _searchEditingController =
       TextEditingController();
 
@@ -53,6 +53,7 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -73,13 +74,28 @@ class _SearchScreenState extends State<SearchScreen>
         iconTheme: const IconThemeData(color: Colors.white),
         title: Container(
           decoration: BoxDecoration(
-              color: isDark ? Colors.grey[800] : Colors.white,
+              color: isDark && !_focusNode.hasFocus
+                  ? Colors.grey[900]
+                  : isDark && _focusNode.hasFocus
+                      ? Colors.grey[800]
+                      : !isDark && !_focusNode.hasFocus
+                          ? const Color.fromARGB(255, 255, 185, 79)
+                          : Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           width: double.infinity,
           height: 40,
           child: Center(
             child: TextField(
               controller: _searchEditingController,
+              focusNode: _focusNode,
+              style: TextStyle(
+                  color: _focusNode.hasFocus && !isDark
+                      ? Colors.black
+                      : !_focusNode.hasFocus && !isDark
+                          ? Colors.grey[700]
+                          : _focusNode.hasFocus && isDark
+                              ? Colors.white
+                              : Colors.grey),
               decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Search for something',
