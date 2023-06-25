@@ -287,14 +287,14 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                         Item singleitem = Item.fromJson(
                                             itemList[index].toJson());
                                         await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (content) =>
-                                                        ItemDetailScreen(
-                                                            user: widget.user,
-                                                            useritem:
-                                                                singleitem)))
-                                            .then((value) {
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (content) =>
+                                                    ItemDetailScreen(
+                                                        user: widget.user,
+                                                        useritem: singleitem,
+                                                        page: "user"))).then(
+                                            (value) {
                                           itemList.clear();
                                           offset = 0;
                                           loaduseritems();

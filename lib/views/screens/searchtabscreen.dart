@@ -1,3 +1,4 @@
+import 'package:barterit/views/screens/searchscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/widgets/searchitemwidget.dart';
@@ -56,7 +57,13 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                       validator: (val) => val!.isEmpty
                           ? "Please provide input for searching items"
                           : null,
-                      onFieldSubmitted: (v) {},
+                      onFieldSubmitted: (v) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (content) => SearchScreen(
+                                    user: widget.user, search: v)));
+                      },
                       maxLines: 1,
                       controller: _searchitemEditingController,
                       keyboardType: TextInputType.text,

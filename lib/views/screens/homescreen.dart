@@ -99,7 +99,8 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                 MaterialPageRoute(
                                     builder: (content) => ItemDetailScreen(
                                         user: widget.user,
-                                        useritem: singleitem))).then((value) {
+                                        useritem: singleitem,
+                                        page: "user"))).then((value) {
                               loaduseritems();
                             });
                           },
@@ -293,8 +294,9 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
         extractdata['items'].forEach((v) {
           singleItem = Item.fromJson(v);
           newItems.add(singleItem);
-          itemList.add(singleItem);
         });
+        newItems.shuffle();
+        itemList.addAll(newItems);
       }
 
       setState(() {

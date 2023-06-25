@@ -74,7 +74,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   MaterialPageRoute(
                                       builder: (content) => ItemDetailScreen(
                                           user: widget.user,
-                                          useritem: singleitem))).then((value) {
+                                          useritem: singleitem,
+                                          page: "user"))).then((value) {
                                 loadfavorites();
                               });
                             },

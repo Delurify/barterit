@@ -62,6 +62,7 @@ class _TraderScreenState extends State<TraderScreen> {
 
     return Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
               style: const TextStyle(color: Colors.white),
               widget.trader.name.toString()),
@@ -184,7 +185,9 @@ class _TraderScreenState extends State<TraderScreen> {
                                                       ItemDetailScreen(
                                                           user: widget.user,
                                                           useritem:
-                                                              singleitem)))
+                                                              singleitem
+                                                              ,
+                                          page: "trader")))
                                           .then((value) {
                                         itemList.clear();
                                         offset = 0;

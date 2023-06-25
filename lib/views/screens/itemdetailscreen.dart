@@ -14,9 +14,13 @@ import 'package:http/http.dart' as http;
 class ItemDetailScreen extends StatefulWidget {
   final User user;
   final Item useritem;
+  final String page;
 
   const ItemDetailScreen(
-      {super.key, required this.user, required this.useritem});
+      {super.key,
+      required this.user,
+      required this.useritem,
+      required this.page});
 
   @override
   State<ItemDetailScreen> createState() => _ItemDetailScreenState();
@@ -84,7 +88,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     SizedBox(width: screenWidth * 0.05),
                     GestureDetector(
                       onTap: () {
-                        if (singleUser.id != widget.user.id) {
+                        if (singleUser.id != widget.user.id &&
+                            widget.page == "user") {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
