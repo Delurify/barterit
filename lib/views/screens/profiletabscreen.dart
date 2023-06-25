@@ -169,14 +169,29 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                             ],
                           ),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(following.toString()),
-                            Text("Following",
-                                style: textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.grey))
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => FollowListScreen(
+                                        user: widget.user,
+                                        page: "following"))).then((value) {
+                              setState(() {
+                                loadfollowers();
+                                loadfollowing();
+                              });
+                            });
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(following.toString()),
+                              Text("Following",
+                                  style: textTheme.bodyMedium
+                                      ?.copyWith(color: Colors.grey))
+                            ],
+                          ),
                         ),
                       ]),
                 ),
@@ -742,6 +757,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         following = jsondata['follow'];
+      } else {
+        following = 0;
       }
       setState(() {});
     });

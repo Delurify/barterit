@@ -20,10 +20,12 @@ class FollowListScreen extends StatefulWidget {
 class _FollowListScreenState extends State<FollowListScreen>
     with SingleTickerProviderStateMixin {
   late double screenHeight, screenWidth;
-  late final TabController _tabController =
-      TabController(length: 2, vsync: this);
+  late final TabController _tabController = TabController(
+      length: 2, vsync: this, initialIndex: widget.page == "following" ? 1 : 0);
   int followers = 0;
   int following = 0;
+  bool isFollow = false;
+  List<String> unfollowed = <String>[];
   List<User> followerList = <User>[];
   List<User> followingList = <User>[];
 
@@ -52,6 +54,17 @@ class _FollowListScreenState extends State<FollowListScreen>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  // This is to check whether user change favorite, if yes, update to server
+                  if (unfollowed.isNotEmpty) {
+                    for (var element in unfollowed) {
+                      unfollow(element);
+                    }
+                  }
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
             iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               widget.user.name.toString(),
@@ -76,58 +89,71 @@ class _FollowListScreenState extends State<FollowListScreen>
                     if (followerList.isNotEmpty)
                       Expanded(
                         child: ListView.builder(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                             itemCount: followerList.length,
                             itemBuilder: (context, index) {
                               final user = followerList[index];
 
                               return GestureDetector(
                                 onTap: () {
+                                  if (unfollowed.isNotEmpty) {
+                                    for (var element in unfollowed) {
+                                      unfollow(element);
+                                    }
+                                  }
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (content) => TraderScreen(
                                               user: widget.user,
-                                              trader: user)));
+                                              trader: user))).then((value) {
+                                    followingList.clear();
+                                    loadfollowing();
+                                    loadfollowinglist();
+                                  });
                                 },
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 8),
-                                    CircleAvatar(
-                                        radius: 25,
-                                        backgroundImage: user.hasavatar
-                                                    .toString() ==
-                                                "1"
-                                            ? NetworkImage(
-                                                "${MyConfig().SERVER}/barterit/assets/avatars/${user.id}.png")
-                                            : NetworkImage(
-                                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                                    const SizedBox(width: 14),
-                                    Text(
-                                      user.name.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    Expanded(
-                                      child: Container(),
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            backgroundColor: isDark
-                                                ? Colors.grey[800]
-                                                : Colors.grey[300]),
-                                        onPressed: () {
-                                          removefollowDialog(index);
-                                        },
-                                        child: Text(
-                                          "Remove",
-                                          style: TextStyle(
-                                              color: isDark
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        )),
-                                    const SizedBox(width: 8),
-                                  ],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      CircleAvatar(
+                                          radius: 25,
+                                          backgroundImage: user
+                                                      .hasavatar
+                                                      .toString() ==
+                                                  "1"
+                                              ? NetworkImage(
+                                                  "${MyConfig().SERVER}/barterit/assets/avatars/${user.id}.png")
+                                              : NetworkImage(
+                                                  "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                                      const SizedBox(width: 14),
+                                      Text(
+                                        user.name.toString(),
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Expanded(
+                                        child: Container(),
+                                      ),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              elevation: 0,
+                                              backgroundColor: isDark
+                                                  ? Colors.grey[800]
+                                                  : Colors.grey[300]),
+                                          onPressed: () {
+                                            removefollowDialog(index);
+                                          },
+                                          child: Text(
+                                            "Remove",
+                                            style: TextStyle(
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                          )),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -148,51 +174,90 @@ class _FollowListScreenState extends State<FollowListScreen>
 
                               return GestureDetector(
                                 onTap: () {
+                                  if (unfollowed.isNotEmpty) {
+                                    for (var element in unfollowed) {
+                                      unfollow(element);
+                                    }
+                                  }
+
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (content) => TraderScreen(
                                               user: widget.user,
-                                              trader: user)));
+                                              trader: user))).then((value) {
+                                    followingList.clear();
+                                    loadfollowing();
+                                    loadfollowinglist();
+                                  });
                                 },
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 8),
-                                    CircleAvatar(
-                                        radius: 25,
-                                        backgroundImage: user.hasavatar
-                                                    .toString() ==
-                                                "1"
-                                            ? NetworkImage(
-                                                "${MyConfig().SERVER}/barterit/assets/avatars/${user.id}.png")
-                                            : NetworkImage(
-                                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
-                                    const SizedBox(width: 14),
-                                    Text(
-                                      user.name.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    Expanded(
-                                      child: Container(),
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            backgroundColor: isDark
-                                                ? Colors.grey[800]
-                                                : Colors.grey[300]),
-                                        onPressed: () {
-                                          removefollowDialog(index);
-                                        },
-                                        child: Text(
-                                          "Remove",
-                                          style: TextStyle(
-                                              color: isDark
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        )),
-                                    const SizedBox(width: 8),
-                                  ],
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      CircleAvatar(
+                                          radius: 25,
+                                          backgroundImage: user
+                                                      .hasavatar
+                                                      .toString() ==
+                                                  "1"
+                                              ? NetworkImage(
+                                                  "${MyConfig().SERVER}/barterit/assets/avatars/${user.id}.png")
+                                              : NetworkImage(
+                                                  "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                                      const SizedBox(width: 14),
+                                      Text(
+                                        user.name.toString(),
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Expanded(
+                                        child: Container(),
+                                      ),
+                                      if (!unfollowed
+                                          .contains(user.id.toString()))
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                backgroundColor: isDark
+                                                    ? Colors.grey[800]
+                                                    : Colors.grey[300]),
+                                            onPressed: () {
+                                              unfollowed
+                                                  .add(user.id.toString());
+                                              following--;
+                                              setState(() {});
+                                            },
+                                            child: Text(
+                                              "Following",
+                                              style: TextStyle(
+                                                  color: isDark
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                            )),
+                                      if (unfollowed
+                                          .contains(user.id.toString()))
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                backgroundColor: isDark
+                                                    ? Colors.white
+                                                    : Colors.orange),
+                                            onPressed: () {
+                                              unfollowed
+                                                  .remove(user.id.toString());
+                                              following++;
+                                              setState(() {});
+                                            },
+                                            child: Text("Follow",
+                                                style: TextStyle(
+                                                    color: isDark
+                                                        ? Colors.black
+                                                        : Colors.white))),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -328,5 +393,13 @@ class _FollowListScreenState extends State<FollowListScreen>
       loadfollowerslist();
       setState(() {});
     });
+  }
+
+  void unfollow(String traderid) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/manage_follow.php"),
+        body: {
+          "deleteuserid": widget.user.id,
+          "deletetraderid": traderid,
+        });
   }
 }
