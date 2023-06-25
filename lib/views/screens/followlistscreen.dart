@@ -108,6 +108,7 @@ class _FollowListScreenState extends State<FollowListScreen>
                                               user: widget.user,
                                               trader: user))).then((value) {
                                     followingList.clear();
+                                    unfollowed.clear();
                                     loadfollowing();
                                     loadfollowinglist();
                                   });
@@ -187,8 +188,10 @@ class _FollowListScreenState extends State<FollowListScreen>
                                               user: widget.user,
                                               trader: user))).then((value) {
                                     followingList.clear();
+                                    unfollowed.clear();
                                     loadfollowing();
                                     loadfollowinglist();
+                                    setState(() {});
                                   });
                                 },
                                 child: Padding(
