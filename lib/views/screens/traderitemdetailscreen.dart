@@ -76,6 +76,13 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
               left: 0,
               child: IconButton(
                   onPressed: () {
+                    // This is to check whether user change favorite, if yes, update to server
+                    if (favorite == true && favorite != isFavorited) {
+                      addFavorite();
+                    }
+                    if (favorite == false && favorite != isFavorited) {
+                      removeFavorite();
+                    }
                     Navigator.of(context).pop(widget.useritem);
                   },
                   icon: const Icon(Icons.arrow_back)),
