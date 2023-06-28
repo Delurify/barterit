@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:barterit/views/screens/useritemdetailscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:http/http.dart' as http;
 
 import '../../myconfig.dart';
-import 'itemdetailscreen.dart';
+import 'traderitemdetailscreen.dart';
 import 'package:intl/intl.dart';
 
 import 'newtradescreen.dart';
@@ -94,16 +95,32 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                           onTap: () async {
                             Item singleitem =
                                 Item.fromJson(itemList[index].toJson());
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (content) => ItemDetailScreen(
-                                        user: widget.user,
-                                        useritem: singleitem,
-                                        page: "user"))).then((value) {
-                              itemList[index] = value;
-                              loaduseritems();
-                            });
+
+                            if (singleitem.userId == widget.user.id) {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (content) =>
+                                          UserItemDetailScreen(
+                                              user: widget.user,
+                                              useritem: singleitem,
+                                              page: "user"))).then((value) {
+                                itemList[index] = value;
+                                loaduseritems();
+                              });
+                            } else {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (content) =>
+                                          TraderItemDetailScreen(
+                                              user: widget.user,
+                                              useritem: singleitem,
+                                              page: "user"))).then((value) {
+                                itemList[index] = value;
+                                loaduseritems();
+                              });
+                            }
                           },
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,

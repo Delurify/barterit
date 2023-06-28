@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:barterit/views/screens/traderscreen.dart';
+import 'package:barterit/views/screens/useritemdetailscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -11,7 +12,7 @@ import '../../myconfig.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-import 'itemdetailscreen.dart';
+import 'traderitemdetailscreen.dart';
 
 class SearchScreen extends StatefulWidget {
   final User user;
@@ -183,16 +184,32 @@ class _SearchScreenState extends State<SearchScreen>
                               onTap: () async {
                                 Item singleitem =
                                     Item.fromJson(itemList[index].toJson());
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (content) => ItemDetailScreen(
-                                            user: widget.user,
-                                            useritem: singleitem,
-                                            page: "user"))).then((value) {
-                                  itemList[index] = value;
-                                  searchitems(_searchEditingController.text);
-                                });
+
+                                if (singleitem.userId == widget.user.id) {
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (content) =>
+                                              UserItemDetailScreen(
+                                                  user: widget.user,
+                                                  useritem: singleitem,
+                                                  page: "user"))).then((value) {
+                                    itemList[index] = value;
+                                    searchitems(_searchEditingController.text);
+                                  });
+                                } else {
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (content) =>
+                                              TraderItemDetailScreen(
+                                                  user: widget.user,
+                                                  useritem: singleitem,
+                                                  page: "user"))).then((value) {
+                                    itemList[index] = value;
+                                    searchitems(_searchEditingController.text);
+                                  });
+                                }
                               },
                               child: Column(
                                   crossAxisAlignment:

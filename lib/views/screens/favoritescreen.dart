@@ -8,7 +8,7 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:http/http.dart' as http;
 
 import '../../myconfig.dart';
-import 'itemdetailscreen.dart';
+import 'traderitemdetailscreen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   final User user;
@@ -72,7 +72,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (content) => ItemDetailScreen(
+                                      builder: (content) => TraderItemDetailScreen(
                                           user: widget.user,
                                           useritem: singleitem,
                                           page: "user"))).then((value) {

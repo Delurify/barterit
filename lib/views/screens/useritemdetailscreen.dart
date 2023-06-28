@@ -11,22 +11,22 @@ import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:http/http.dart' as http;
 
-class ItemDetailScreen extends StatefulWidget {
+class UserItemDetailScreen extends StatefulWidget {
   final User user;
   final Item useritem;
   final String page;
 
-  const ItemDetailScreen(
+  const UserItemDetailScreen(
       {super.key,
       required this.user,
       required this.useritem,
       required this.page});
 
   @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
+  State<UserItemDetailScreen> createState() => _UserItemDetailScreenState();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
+class _UserItemDetailScreenState extends State<UserItemDetailScreen> {
   @override
   void initState() {
     super.initState();

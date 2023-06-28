@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:barterit/views/experiment.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,7 +17,7 @@ import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
 import 'package:barterit/views/screens/favoritescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
-import 'package:barterit/views/screens/itemdetailscreen.dart';
+import 'package:barterit/views/screens/useritemdetailscreen.dart';
 import 'package:barterit/myconfig.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:barterit/main.dart';
@@ -290,7 +291,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (content) =>
-                                                    ItemDetailScreen(
+                                                    UserItemDetailScreen(
                                                         user: widget.user,
                                                         useritem: singleitem,
                                                         page: "user"))).then(
@@ -537,7 +538,14 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   void onSelected(BuildContext context, int item) async {
     switch (item) {
       case 0:
-        print('Clicked Profile');
+        Navigator.push(context,
+                MaterialPageRoute(builder: (content) => Experiment(user: widget.user, useritem: itemList[0], page: "",)))
+            .then((value) {
+          setState(() {
+            loadfollowers();
+            loadfollowing();
+          });
+        });
 
         break;
       case 1:

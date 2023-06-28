@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../myconfig.dart';
-import 'itemdetailscreen.dart';
+import 'traderitemdetailscreen.dart';
 
 class TraderScreen extends StatefulWidget {
   final User user;
@@ -182,7 +182,7 @@ class _TraderScreenState extends State<TraderScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (content) =>
-                                                      ItemDetailScreen(
+                                                      TraderItemDetailScreen(
                                                           user: widget.user,
                                                           useritem:
                                                               singleitem
