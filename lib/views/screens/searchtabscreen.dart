@@ -91,17 +91,36 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Electronic Devices")));
+                          },
                           child: const SearchItemWidget(Colors.blue,
                               Icons.devices, "Electronic Devices")),
                       InkWell(
                           onTap: () {
-                            print("Hello");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Vehicles")));
                           },
                           child: SearchItemWidget(Colors.purple.shade300,
                               Icons.car_rental, "Vehicles")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Furniture & Accessories")));
+                          },
                           child: const SearchItemWidget(Colors.orange,
                               Icons.table_bar, "Furniture & Accessories"))
                     ],
@@ -114,15 +133,36 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Books & Stationery")));
+                          },
                           child: SearchItemWidget(Colors.green.shade300,
                               Icons.book, "Books & Stationery")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Home Appliances")));
+                          },
                           child: const SearchItemWidget(
                               Colors.grey, Icons.blender, "Home Appliances")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Fashion & Cosmetics")));
+                          },
                           child: SearchItemWidget(Colors.pinkAccent.shade100,
                               Icons.face, "Fashion & Cosmetics"))
                     ],
@@ -135,15 +175,36 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Games & Consoles")));
+                          },
                           child: const SearchItemWidget(Colors.greenAccent,
                               Icons.games, "Video Game \n& Consoles")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "For Children")));
+                          },
                           child: SearchItemWidget(Colors.orange.shade300,
                               Icons.child_care, "For Children")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Musical Instruments")));
+                          },
                           child: SearchItemWidget(Colors.blue.shade300,
                               Icons.music_note, "Musical Instruments"))
                     ],
@@ -156,15 +217,34 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user, search: "Sports")));
+                          },
                           child: SearchItemWidget(
                               Colors.red.shade200, Icons.run_circle, "Sports")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user,
+                                        search: "Food & Nutrition")));
+                          },
                           child: SearchItemWidget(Colors.red.shade300,
                               Icons.food_bank, "Food & Nutrition")),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => SearchScreen(
+                                        user: widget.user, search: "Other")));
+                          },
                           child: const SearchItemWidget(
                               Colors.black38, Icons.question_mark, "Other"))
                     ],

@@ -24,7 +24,7 @@ if(isset($_POST['userid'])){
     $search = $_POST['search'];
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];
-    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE `item_name` LIKE '%$search%' LIMIT $limit OFFSET $offset";
+    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE `item_name` LIKE '%$search%' OR `item_type` LIKE '%$search%' LIMIT $limit OFFSET $offset";
 
     
 } else{

@@ -24,7 +24,10 @@ include_once("dbconnect.php");
 if(isset($_POST['user_id'])){
     $userid = $_POST['user_id'];
     $sqllogin = "SELECT `user_id`, `user_name`, `user_phone`, `user_hasavatar` FROM `tbl_users` WHERE user_id = '$userid'";
-}else{
+} else if(isset($_POST['search'])){
+    $search = $_POST['search'];
+    $sqllogin = "SELECT `user_id`, `user_name`, `user_phone`, `user_hasavatar` FROM `tbl_users` WHERE user_name LIKE '%$search%'";
+} else{
     $sqllogin = "SELECT * FROM `tbl_users` WHERE user_email = '$email' AND user_password =++ '$pass'";
 }
 
@@ -37,7 +40,7 @@ if($result -> num_rows > 0){
 		$userarray['phone'] = $row['user_phone'];
         $userarray['hasavatar'] = $row['user_hasavatar'];
 
-        if(isset($_POST['user_id'])){
+        if(isset($_POST['user_id']) || isset($_POST['search'])){
             $userarray['email'] = "na";
             $userarray['password'] = "na";
             $userarray['otp'] = "na";
