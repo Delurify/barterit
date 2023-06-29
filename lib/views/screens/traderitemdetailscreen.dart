@@ -32,7 +32,9 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
   int selectedTabIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
   final df = DateFormat('dd-MM-yyyy');
+  final df2 = DateFormat('d MMMM');
   List<String> barterTo = [];
+  List<Item> itemList = [];
   String result = "";
   User singleUser = User();
 
@@ -46,6 +48,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
     super.initState();
     loadUserItem();
     loadFavorite();
+    loadBarter();
 
     // this is to seperate the barterto string to List
     String filter =
@@ -459,9 +462,406 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.green,
-                ),
+                if (itemList.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              screenWidth * 0.08, 24, screenWidth * 0.08, 0),
+                          child: Text(
+                            "You don't have any product that matches with this product. This product matches with:\n",
+                            style: TextStyle(
+                              color: isDark ? Colors.grey : Colors.grey[600],
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            child: ListView.builder(
+                                itemCount: barterTo.length,
+                                padding: EdgeInsets.fromLTRB(screenWidth * 0.08,
+                                    0, screenWidth * 0.08, 0),
+                                itemBuilder: (context, index) {
+                                  return Text(
+                                    "- ${barterTo[index]}",
+                                    style: const TextStyle(
+                                        color: Colors.orange,
+                                        height: 1.5,
+                                        fontSize: 16),
+                                  );
+                                })),
+                      ],
+                    ),
+                  ),
+                if (itemList.isNotEmpty)
+                  Center(
+                      child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                width: screenWidth * 0.3,
+                                height: screenWidth * 0.4,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    widget.useritem.itemImageCount == "1"
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            child: CachedNetworkImage(
+                                              width: screenWidth * 0.3,
+                                              height: screenWidth * 0.3,
+                                              fit: BoxFit.cover,
+                                              imageUrl:
+                                                  "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-1.png",
+                                              placeholder: (context, url) =>
+                                                  const LinearProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
+                                          )
+                                        : widget.useritem.itemImageCount == "2"
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: ImageSlideshow(
+                                                    width: screenWidth * 0.3,
+                                                    height: screenWidth * 0.4,
+                                                    initialPage: 0,
+                                                    children: [
+                                                      Image.network(
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-1.png",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      Image.network(
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-2.png",
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    ]),
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: ImageSlideshow(
+                                                    width: screenWidth * 0.3,
+                                                    height: screenWidth * 0.4,
+                                                    initialPage: 0,
+                                                    children: [
+                                                      Image.network(
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-1.png",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      Image.network(
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-2.png",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      Image.network(
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-3.png",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ]),
+                                              ),
+                                    Expanded(child: Container()),
+                                  ],
+                                )),
+                          ),
+                          SizedBox(width: screenWidth * 0.01),
+                          SizedBox(
+                            width: screenWidth * 0.60,
+                            height: screenWidth * 0.4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.useritem.itemName.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  widget.useritem.itemDesc.toString(),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: isDark
+                                          ? Colors.grey[400]
+                                          : Colors.grey[700]),
+                                  softWrap: true,
+                                  maxLines: 4,
+                                ),
+                                Expanded(
+                                  child: Container(),
+                                ),
+                                Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            df2.format(DateTime.parse(widget
+                                                .useritem.itemDate
+                                                .toString())),
+                                            style: const TextStyle(
+                                                color: Colors.orange)),
+                                        Text(
+                                          widget.useritem.itemLocality
+                                              .toString(),
+                                          softWrap: true,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? Colors.grey
+                                                  : Colors.grey[700]),
+                                        )
+                                      ],
+                                    ),
+                                    Expanded(child: Container()),
+                                    Container(
+                                      width: screenWidth * 0.24,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), // Adjust the border radius as needed
+                                        color: isDark
+                                            ? Colors.black54
+                                            : Colors.grey[
+                                                300], // Background color of the rounded rectangle
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                          5.0), // Adjust the padding as needed
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            10.0), // Same border radius as the container
+                                        child: Text(
+                                            'RM ${widget.useritem.itemPrice.toString()}',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(
+                        indent: 8,
+                        endIndent: 8,
+                        height: 3,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: itemList.length,
+                            itemBuilder: (context, index) {
+                              final item = itemList[index];
+
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: isDark
+                                                      ? const Color.fromARGB(
+                                                          255, 173, 96, 33)
+                                                      : Colors.orangeAccent,
+                                                  width: 2),
+                                            ),
+                                            width: screenWidth * 0.25,
+                                            height: screenWidth * 0.35,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                    height: 24,
+                                                    width: screenWidth * 0.3,
+                                                    color: isDark
+                                                        ? const Color.fromARGB(
+                                                            255, 173, 96, 33)
+                                                        : Colors.orangeAccent,
+                                                    child: const Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "Take",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    )),
+                                                Expanded(child: Container()),
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: CachedNetworkImage(
+                                                    width: screenWidth * 0.25,
+                                                    height: screenWidth * 0.25,
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${widget.useritem.itemId}-1.png",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const LinearProgressIndicator(),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      const Icon(Icons.multiple_stop),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: isDark
+                                                      ? const Color.fromARGB(
+                                                          255, 34, 76, 110)
+                                                      : Colors.blue,
+                                                  width: 2),
+                                            ),
+                                            width: screenWidth * 0.25,
+                                            height: screenWidth * 0.35,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                    height: 24,
+                                                    width: screenWidth * 0.3,
+                                                    color: isDark
+                                                        ? const Color.fromARGB(
+                                                            255, 34, 76, 110)
+                                                        : Colors.blue,
+                                                    child: const Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "Give",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    )),
+                                                Expanded(child: Container()),
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: CachedNetworkImage(
+                                                    width: screenWidth * 0.25,
+                                                    height: screenWidth * 0.25,
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${item.itemId}-1.png",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const LinearProgressIndicator(),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth * 0.03,
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth * 0.30,
+                                        height: screenWidth * 0.35,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.itemName.toString(),
+                                              maxLines: 2,
+                                              style:
+                                                  const TextStyle(fontSize: 15),
+                                            ),
+                                            Expanded(
+                                              child: Container(),
+                                            ),
+                                            Text(
+                                              "RM ${item.itemPrice.toString()}",
+                                              maxLines: 2,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.orange),
+                                            ),
+                                            Text(
+                                              "Qty: ${item.itemQty.toString()}",
+                                              softWrap: true,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: isDark
+                                                      ? Colors.grey
+                                                      : Colors.grey[700]),
+                                            ),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: isDark
+                                                      ? const Color.fromARGB(
+                                                          255, 190, 101, 27)
+                                                      : Colors.orangeAccent,
+                                                ),
+                                                onPressed: () {},
+                                                child: Text("Send Offer",
+                                                    style: TextStyle(
+                                                        color: isDark
+                                                            ? const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                240,
+                                                                222,
+                                                                194)
+                                                            : Colors.white)))
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const Divider(
+                                    indent: 8,
+                                    endIndent: 8,
+                                  ),
+                                ],
+                              );
+                            }),
+                      )
+                    ],
+                  ))
               ],
             ),
           ),
@@ -512,11 +912,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
           "item_id": widget.useritem.itemId,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {
-        print("favorite added successfully");
-      } else {
-        print("failed to add favorite");
-      }
+      if (jsondata['status'] == "success") {}
       setState(() {});
     });
   }
@@ -530,12 +926,25 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
           "item_id": widget.useritem.itemId,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {
-        print("favorite deleted successfully");
-      } else {
-        print("failed to delete favorite");
-      }
+      if (jsondata['status'] == "success") {}
       setState(() {});
+    });
+  }
+
+// Load number of items available for trade
+  void loadBarter() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_barterto.php"),
+        body: {
+          "barterto": widget.useritem.itemBarterto,
+          "userid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['items'].forEach((v) {
+          itemList.add(Item.fromJson(v));
+        });
+      }
     });
   }
 }

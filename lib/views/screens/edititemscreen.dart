@@ -118,6 +118,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                        maxLength: 20,
                         textInputAction: TextInputAction.next,
                         validator: (val) => val!.isEmpty || (val.length < 3)
                             ? "Item name must be longer than 3"
@@ -208,7 +209,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                         controller: _itempriceEditingController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Price per item',
+                            labelText: 'Total Price',
                             labelStyle: TextStyle(),
                             icon: Icon(Icons.currency_pound),
                             focusedBorder: OutlineInputBorder(

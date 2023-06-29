@@ -660,7 +660,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
+
+        // get number of post under the user
         posts = jsondata['posts'];
+
+        // assign the items into itemList as objects
         extractdata['items'].forEach((v) {
           itemList.add(Item.fromJson(v));
         });
