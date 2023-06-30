@@ -19,7 +19,7 @@ $bartertoList = explode(", ", $barterto);
 // Now, construct a dynamic OR conditions
 $conditions = array();
 foreach($bartertoList as $itemtype){
-    $condition = "item_type = '" . $itemtype . "'";
+    $condition = "'" . $itemtype . "'";
     
     // Can use this as well:
     // $conditions[] = $condition;
@@ -27,10 +27,10 @@ foreach($bartertoList as $itemtype){
 }
 
 // Combining the OR conditions using implode()
-$conditionString = implode(" OR ", $conditions);
+$conditionString = implode(", ", $conditions);
 
 // Construct sql query
-$sqlloadusers = "SELECT * FROM tbl_items WHERE user_id = '$userid' AND " . $conditionString;
+$sqlloadusers = "SELECT * FROM tbl_items WHERE user_id = '$userid' AND item_type IN (" . $conditionString . ")";
 
 
 $result = $conn->query($sqlloadusers);

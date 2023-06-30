@@ -69,7 +69,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   List<String> itemList = [
     "Electronic Devices",
     "Vehicles",
-    "Furniture",
+    "Furniture & Accessories",
     "Books & Stationery",
     "Home Appliances",
     "Fashion & Cosmetics",

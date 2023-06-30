@@ -156,14 +156,13 @@ class _TraderScreenState extends State<TraderScreen> {
                   endIndent: 8,
                   color: isDark ? Colors.grey[400] : Colors.black),
               const SizedBox(height: 8),
-              Container(
+              Expanded(
                   child: itemList.isEmpty
                       ? const Text(
                           style: TextStyle(color: Colors.grey, fontSize: 20),
                           "No items added for barter :(")
                       : GridView.count(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           childAspectRatio: 5 / 6,
                           crossAxisCount: axiscount,
                           children: List.generate(
@@ -184,10 +183,8 @@ class _TraderScreenState extends State<TraderScreen> {
                                                   builder: (content) =>
                                                       TraderItemDetailScreen(
                                                           user: widget.user,
-                                                          useritem:
-                                                              singleitem
-                                                              ,
-                                          page: "trader")))
+                                                          useritem: singleitem,
+                                                          page: "trader")))
                                           .then((value) {
                                         itemList.clear();
                                         offset = 0;

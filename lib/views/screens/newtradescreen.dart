@@ -75,7 +75,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   List<String> itemList = [
     "Electronic Devices",
     "Vehicles",
-    "Furniture",
+    "Furniture & Accessories",
     "Books & Stationery",
     "Home Appliances",
     "Fashion & Cosmetics",
@@ -212,9 +212,8 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                     TextFormField(
                         maxLength: 5,
                         textInputAction: TextInputAction.next,
-                        validator: (val) => val!.isEmpty || (val.length < 3)
-                            ? "Price cannot be empty"
-                            : null,
+                        validator: (val) =>
+                            val!.isEmpty ? "Price cannot be empty" : null,
                         onFieldSubmitted: (v) {},
                         controller: _itempriceEditingController,
                         keyboardType: TextInputType.number,
@@ -507,7 +506,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
   Future<void> _selectFromCamera(index) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
       maxHeight: 800,
       maxWidth: 800,
     );

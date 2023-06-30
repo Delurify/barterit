@@ -660,6 +660,15 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                         indent: 8,
                         endIndent: 8,
                         height: 3,
+                        thickness: 2,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 3, 8, 0),
+                        child: Text(
+                            "It is advised to use similar item value for barter",
+                            style: TextStyle(
+                                color:
+                                    isDark ? Colors.grey : Colors.grey[700])),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -853,9 +862,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                                     ],
                                   ),
                                   const Divider(
-                                    indent: 8,
-                                    endIndent: 8,
-                                  ),
+                                      indent: 8, endIndent: 8, thickness: 1),
                                 ],
                               );
                             }),
