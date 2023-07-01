@@ -326,7 +326,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     if (isLoading) return;
     isLoading = true;
 
-    if (interest.list.isEmpty) {
+    if (interest.list.length < 5) {
       http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
           body: {
             "offset": offset.toString(),

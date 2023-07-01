@@ -8,6 +8,8 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 
 import '../../models/item.dart';
 import '../../models/user.dart';
+import 'package:barterit/models/interest.dart';
+import 'package:barterit/models/sharedpref.dart';
 import '../../myconfig.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +29,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen>
     with SingleTickerProviderStateMixin {
   late double screenWidth, screenHeight;
+  late int axiscount;
   late Item singleItem;
   late TabController tabController =
       TabController(length: 2, vsync: this, initialIndex: 0);
@@ -35,10 +38,11 @@ class _SearchScreenState extends State<SearchScreen>
   List<User> userList = <User>[];
   int offset = 0;
   int limit = 10;
-  late int axiscount;
   bool firstLoad = true;
   bool isLoading = false;
   bool hasMore = true;
+  Interest interest = Interest();
+  SharedPref sharedPref = SharedPref();
   final df = DateFormat('d MMM');
   final controller = ScrollController();
   final FocusNode _focusNode = FocusNode();
@@ -52,6 +56,7 @@ class _SearchScreenState extends State<SearchScreen>
     _searchEditingController.text = widget.search;
     searchitems(widget.search);
     searchUsers(widget.search);
+    loadSharedPrefs();
   }
 
   @override
@@ -184,6 +189,12 @@ class _SearchScreenState extends State<SearchScreen>
                               onTap: () async {
                                 Item singleitem =
                                     Item.fromJson(itemList[index].toJson());
+
+                                // Add as interest for future display
+                                interest.addInterest(
+                                    singleitem.itemType.toString());
+                                sharedPref.save(
+                                    widget.user.id.toString(), interest);
 
                                 if (singleitem.userId == widget.user.id) {
                                   await Navigator.push(
@@ -506,5 +517,14 @@ class _SearchScreenState extends State<SearchScreen>
       }
       setState(() {});
     });
+  }
+
+  void loadSharedPrefs() async {
+    // Load user id to look for their search history
+    // which is their item interest
+    interest =
+        Interest.fromJson(await sharedPref.read(widget.user.id.toString()));
+
+    interest.initializeList();
   }
 }
