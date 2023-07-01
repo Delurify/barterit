@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
+import 'package:barterit/models/interest.dart';
+import 'package:barterit/models/sharedpref.dart';
 import 'searchtabscreen.dart';
 import 'homescreen.dart';
 import 'barterscreen.dart';
@@ -19,6 +21,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  Interest interestLoad = Interest();
+  Interest interestSave = Interest();
+  SharedPref sharedPref = SharedPref();
   late List<Widget> tabchildren;
   int _currentIndex = 1;
   String maintitle = "Search";
@@ -26,10 +31,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    loadSharedPrefs();
+    // sharedPref.remove(widget.user.id.toString());
     tabchildren = [
-      HomeTabScreen(
-        user: widget.user,
-      ),
+      HomeTabScreen(user: widget.user),
       SearchTabScreen(user: widget.user),
       BarterTabScreen(user: widget.user),
       MessagesTabScreen(user: widget.user),
@@ -101,5 +106,18 @@ class _MainScreenState extends State<MainScreen> {
         maintitle = "Profile";
       }
     });
+  }
+
+  loadSharedPrefs() async {
+    try {
+      // Load user id to look for their search history
+      // which is their item interest
+      interestLoad =
+          Interest.fromJson(await sharedPref.read(widget.user.id.toString()));
+    } catch (Exception) {
+      // If the user is not found
+      interestSave.id = widget.user.id.toString();
+      sharedPref.save(widget.user.id.toString(), interestSave);
+    }
   }
 }

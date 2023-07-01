@@ -5,6 +5,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
+import 'package:barterit/models/interest.dart';
+import 'package:barterit/models/sharedpref.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,6 +26,8 @@ class HomeTabScreen extends StatefulWidget {
 
 class _HomeTabScreenState extends State<HomeTabScreen> {
   late double screenWidth, screenHeight;
+  Interest interest = Interest();
+  SharedPref sharedPref = SharedPref();
   List<Item> itemList = <Item>[];
   List<Item> newItems = <Item>[];
   late int axiscount;
@@ -41,6 +45,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     // TODO: implement initState
     super.initState();
     hasMore = true;
+    loadSharedPrefs();
     loaduseritems();
     controller.addListener(() {
       if (controller.position.maxScrollExtent == controller.offset) {
@@ -95,6 +100,12 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                           onTap: () async {
                             Item singleitem =
                                 Item.fromJson(itemList[index].toJson());
+
+                            // Add as interest for future display
+                            interest
+                                .addInterest(singleitem.itemType.toString());
+                            sharedPref.save(
+                                widget.user.id.toString(), interest);
 
                             if (singleitem.userId == widget.user.id) {
                               await Navigator.push(
@@ -293,38 +304,74 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     if (isLoading) return;
     isLoading = true;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
-        body: {
-          "offset": offset.toString(),
-          "limit": limit.toString(),
-        }).then((response) {
-      offset = offset + limit;
-      newItems.clear();
-      if (firstLoad) {
-        itemList.clear();
-        firstLoad = false;
-      }
-
-      print(response.body);
-      var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {
-        var extractdata = jsondata['data'];
-        extractdata['items'].forEach((v) {
-          singleItem = Item.fromJson(v);
-          newItems.add(singleItem);
-        });
-        newItems.shuffle();
-        itemList.addAll(newItems);
-      }
-
-      setState(() {
-        isLoading = false;
-
-        if (newItems.length < limit) {
-          hasMore = false;
+    if (interest.list.isEmpty) {
+      http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
+          body: {
+            "offset": offset.toString(),
+            "limit": limit.toString(),
+          }).then((response) {
+        offset = offset + limit;
+        newItems.clear();
+        if (firstLoad) {
+          itemList.clear();
+          firstLoad = false;
         }
+
+        print(response.body);
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['items'].forEach((v) {
+            singleItem = Item.fromJson(v);
+            newItems.add(singleItem);
+          });
+          newItems.shuffle();
+          itemList.addAll(newItems);
+        }
+
+        setState(() {
+          isLoading = false;
+
+          if (newItems.length < limit) {
+            hasMore = false;
+          }
+        });
       });
-    });
+    } else {
+      http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
+          body: {
+            "offset": offset.toString(),
+            "limit": limit.toString(),
+            "interest": interest.ranking().toString(),
+          }).then((response) {
+        offset = offset + limit;
+        newItems.clear();
+        if (firstLoad) {
+          itemList.clear();
+          firstLoad = false;
+        }
+
+        print(response.body);
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['items'].forEach((v) {
+            singleItem = Item.fromJson(v);
+            newItems.add(singleItem);
+          });
+          newItems.shuffle();
+          itemList.addAll(newItems);
+        }
+
+        setState(() {
+          isLoading = false;
+
+          if (newItems.length < limit) {
+            hasMore = false;
+          }
+        });
+      });
+    }
   }
 
   Future refresh() async {
@@ -339,4 +386,13 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   }
 
   void updateitem(int index) {}
+
+  void loadSharedPrefs() async {
+    // Load user id to look for their search history
+    // which is their item interest
+    interest =
+        Interest.fromJson(await sharedPref.read(widget.user.id.toString()));
+
+    interest.initializeList();
+  }
 }
