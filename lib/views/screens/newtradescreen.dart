@@ -128,7 +128,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                        maxLength: 20,
+                        maxLength: 30,
                         textInputAction: TextInputAction.next,
                         validator: (val) => val!.isEmpty || (val.length < 3)
                             ? "Item name must be longer than 3"

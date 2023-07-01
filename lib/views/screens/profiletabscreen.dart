@@ -310,6 +310,24 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                                             .itemImageCount ==
                                                         "1"
                                                     ? CachedNetworkImage(
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                colorFilter: const ColorFilter
+                                                                        .mode(
+                                                                    Colors
+                                                                        .white,
+                                                                    BlendMode
+                                                                        .colorBurn)),
+                                                          ),
+                                                        ),
                                                         width: screenWidth,
                                                         fit: BoxFit.cover,
                                                         imageUrl:
@@ -538,9 +556,14 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   void onSelected(BuildContext context, int item) async {
     switch (item) {
       case 0:
-        Navigator.push(context,
-                MaterialPageRoute(builder: (content) => Experiment(user: widget.user, useritem: itemList[0], page: "",)))
-            .then((value) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (content) => Experiment(
+                      user: widget.user,
+                      useritem: itemList[0],
+                      page: "",
+                    ))).then((value) {
           setState(() {
             loadfollowers();
             loadfollowing();

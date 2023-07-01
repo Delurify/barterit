@@ -139,6 +139,20 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                 Expanded(
                                     child: itemList[index].itemImageCount == "1"
                                         ? CachedNetworkImage(
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                    colorFilter:
+                                                        const ColorFilter.mode(
+                                                            Colors.white,
+                                                            BlendMode
+                                                                .colorBurn)),
+                                              ),
+                                            ),
                                             width: screenWidth,
                                             fit: BoxFit.cover,
                                             imageUrl:
@@ -151,6 +165,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                           )
                                         : itemList[index].itemImageCount == "2"
                                             ? ImageSlideshow(
+                                              
                                                 width: screenWidth,
                                                 initialPage: 0,
                                                 children: [
@@ -265,7 +280,14 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                           child: Center(
                               child: hasMore
                                   ? const CircularProgressIndicator()
-                                  : null));
+                                  : Text(
+                                      "Looks like you've reached the end",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.grey
+                                              : Colors.grey[700]),
+                                    )));
                     }
                   },
                 )),
