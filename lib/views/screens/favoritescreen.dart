@@ -27,7 +27,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadfavorites();
   }
@@ -72,10 +71,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (content) => TraderItemDetailScreen(
-                                          user: widget.user,
-                                          useritem: singleitem,
-                                          page: "user"))).then((value) {
+                                      builder: (content) =>
+                                          TraderItemDetailScreen(
+                                              user: widget.user,
+                                              useritem: singleitem,
+                                              page: "user"))).then((value) {
                                 loadfavorites();
                               });
                             },

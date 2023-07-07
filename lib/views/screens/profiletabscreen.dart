@@ -119,20 +119,54 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
               child: Column(children: [
                 Container(
                   padding: const EdgeInsets.all(8),
-                  height: screenHeight * 0.15,
+                  height: screenHeight * 0.18,
                   width: screenWidth,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // Profile picture
-                        CircleAvatar(
-                            radius: screenHeight * 0.05,
-                            backgroundImage: widget.user.hasavatar.toString() ==
-                                    "1"
-                                ? NetworkImage(
-                                    "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                                : NetworkImage(
-                                    "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                        Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            // Profile picture
+                            CircleAvatar(
+                                radius: screenHeight * 0.05,
+                                backgroundImage: widget.user.hasavatar
+                                            .toString() ==
+                                        "1"
+                                    ? NetworkImage(
+                                        "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                                    : NetworkImage(
+                                        "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (content) => FollowListScreen(
+                                            user: widget.user,
+                                            page: "follower"))).then((value) {
+                                  setState(() {
+                                    loadfollowers();
+                                    loadfollowing();
+                                  });
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.add_circle,
+                                    color: Colors.orange,
+                                  ),
+                                  Text(
+                                    "  ${widget.user.credit.toString()}",
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

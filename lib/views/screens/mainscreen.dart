@@ -110,6 +110,7 @@ class _MainScreenState extends State<MainScreen> {
 
   loadSharedPrefs() async {
     try {
+      // sharedPref.remove(widget.user.id.toString());
       // Load user id to look for their search history
       // which is their item interest
       interestLoad =

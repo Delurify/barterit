@@ -5,7 +5,7 @@ class MyConfig {
   // String SERVER = "http://192.168.110.250";
 
   //Maybank wifi ip address
-  // String SERVER = "http://10.19.117.168";
+  // String SERVER = "http://10.19.112.107";
 
   // Home wifi address
   String SERVER = "http://192.168.0.175";
