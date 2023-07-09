@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:barterit/views/screens/traderitemdetailscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +24,20 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
   int selectedTabIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
   List<Offer> sentOfferList = [];
+  List<Offer> receivedOfferList = [];
+
+  // This is for received offer item list
+  List<String> userItemIdList = [];
+
+  // This is for sent offer item list
   List<String> itemIdList = [];
   Map<String, Item> itemMap = {};
+  Map<String, int> countMap = {};
 
   @override
   void initState() {
-    loadOfferList();
-    loadItemIdList();
+    loadSentOfferList();
+    loadReceivedOfferList();
     super.initState();
   }
 
@@ -150,20 +158,44 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                     ),
                                                   )),
                                               Expanded(child: Container()),
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                child: CachedNetworkImage(
-                                                  width: screenWidth * 0.25,
-                                                  height: screenWidth * 0.25,
-                                                  fit: BoxFit.cover,
-                                                  imageUrl:
-                                                      "${MyConfig().SERVER}/barterit/assets/items/${sentOfferList[index].takeId}-1.png",
-                                                  placeholder: (context, url) =>
-                                                      const LinearProgressIndicator(),
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Icon(Icons.error),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  Item item = itemMap[
+                                                          sentOfferList[index]
+                                                              .takeId] ??
+                                                      Item();
+
+                                                  await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (content) =>
+                                                              TraderItemDetailScreen(
+                                                                  user: widget
+                                                                      .user,
+                                                                  useritem:
+                                                                      item,
+                                                                  page:
+                                                                      "user"))).then(
+                                                      (value) {
+                                                    refreshSentOffer();
+                                                  });
+                                                },
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: CachedNetworkImage(
+                                                    width: screenWidth * 0.25,
+                                                    height: screenWidth * 0.25,
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        "${MyConfig().SERVER}/barterit/assets/items/${sentOfferList[index].takeId}-1.png",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const LinearProgressIndicator(),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -297,7 +329,42 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                     )
                   ],
                 )),
-              const Placeholder(),
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: screenHeight * 0.05),
+                    if (receivedOfferList.isEmpty)
+                      const Column(
+                        children: [
+                          Text(
+                            "No items Found",
+                            style: TextStyle(fontSize: 20, height: 1.5),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The list is currently empty",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    if (receivedOfferList.isNotEmpty)
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: receivedOfferList.length,
+                              padding: EdgeInsets.fromLTRB(
+                                  screenWidth * 0.08, 0, screenWidth * 0.08, 0),
+                              itemBuilder: (context, index) {
+                                return Text(
+                                  "- ${receivedOfferList[index].giveId}",
+                                  style: const TextStyle(
+                                      color: Colors.orange,
+                                      height: 1.5,
+                                      fontSize: 16),
+                                );
+                              })),
+                  ],
+                ),
+              ),
               const Placeholder(),
             ],
           ),
@@ -306,24 +373,61 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     ));
   }
 
-  void removeOfferDialog(int index) {}
+  void removeOfferDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Remove Offer?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                deleteOffer(sentOfferList[index].giveId.toString(),
+                    sentOfferList[index].takeId.toString());
+                sentOfferList.remove(sentOfferList[index]);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void insertOffer(String string) {}
 
-  void loadOfferList() {
+  Future loadSentOfferList() async {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_offer.php"),
         body: {
           "userid": widget.user.id,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      print(jsondata);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
         extractdata['offers'].forEach((v) {
           sentOfferList.add(Offer.fromJson(v));
         });
-        print(sentOfferList[2].giveId);
       }
+      loadItemIdList();
     });
   }
 
@@ -346,14 +450,60 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
         body: {"itemIdList": itemIdList.toString()}).then((response) {
       var jsondata = jsonDecode(response.body);
-      print(jsondata);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
-        extractdata['Items'].forEach((v) {
+        extractdata['items'].forEach((v) {
           Item item = Item.fromJson(v);
           itemMap[item.itemId.toString()] = item;
         });
       }
+      setState(() {});
     });
+  }
+
+  void refreshSentOffer() {
+    sentOfferList.clear();
+    itemIdList.clear();
+    itemMap.clear();
+    loadSentOfferList();
+  }
+
+  void deleteOffer(String giveId, String takeId) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/delete_offer.php"),
+        body: {
+          "giveid": giveId,
+          "takeid": takeId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {}
+      setState(() {});
+    });
+  }
+
+  void loadReceivedOfferList() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_offer.php"),
+        body: {
+          "useridreceived": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['offers'].forEach((v) {
+          receivedOfferList.add(Offer.fromJson(v));
+        });
+        countOffers();
+      }
+    });
+  }
+
+  void countOffers() {
+    // Count the occurences of each element
+    for (Offer element in receivedOfferList) {
+      // See if the element exists in the map,
+      // if not, set it to 0 and add it by one
+      countMap[element.giveId.toString()] =
+          (countMap[element.giveId.toString()] ?? 0) + 1;
+    }
+    print(countMap["60"]);
   }
 }

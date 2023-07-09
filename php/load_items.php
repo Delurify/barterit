@@ -71,7 +71,7 @@ if (isset($_POST['userid'])) {
     $conditionString = implode(", ", $conditions);
 
     // Construct sql query
-    $sqlloadusers = "SELECT * FROM tbl_items WHERE item_id IN (" . $conditionString . ")";
+    $sqlloaditems = "SELECT * FROM tbl_items WHERE item_id IN (" . $conditionString . ")";
 
 } else {
     $offset = $_POST['offset'];

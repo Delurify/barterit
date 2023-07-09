@@ -18,6 +18,9 @@ if (isset($_POST['takeid']) && isset($_POST['userid'])) {
 } else if (isset($_POST['userid'])) {
     $userid = $_POST['userid'];
     $sqllogin = "SELECT * FROM `tbl_offers` INNER JOIN `tbl_items` ON `tbl_offers`.`offer_giveid` = `tbl_items`.`item_id` WHERE `user_id` = '$userid'";
+} else if (isset($_POST['useridreceived'])) {
+    $userid = $_POST['useridreceived'];
+    $sqllogin = "SELECT * FROM `tbl_offers` INNER JOIN `tbl_items` ON `tbl_offers`.`offer_takeid` = `tbl_items`.`item_id` WHERE `user_id` = '$userid'";
 }
 
 $result = $conn->query($sqllogin);
@@ -29,7 +32,7 @@ if ($result->num_rows > 0) {
         }
         $response = array('status' => 'success', 'data' => $offerlist);
         sendJsonResponse($response);
-    } else if (isset($_POST['userid'])) {
+    } else if (isset($_POST['userid']) || isset($_POST['useridreceived'])) {
         $offers['offers'] = array();
         while ($row = $result->fetch_assoc()) {
             $offerlist = array();
