@@ -13,21 +13,23 @@ if (isset($_POST['userid'])) {
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid' LIMIT $limit OFFSET $offset";
+
 } else if (isset($_POST['itemid'])) {
     $itemid = $_POST['itemid'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE item_id = '$itemid'";
+
 } else if (isset($_POST['favorite_userid'])) {
     $userid = $_POST['favorite_userid'];
     $sqlloaditems = "SELECT `tbl_items`.`user_id`, `tbl_items`.`item_id`, `tbl_items`.`item_name`, `tbl_items`.`item_price`, `tbl_items`.`item_type`, `tbl_items`.`item_imagecount`, `tbl_items`.`item_desc`, `tbl_items`.`item_qty`, `tbl_items`.`item_lat`, `tbl_items`.`item_long`, `tbl_items`.`item_state`, `tbl_items`.`item_locality`, `tbl_items`.`item_datereg`, `tbl_items`.`item_barterto` 
                     FROM `tbl_items` 
                     INNER JOIN `tbl_favorites` ON `tbl_favorites`.`item_id` = `tbl_items`.`item_id` 
                     WHERE `tbl_favorites`.`user_id` = '$userid'";
+
 } else if (isset($_POST['search'])) {
     $search = $_POST['search'];
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];
     $sqlloaditems = "SELECT * FROM `tbl_items` WHERE `item_name` LIKE '%$search%' OR `item_type` LIKE '%$search%'OR `item_desc` LIKE '%$search%' LIMIT $limit OFFSET $offset";
-
 
 } else if (isset($_POST['interest'])) {
     $interest = $_POST['interest'];
@@ -48,6 +50,29 @@ if (isset($_POST['userid'])) {
 
     // Build the query
     $sqlloaditems = "SELECT * FROM tbl_items ORDER BY CASE $condition ELSE " . (count($interestList) + 1) . " END LIMIT $limit OFFSET $offset";
+} else if (isset($_POST['itemIdList'])) {
+    $itemIdList = $_POST['itemIdList'];
+
+    // Remove the square brackets at the beginning and end of the string
+    $itemIdList = trim($itemIdList, "[]");
+
+    // Seperate each elements of the string into array
+    $itemIdArray = explode(", ", $itemIdList);
+
+    // Now, construct a dynamic IN conditions to add '' for each itemId
+    $conditions = array();
+    foreach ($itemIdArray as $itemId) {
+        $condition = "'" . $itemId . "'";
+
+        array_push($conditions, $condition);
+    }
+
+    // Combining the OR conditions using implode()
+    $conditionString = implode(", ", $conditions);
+
+    // Construct sql query
+    $sqlloadusers = "SELECT * FROM tbl_items WHERE item_id IN (" . $conditionString . ")";
+
 } else {
     $offset = $_POST['offset'];
     $limit = $_POST['limit'];

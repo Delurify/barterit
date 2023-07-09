@@ -16,11 +16,11 @@ $barterto = trim($barterto, "[]");
 // Seperate each elements of the string into array
 $bartertoList = explode(", ", $barterto);
 
-// Now, construct a dynamic OR conditions
+// Now, construct a dynamic IN conditions
 $conditions = array();
-foreach($bartertoList as $itemtype){
+foreach ($bartertoList as $itemtype) {
     $condition = "'" . $itemtype . "'";
-    
+
     // Can use this as well:
     // $conditions[] = $condition;
     array_push($conditions, $condition);
@@ -52,9 +52,9 @@ if ($result->num_rows > 0) {
         $itemlist['item_long'] = $row['item_long'];
         $itemlist['item_state'] = $row['item_state'];
         $itemlist['item_locality'] = $row['item_locality'];
-		$itemlist['item_datereg'] = $row['item_datereg'];
+        $itemlist['item_datereg'] = $row['item_datereg'];
         $itemlist['item_barterto'] = $row['item_barterto'];
-        array_push($items["items"],$itemlist);
+        array_push($items["items"], $itemlist);
     }
     $response = array('status' => 'success', 'data' => $items, 'posts' => $row_count);
     sendJsonResponse($response);
