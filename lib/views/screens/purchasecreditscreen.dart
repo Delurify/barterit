@@ -18,20 +18,22 @@ class PurchaseCreditScreen extends StatefulWidget {
 
 class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
   late double screenWidth, screenHeight;
+  String selected = "";
   int axiscount = 3;
   List<PurchaseType> purchaseList = [
     PurchaseType(credit: "30", cost: "3.90"),
     PurchaseType(credit: "280", cost: "19.90"),
     PurchaseType(credit: "640", cost: "59.90"),
     PurchaseType(credit: "1680", cost: "129.90"),
-    PurchaseType(credit: "2480", cost: "199.90"),
-    PurchaseType(credit: "4980", cost: "399.90"),
+    PurchaseType(credit: "3180", cost: "199.90"),
+    PurchaseType(credit: "6480", cost: "399.90"),
   ];
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (screenWidth > 600) {
       axiscount = 4;
@@ -41,11 +43,18 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Top Up"),
+          title: Text(
+            "Top Up",
+            style: TextStyle(color: isDark ? Colors.grey : Colors.white),
+          ),
+          iconTheme: IconThemeData(color: isDark ? Colors.grey : Colors.white),
         ),
         body: Center(
           child: Column(
             children: [
+              SizedBox(
+                height: screenHeight * 0.1,
+              ),
               Expanded(
                   child: GridView.count(
                       childAspectRatio: 4 / 5,
@@ -55,11 +64,21 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
                         (index) {
                           return Card(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                    color: selected == purchaseList[index].cost
+                                        ? Colors.orange
+                                        : Colors.grey,
+                                    width: selected == purchaseList[index].cost
+                                        ? 2
+                                        : 1)),
                             clipBehavior: Clip.antiAlias,
                             elevation: 2,
                             child: InkWell(
-                              onTap: () async {},
+                              onTap: () async {
+                                selected = purchaseList[index].cost;
+                                setState(() {});
+                              },
                               child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -76,13 +95,15 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
                                           child: SingleChildScrollView(
                                             // for horizontal scrolling
                                             scrollDirection: Axis.horizontal,
-
                                             child: Text(
-                                              purchaseList[index]
-                                                  .credit
-                                                  .toString(),
-                                              style:
-                                                  const TextStyle(fontSize: 18),
+                                              "${purchaseList[index].credit} cred",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: selected ==
+                                                        purchaseList[index].cost
+                                                    ? Colors.white
+                                                    : Colors.grey,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -107,7 +128,21 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
                             ),
                           );
                         },
-                      )))
+                      ))),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark ? Colors.white : Colors.orange),
+                child: Text(
+                  "Purchase",
+                  style: TextStyle(
+                      color: isDark ? Colors.black : Colors.white,
+                      fontSize: 24),
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.1,
+              )
             ],
           ),
         ));

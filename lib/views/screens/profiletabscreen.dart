@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:barterit/models/user.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/views/screens/newtradescreen.dart';
+import 'package:barterit/views/screens/purchasecreditscreen.dart';
 import 'package:barterit/views/screens/favoritescreen.dart';
 import 'package:barterit/views/screens/loginscreen.dart';
 import 'package:barterit/views/screens/useritemdetailscreen.dart';
@@ -144,13 +145,11 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (content) => FollowListScreen(
-                                            user: widget.user,
-                                            page: "follower"))).then((value) {
-                                  setState(() {
-                                    loadfollowers();
-                                    loadfollowing();
-                                  });
+                                        builder: (content) =>
+                                            PurchaseCreditScreen(
+                                              user: widget.user,
+                                            ))).then((value) {
+                                  setState(() {});
                                 });
                               },
                               child: Row(

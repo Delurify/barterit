@@ -35,6 +35,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
   final df2 = DateFormat('d MMMM');
   List<String> barterTo = [];
   List<Item> itemList = [];
+  List<String> sentOfferList = [];
   String result = "";
   User singleUser = User();
 
@@ -49,6 +50,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
     loadUserItem();
     loadFavorite();
     loadBarter();
+    loadOfferList();
 
     // this is to seperate the barterto string to List
     String filter =
@@ -838,24 +840,57 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                                                       ? Colors.grey
                                                       : Colors.grey[700]),
                                             ),
-                                            ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: isDark
-                                                      ? const Color.fromARGB(
-                                                          255, 190, 101, 27)
-                                                      : Colors.orangeAccent,
-                                                ),
-                                                onPressed: () {},
-                                                child: Text("Send Offer",
-                                                    style: TextStyle(
-                                                        color: isDark
-                                                            ? const Color
-                                                                    .fromARGB(
-                                                                255,
-                                                                240,
-                                                                222,
-                                                                194)
-                                                            : Colors.white)))
+                                            if (!sentOfferList.contains(
+                                                item.itemId.toString()))
+                                              ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: isDark
+                                                        ? const Color.fromARGB(
+                                                            255, 190, 101, 27)
+                                                        : Colors.orangeAccent,
+                                                  ),
+                                                  onPressed: () {
+                                                    sentOfferList.add(
+                                                        item.itemId.toString());
+                                                    insertOffer(
+                                                        item.itemId.toString());
+                                                    setState(() {});
+                                                  },
+                                                  child: Text("Send Offer",
+                                                      style: TextStyle(
+                                                          color: isDark
+                                                              ? const Color
+                                                                      .fromARGB(
+                                                                  255,
+                                                                  240,
+                                                                  222,
+                                                                  194)
+                                                              : Colors.white))),
+                                            if (sentOfferList.contains(
+                                                item.itemId.toString()))
+                                              ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: isDark
+                                                        ? Colors.grey[700]
+                                                        : const Color.fromARGB(
+                                                            255, 190, 101, 27),
+                                                  ),
+                                                  onPressed: () {
+                                                    removeOfferDialog(index);
+                                                    setState(() {});
+                                                  },
+                                                  child: Text("Offer Sent",
+                                                      style: TextStyle(
+                                                          color: isDark
+                                                              ? Colors.grey[300]
+                                                              : const Color
+                                                                      .fromARGB(
+                                                                  255,
+                                                                  240,
+                                                                  222,
+                                                                  194))))
                                           ],
                                         ),
                                       )
@@ -950,6 +985,86 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
         var extractdata = jsondata['data'];
         extractdata['items'].forEach((v) {
           itemList.add(Item.fromJson(v));
+        });
+      }
+    });
+  }
+
+  void removeOfferDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Remove Offer?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                sentOfferList.remove(itemList[index].itemId.toString());
+                deleteOffer(itemList[index].itemId.toString());
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void insertOffer(String itemId) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_offer.php"),
+        body: {
+          "giveid": itemId,
+          "takeid": widget.useritem.itemId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {}
+      setState(() {});
+    });
+  }
+
+  void deleteOffer(String itemId) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/delete_offer.php"),
+        body: {
+          "giveid": itemId,
+          "takeid": widget.useritem.itemId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {}
+      setState(() {});
+    });
+  }
+
+  void loadOfferList() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_offer.php"),
+        body: {
+          "takeid": widget.useritem.itemId,
+          "userid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        print(extractdata);
+        extractdata.forEach((v) {
+          sentOfferList.add(v.toString());
         });
       }
     });
