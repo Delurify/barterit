@@ -36,6 +36,7 @@ if ($result->num_rows > 0) {
         $offers['offers'] = array();
         while ($row = $result->fetch_assoc()) {
             $offerlist = array();
+            $offerlist['offer_id'] = $row['offer_id'];
             $offerlist['offer_giveid'] = $row['offer_giveid'];
             $offerlist['offer_takeid'] = $row['offer_takeid'];
             array_push($offers["offers"], $offerlist);

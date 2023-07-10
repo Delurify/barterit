@@ -187,6 +187,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                             : null,
                         onFieldSubmitted: (v) {},
                         maxLines: screenHeight > 750 ? 4 : 3,
+                        maxLength: 100,
                         controller: _itemdescEditingController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
@@ -567,7 +568,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_item.php"),
         body: {
-          "userid": widget.user.id,
           "itemid": widget.useritem.itemId,
           "itemname": widget.useritem.itemName,
           "itemprice": widget.useritem.itemPrice,

@@ -198,6 +198,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                         onFieldSubmitted: (v) {},
                         maxLines: screenHeight > 750 ? 4 : 3,
                         controller: _itemdescEditingController,
+                        maxLength: 100,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                             labelText: 'Item Description',

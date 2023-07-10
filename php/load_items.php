@@ -50,6 +50,12 @@ if (isset($_POST['userid'])) {
 
     // Build the query
     $sqlloaditems = "SELECT * FROM tbl_items ORDER BY CASE $condition ELSE " . (count($interestList) + 1) . " END LIMIT $limit OFFSET $offset";
+
+} else if (isset($_POST['takeid'])) {
+    $offer_takeid = $_POST['takeid'];
+
+    $sqlloaditems = "SELECT * FROM `tbl_offers` INNER JOIN `tbl_items` ON `tbl_offers`.`offer_giveid` = `tbl_items`.`item_id` WHERE `offer_takeid` = '$offer_takeid'";
+
 } else if (isset($_POST['itemIdList'])) {
     $itemIdList = $_POST['itemIdList'];
 
@@ -82,6 +88,7 @@ if (isset($_POST['userid'])) {
 $result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {
     $items["items"] = array();
+    $offers['offers'] = array();
     $row_count = mysqli_num_rows($result);
 
     while ($row = $result->fetch_assoc()) {
@@ -100,9 +107,18 @@ if ($result->num_rows > 0) {
         $itemlist['item_locality'] = $row['item_locality'];
         $itemlist['item_datereg'] = $row['item_datereg'];
         $itemlist['item_barterto'] = $row['item_barterto'];
+
+        if (isset($_POST['takeid'])) {
+            $offerlist['offer_id'] = $row['offer_id'];
+            $offerlist['offer_giveid'] = $row['offer_giveid'];
+            $offerlist['offer_takeid'] = $row['offer_takeid'];
+            $offerlist['offer_date'] = $row['offer_date'];
+            array_push($offers["offers"], $offerlist);
+        }
+
         array_push($items["items"], $itemlist);
     }
-    $response = array('status' => 'success', 'data' => $items, 'posts' => $row_count);
+    $response = array('status' => 'success', 'data' => $items, 'posts' => $row_count, 'offerdata' => $offers);
     sendJsonResponse($response);
 } else {
     $response = array('status' => 'failed', 'data' => null);

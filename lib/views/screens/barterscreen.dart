@@ -441,7 +441,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                             color:
                                                                 Colors.orange,
                                                           )),
-                                                      SizedBox(width: 28)
+                                                      const SizedBox(width: 28)
                                                     ],
                                                   ),
                                                   const SizedBox(height: 8),
@@ -625,6 +625,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     receivedOfferList.clear();
     userItemList.clear();
     userItemIdList.clear();
+    countMap.clear();
     loadReceivedOfferList();
   }
 }
