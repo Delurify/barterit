@@ -10,9 +10,7 @@ include_once("dbconnect.php");
 
 if (isset($_POST['userid'])) {
     $userid = $_POST['userid'];
-    $offset = $_POST['offset'];
-    $limit = $_POST['limit'];
-    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid' LIMIT $limit OFFSET $offset";
+    $sqlloaditems = "SELECT * FROM `tbl_items` WHERE user_id = '$userid' ORDER BY item_datereg DESC";
 
 } else if (isset($_POST['itemid'])) {
     $itemid = $_POST['itemid'];
