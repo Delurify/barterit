@@ -27,9 +27,9 @@ foreach ($barterIdArray as $barterId) {
 $conditionString = implode(", ", $conditions);
 
 // Construct sql query
-$sqlloaditems = "SELECT * FROM tbl_items WHERE barteritem_itemid IN (" . $conditionString . ")";
+$sqlloaditems = "SELECT * FROM tbl_barteritems WHERE barteritem_itemid IN (" . $conditionString . ")";
 
-$result = $conn->query($sqlloadusers);
+$result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {
     $barteritems["barteritems"] = array();
     $row_count = mysqli_num_rows($result);
@@ -38,12 +38,12 @@ if ($result->num_rows > 0) {
         $barteritemarray = array();
         $barteritemarray['offerid'] = $row['offer_id'];
         $barteritemarray['itemid'] = $row['barteritem_itemid'];
-        $barteritemarray['userid'] = $row['	barteritem_userid'];
+        $barteritemarray['userid'] = $row['barteritem_userid'];
         $barteritemarray['name'] = $row['barteritem_name'];
         $barteritemarray['desc'] = $row['barteritem_desc'];
         $barteritemarray['date'] = $row['barteritem_date'];
         $barteritemarray['qty'] = $row['barterdetail_qty'];
-        $barteritemarray['price'] = $row['	barteritem_price'];
+        $barteritemarray['price'] = $row['barteritem_price'];
         $barteritemarray['lat'] = $row['barteritem_lat'];
         $barteritemarray['long'] = $row['barteritem_long'];
         $barteritemarray['state'] = $row['barteritem_state'];

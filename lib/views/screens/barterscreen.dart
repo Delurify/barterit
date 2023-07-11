@@ -68,6 +68,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     var tabText = const TextStyle(fontSize: 18);
 
+    print(screenHeight);
+    print(screenWidth);
+
     return Scaffold(
         body: Column(
       children: [
@@ -93,7 +96,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
             groupValue: selectedTabIndex,
           ),
         ),
-        SizedBox(height: screenHeight * 0.01),
+        const SizedBox(height: 8),
         Expanded(
           child: PageView(
             controller: _pageController,
@@ -108,8 +111,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            screenWidth * 0.08, 24, screenWidth * 0.08, 0),
+                        padding: const EdgeInsets.fromLTRB(31, 24, 31, 0),
                         child: Text(
                           "You didn't send any offer to barter",
                           style: TextStyle(
@@ -147,15 +149,15 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                     : Colors.orangeAccent,
                                                 width: 2),
                                           ),
-                                          width: screenWidth * 0.25,
-                                          height: screenWidth * 0.35,
+                                          width: 98,
+                                          height: 138,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
                                               Container(
                                                   height: 24,
-                                                  width: screenWidth * 0.3,
+                                                  width: 117,
                                                   color: isDark
                                                       ? const Color.fromARGB(
                                                           255, 173, 96, 33)
@@ -198,8 +200,8 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   child: CachedNetworkImage(
-                                                    width: screenWidth * 0.25,
-                                                    height: screenWidth * 0.25,
+                                                    width: 98,
+                                                    height: 98,
                                                     fit: BoxFit.cover,
                                                     imageUrl:
                                                         "${MyConfig().SERVER}/barterit/assets/items/${sentOfferList[index].takeId}-1.png",
@@ -230,15 +232,15 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                     : Colors.blue,
                                                 width: 2),
                                           ),
-                                          width: screenWidth * 0.25,
-                                          height: screenWidth * 0.35,
+                                          width: 98,
+                                          height: 138,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
                                               Container(
                                                   height: 24,
-                                                  width: screenWidth * 0.3,
+                                                  width: 117,
                                                   color: isDark
                                                       ? const Color.fromARGB(
                                                           255, 34, 76, 110)
@@ -259,8 +261,8 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 child: CachedNetworkImage(
-                                                  width: screenWidth * 0.25,
-                                                  height: screenWidth * 0.25,
+                                                  width: 98,
+                                                  height: 98,
                                                   fit: BoxFit.cover,
                                                   imageUrl:
                                                       "${MyConfig().SERVER}/barterit/assets/items/${sentOfferList[index].giveId}-1.png",
@@ -274,12 +276,12 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                             ],
                                           )),
                                     ),
-                                    SizedBox(
-                                      width: screenWidth * 0.03,
+                                    const SizedBox(
+                                      width: 12,
                                     ),
                                     SizedBox(
-                                      width: screenWidth * 0.30,
-                                      height: screenWidth * 0.35,
+                                      width: 117,
+                                      height: 137,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -297,7 +299,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                             child: Container(),
                                           ),
                                           Text(
-                                            "RM ${itemMap[sentOfferList[index].giveId]!.itemPrice.toString()}",
+                                            "RM ${itemMap[sentOfferList[index].giveId]?.itemPrice.toString()}",
                                             maxLines: 2,
                                             style: const TextStyle(
                                                 fontSize: 16,
@@ -492,29 +494,26 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                             Expanded(
                                 child: ListView.builder(
                                     itemCount: barterList.length,
-                                    padding: EdgeInsets.fromLTRB(
-                                        screenWidth * 0.02,
-                                        0,
-                                        screenWidth * 0.02,
-                                        0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(6, 0, 6, 0),
                                     itemBuilder: (context, index) {
-                                      return Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (content) =>
-                                                          ChatScreen(
-                                                            user: widget.user,
-                                                            barter: barterList[
-                                                                index],
-                                                          ))).then((value) {
-                                                refreshBarter();
-                                              });
-                                            },
-                                            child: Row(
+                                      return InkResponse(
+                                        onTap: () async {
+                                          await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (content) =>
+                                                      ChatScreen(
+                                                        user: widget.user,
+                                                        barter:
+                                                            barterList[index],
+                                                      ))).then((value) {
+                                            refreshBarter();
+                                          });
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Row(
                                               children: [
                                                 Padding(
                                                   padding:
@@ -701,11 +700,11 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                         ],
                                                       )),
                                                 ),
-                                                SizedBox(
-                                                  width: screenWidth * 0.03,
+                                                const SizedBox(
+                                                  width: 5,
                                                 ),
                                                 SizedBox(
-                                                  width: screenWidth * 0.30,
+                                                  width: screenWidth * 0.2,
                                                   height: screenWidth * 0.35,
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -727,7 +726,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                         child: Container(),
                                                       ),
                                                       Text(
-                                                        "RM ${barterItemMap[barterList[index].takeitemid]!.price.toString()}",
+                                                        "RM ${barterItemMap[barterList[index].takeitemid]?.price.toString()}",
                                                         maxLines: 2,
                                                         style: const TextStyle(
                                                             fontSize: 16,
@@ -735,7 +734,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                                 Colors.orange),
                                                       ),
                                                       Text(
-                                                        "Qty: ${barterItemMap[barterList[index].takeitemid]!.qty.toString()}",
+                                                        "Qty: ${barterItemMap[barterList[index].takeitemid]?.qty.toString()}",
                                                         softWrap: true,
                                                         maxLines: 1,
                                                         style: TextStyle(
@@ -758,12 +757,12 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                 )
                                               ],
                                             ),
-                                          ),
-                                          const Divider(
-                                              indent: 8,
-                                              endIndent: 8,
-                                              thickness: 1),
-                                        ],
+                                            const Divider(
+                                                indent: 8,
+                                                endIndent: 8,
+                                                thickness: 1),
+                                          ],
+                                        ),
                                       );
                                     })),
                           ],
@@ -939,6 +938,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
           "userid": widget.user.id,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
+      print(jsondata);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
         extractdata['barters'].forEach((v) {
@@ -988,6 +988,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     http.post(
         Uri.parse("${MyConfig().SERVER}/barterit/php/load_barteritem.php"),
         body: {"barterIdList": barterIdList.toString()}).then((response) {
+      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
