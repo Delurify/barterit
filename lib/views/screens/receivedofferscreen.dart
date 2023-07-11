@@ -483,5 +483,18 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
         setState(() {});
       });
     }
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_barter.php"),
+        body: {
+          "offer_id": offerid,
+          "barter_giveitemid": giveitem.itemId,
+          "barter_takeitemid": takeitem.itemId,
+          "barter_giveuserid": giveitem.userId,
+          "barter_takeuserid": takeitem.userId,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      print(jsondata);
+      if (jsondata['status'] == "success") {}
+      setState(() {});
+    });
   }
 }

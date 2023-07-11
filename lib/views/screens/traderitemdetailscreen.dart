@@ -192,7 +192,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                                                   ? Colors.grey
                                                   : Colors.purple.shade300)
                                           : widget.useritem.itemType ==
-                                                  "Furniture"
+                                                  "Furniture & Accessories"
                                               ? Icon(Icons.table_bar,
                                                   color: isDark
                                                       ? Colors.grey

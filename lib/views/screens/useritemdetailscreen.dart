@@ -138,7 +138,8 @@ class _UserItemDetailScreenState extends State<UserItemDetailScreen> {
                                       color: isDark
                                           ? Colors.grey
                                           : Colors.purple.shade300)
-                                  : widget.useritem.itemType == "Furniture"
+                                  : widget.useritem.itemType ==
+                                          "Furniture & Accessories"
                                       ? Icon(Icons.table_bar,
                                           color: isDark
                                               ? Colors.grey
