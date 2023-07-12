@@ -147,6 +147,8 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                     builder: (content) => PurchaseCreditScreen(
                                           user: widget.user,
                                         ))).then((value) {
+                              loadUser();
+
                               setState(() {});
                             });
                           },
@@ -264,7 +266,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                               builder: (content) =>
                                                   PurchaseCreditScreen(
                                                     user: widget.user,
-                                                  ))).then((value) {});
+                                                  ))).then((value) {
+                                        loadUser();
+                                      });
                                     })),
                             const SizedBox(
                               width: 10,
@@ -605,16 +609,14 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
 
   Future<void> _pullRefresh() async {
-    Future refresh() async {
-      setState(() {
-        isLoading = false;
-        hasMore = true;
-        offset = 0;
-        itemList.clear();
-      });
+    setState(() {
+      isLoading = false;
+      hasMore = true;
+      offset = 0;
+      itemList.clear();
+    });
 
-      loaduseritems();
-    }
+    loaduseritems();
   }
 
   void checkLogin() {
@@ -910,6 +912,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         widget.user.name = user.name;
         widget.user.email = user.email;
         widget.user.phone = user.phone;
+        widget.user.credit = user.credit;
       }
       setState(() {});
     });

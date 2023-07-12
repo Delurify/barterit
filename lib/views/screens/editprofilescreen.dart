@@ -245,8 +245,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               onPressed: () async {
                 Navigator.of(context).pop();
-                await updateUser();
                 Navigator.of(context).pop();
+                await updateUser();
               },
             ),
             TextButton(

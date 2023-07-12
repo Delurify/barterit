@@ -1,10 +1,10 @@
 name: barterit
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   cached_network_image: ^3.2.3
@@ -24,6 +24,7 @@ dependencies:
   shared_preferences: ^2.1.1
   intl: ^0.18.1
   grouped_list: ^5.1.2
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:
@@ -32,5 +33,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets: 
+  assets:
     - assets/images/

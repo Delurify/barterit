@@ -926,7 +926,6 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
           "userid": widget.user.id,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      print(jsondata);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
         extractdata['barters'].forEach((v) {
@@ -976,7 +975,6 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     http.post(
         Uri.parse("${MyConfig().SERVER}/barterit/php/load_barteritem.php"),
         body: {"barterIdList": barterIdList.toString()}).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];

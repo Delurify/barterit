@@ -305,7 +305,6 @@ class _ChatScreenState extends State<ChatScreen> {
           "sentBy": message.sentBy,
           "sentTo": message.sentTo,
         }).then((response) {
-      print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {}

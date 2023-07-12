@@ -1,3 +1,4 @@
+import 'package:barterit/views/screens/billscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:barterit/models/user.dart';
 
@@ -19,6 +20,7 @@ class PurchaseCreditScreen extends StatefulWidget {
 class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
   late double screenWidth, screenHeight;
   String selected = "";
+  String credit = "";
   int axiscount = 3;
   List<PurchaseType> purchaseList = [
     PurchaseType(credit: "30", cost: "3.90"),
@@ -77,6 +79,7 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
                             child: InkWell(
                               onTap: () async {
                                 selected = purchaseList[index].cost;
+                                credit = purchaseList[index].credit;
                                 setState(() {});
                               },
                               child: Column(
@@ -130,7 +133,21 @@ class _PurchaseCreditScreenState extends State<PurchaseCreditScreen> {
                         },
                       ))),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (selected != "") {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (content) => BillScreen(
+                                  user: widget.user,
+                                  totalprice: double.parse(selected),
+                                  credit: credit,
+                                ))).then((value) {});
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Please select a top-up option")));
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: isDark ? Colors.white : Colors.orange),
                 child: Text(

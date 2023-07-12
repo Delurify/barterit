@@ -575,7 +575,6 @@ class _BarterOverviewScreenState extends State<BarterOverviewScreen> {
         body: {
           "itemid": widget.barter.giveitemid,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
@@ -593,7 +592,6 @@ class _BarterOverviewScreenState extends State<BarterOverviewScreen> {
         body: {
           "itemid": widget.barter.takeitemid,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
