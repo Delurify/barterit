@@ -97,7 +97,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                       onSelected: (item) => onSelected(context, item),
                       itemBuilder: (context) => [
                             const PopupMenuItem<int>(
-                                value: 0, child: Text('Profile')),
+                                value: 0, child: Text('Edit Profile')),
                             PopupMenuItem<int>(
                               value: 1,
                               child: isDark
@@ -290,7 +290,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                               builder: (content) =>
                                                   EditProfileScreen(
                                                     user: widget.user,
-                                                  ))).then((value) {});
+                                                  ))).then((value) {
+                                        loadUser();
+                                      });
                                     }))
                           ],
                         )
@@ -663,7 +665,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
             MaterialPageRoute(
                 builder: (content) => EditProfileScreen(
                       user: widget.user,
-                    ))).then((value) {});
+                    ))).then((value) {
+          loadUser();
+        });
 
         break;
       case 1:
@@ -889,6 +893,23 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         following = jsondata['follow'];
       } else {
         following = 0;
+      }
+      setState(() {});
+    });
+  }
+
+  void loadUser() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_user.php"),
+        body: {
+          "userid": widget.user.id,
+        }).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        User user = User.fromJson(jsondata['data']);
+        widget.user.name = user.name;
+        widget.user.email = user.email;
+        widget.user.phone = user.phone;
       }
       setState(() {});
     });

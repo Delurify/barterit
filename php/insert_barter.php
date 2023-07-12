@@ -22,7 +22,7 @@ if (isset($_POST['barter_userid'])) {
     $barter_imagecount = $_POST['barter_imagecount'];
     $item_id = $_POST['item_id'];
 
-    $sqlinsert = "INSERT INTO `tbl_barteritems`(`offer_id`, `barteritem_userid`, `barteritem_name`, `barteritem_desc`, `barteritem_qty`, `barteritem_price`, `barteritem_lat`, `barteritem_long`, `barteritem_state`, `barteritem_locality`, `barteritem_imagecount`) VALUES ('$offer_id','$barter_userid', '$barter_itemname', '$barter_itemdesc', '$barter_itemqty', '$barter_itemprice', '$barter_itemlat', '$barter_itemlong', '$barter_itemstate', '$barter_itemLocality', '$barter_imagecount')";
+    $sqlinsert = "INSERT INTO `tbl_barteritems`(`offer_id`, `barteritem_itemid`, `barteritem_userid`, `barteritem_name`, `barteritem_desc`, `barteritem_qty`, `barteritem_price`, `barteritem_lat`, `barteritem_long`, `barteritem_state`, `barteritem_locality`, `barteritem_imagecount`) VALUES ('$offer_id', '$item_id','$barter_userid', '$barter_itemname', '$barter_itemdesc', '$barter_itemqty', '$barter_itemprice', '$barter_itemlat', '$barter_itemlong', '$barter_itemstate', '$barter_itemLocality', '$barter_imagecount')";
 } else if (isset($_POST['barter_giveitemid'])) {
     $offer_id = $_POST['offer_id'];
     $barter_giveitemid = $_POST['barter_giveitemid'];
@@ -48,12 +48,13 @@ if ($conn->query($sqlinsert) === TRUE) {
                     $response = array('status' => 'success', 'data' => null);
                     sendJsonResponse($response);
                 }
-
             }
         }
+    } else {
+        $response = array('status' => 'success', 'data' => null);
+        sendJsonResponse($response);
     }
-    $response = array('status' => 'success', 'data' => null);
-    sendJsonResponse($response);
+
 } else {
     $response = array('status' => 'failed', 'data' => null);
     sendJsonResponse($response);

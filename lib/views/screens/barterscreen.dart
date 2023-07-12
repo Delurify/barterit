@@ -382,8 +382,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                         user: widget.user,
                                                         useritem:
                                                             userItemList[index],
-                                                      ))).then((value) {
+                                                      ))).then((value) async {
                                             refreshReceivedOffer();
+                                            refreshBarter();
                                           });
                                         },
                                         child: Row(children: [
@@ -988,7 +989,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     });
   }
 
-  void refreshBarter() {
+  Future<void> refreshBarter() async {
     barterList.clear();
     barterIdList.clear();
     barterItemMap.clear();

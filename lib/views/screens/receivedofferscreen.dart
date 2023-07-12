@@ -90,7 +90,7 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                       child: ImageSlideshow(
                                           width: screenWidth * 0.3,
-                                          height: screenWidth * 0.4,
+                                          height: screenWidth * 0.3,
                                           initialPage: 0,
                                           children: [
                                             Image.network(
@@ -107,7 +107,7 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                       child: ImageSlideshow(
                                           width: screenWidth * 0.3,
-                                          height: screenWidth * 0.4,
+                                          height: screenWidth * 0.3,
                                           initialPage: 0,
                                           children: [
                                             Image.network(
@@ -439,9 +439,9 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
                   style: TextStyle(),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
                   addbarter(widget.useritem, itemList[index],
                       offerList[index].offerId.toString());
+                  Navigator.of(context).pop("Accepted");
                 },
               ),
               TextButton(
@@ -477,6 +477,7 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
             "barter_imagecount": item.itemImageCount,
             "item_id": item.itemId
           }).then((response) {
+        print(response.body);
         var jsondata = jsonDecode(response.body);
         print(jsondata);
         if (jsondata['status'] == "success") {}

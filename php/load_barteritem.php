@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
         $barteritemarray['name'] = $row['barteritem_name'];
         $barteritemarray['desc'] = $row['barteritem_desc'];
         $barteritemarray['date'] = $row['barteritem_date'];
-        $barteritemarray['qty'] = $row['barterdetail_qty'];
+        $barteritemarray['qty'] = $row['barteritem_qty'];
         $barteritemarray['price'] = $row['barteritem_price'];
         $barteritemarray['lat'] = $row['barteritem_lat'];
         $barteritemarray['long'] = $row['barteritem_long'];
