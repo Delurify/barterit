@@ -667,7 +667,7 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 3, 8, 0),
                         child: Text(
-                            "It is advised to use similar item value for barter",
+                            "Sending offer will use 6 credits as deposit.",
                             style: TextStyle(
                                 color:
                                     isDark ? Colors.grey : Colors.grey[700])),
@@ -855,6 +855,28 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
                                                         item.itemId.toString());
                                                     insertOffer(
                                                         item.itemId.toString());
+
+                                                    if ((int.parse(widget
+                                                                .user.credit
+                                                                .toString()) -
+                                                            6) >=
+                                                        0) {
+                                                      widget.user.credit =
+                                                          (int.parse(widget.user
+                                                                      .credit
+                                                                      .toString()) -
+                                                                  6)
+                                                              .toString();
+                                                      updateCredit();
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text(
+                                                                      "Not Enough Credit")));
+                                                    }
+
                                                     setState(() {});
                                                   },
                                                   child: Text("Send Offer",
@@ -1010,6 +1032,9 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
               onPressed: () {
                 sentOfferList.remove(itemList[index].itemId.toString());
                 deleteOffer(itemList[index].itemId.toString());
+                widget.user.credit =
+                    (int.parse(widget.user.credit.toString()) + 6).toString();
+                updateCredit();
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1067,6 +1092,17 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
           sentOfferList.add(v.toString());
         });
       }
+    });
+  }
+
+  void updateCredit() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_credit.php"),
+        body: {
+          "credit": widget.user.credit,
+          "userid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {}
     });
   }
 }

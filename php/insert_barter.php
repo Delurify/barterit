@@ -42,8 +42,13 @@ if ($conn->query($sqlinsert) === TRUE) {
             $sqldeleteoffer = "DELETE FROM tbl_offers WHERE offer_takeid = '$item_id' OR offer_giveid = '$item_id'";
 
             if ($conn->query($sqldeleteoffer) === TRUE) {
-                $response = array('status' => 'success', 'data' => null);
-                sendJsonResponse($response);
+                $sqldeletefavorite = "DELETE FROM tbl_favorites WHERE item_id = '$item_id'";
+
+                if ($conn->query($sqldeletefavorite) === TRUE) {
+                    $response = array('status' => 'success', 'data' => null);
+                    sendJsonResponse($response);
+                }
+
             }
         }
     }

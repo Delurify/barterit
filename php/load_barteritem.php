@@ -7,27 +7,35 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
-$barterIdList = $_POST['barterIdList'];
+if (isset($_POST['barterIdList'])) {
+    $barterIdList = $_POST['barterIdList'];
 
-// Remove the square brackets at the beginning and end of the string
-$barterIdList = trim($barterIdList, "[]");
+    // Remove the square brackets at the beginning and end of the string
+    $barterIdList = trim($barterIdList, "[]");
 
-// Seperate each elements of the string into array
-$barterIdArray = explode(", ", $barterIdList);
+    // Seperate each elements of the string into array
+    $barterIdArray = explode(", ", $barterIdList);
 
-// Now, construct a dynamic IN conditions to add '' for each itemId
-$conditions = array();
-foreach ($barterIdArray as $barterId) {
-    $condition = "'" . $barterId . "'";
+    // Now, construct a dynamic IN conditions to add '' for each itemId
+    $conditions = array();
+    foreach ($barterIdArray as $barterId) {
+        $condition = "'" . $barterId . "'";
 
-    array_push($conditions, $condition);
+        array_push($conditions, $condition);
+    }
+
+    // Combining the OR conditions using implode()
+    $conditionString = implode(", ", $conditions);
+
+    // Construct sql query
+    $sqlloaditems = "SELECT * FROM tbl_barteritems WHERE barteritem_itemid IN (" . $conditionString . ")";
+} else {
+    $itemid = $_POST['itemid'];
+
+    // Construct sql query
+    $sqlloaditems = "SELECT * FROM tbl_barteritems WHERE barteritem_itemid = '$itemid'";
 }
 
-// Combining the OR conditions using implode()
-$conditionString = implode(", ", $conditions);
-
-// Construct sql query
-$sqlloaditems = "SELECT * FROM tbl_barteritems WHERE barteritem_itemid IN (" . $conditionString . ")";
 
 $result = $conn->query($sqlloaditems);
 if ($result->num_rows > 0) {

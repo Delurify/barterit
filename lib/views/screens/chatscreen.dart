@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:async';
+import 'package:barterit/views/screens/barteroverviewscreen.dart';
 import 'package:barterit/views/screens/traderscreen.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,6 +56,23 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(trader.name.toString()),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => BarterOverviewScreen(
+                          user: widget.user,
+                          trader: trader,
+                          barter: widget.barter))).then((value) {});
+            },
+          )
+        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -142,6 +160,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     : Alignment.centerLeft,
                 child: Card(
                   elevation: 8,
+                  color: message.sentBy == widget.user.id
+                      ? const Color.fromARGB(255, 163, 95, 40)
+                      : null,
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(message.text.toString()),

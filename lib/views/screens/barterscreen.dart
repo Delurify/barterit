@@ -12,7 +12,6 @@ import 'package:barterit/models/offer.dart';
 import 'package:barterit/models/item.dart';
 import 'package:barterit/models/barter.dart';
 
-import 'dart:math' as math;
 import 'package:barterit/myconfig.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -455,14 +454,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                   const SizedBox(height: 8),
                                                 ]),
                                           ),
-                                          Transform(
-                                            alignment: Alignment.center,
-                                            transform:
-                                                Matrix4.rotationY(math.pi),
-                                            child: const Icon(
-                                              Icons.arrow_back_ios_new,
-                                              color: Colors.grey,
-                                            ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.grey,
                                           )
                                         ])));
                               })),
@@ -504,9 +498,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                         user: widget.user,
                                                         barter:
                                                             barterList[index],
-                                                      ))).then((value) {
-                                            refreshBarter();
-                                          });
+                                                      ))).then((value) {});
                                         },
                                         child: Column(
                                           children: [
@@ -743,14 +735,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                     ],
                                                   ),
                                                 ),
-                                                Transform(
-                                                  alignment: Alignment.center,
-                                                  transform: Matrix4.rotationY(
-                                                      math.pi),
-                                                  child: const Icon(
-                                                    Icons.arrow_back_ios_new,
-                                                    color: Colors.grey,
-                                                  ),
+                                                const Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color: Colors.grey,
                                                 )
                                               ],
                                             ),
@@ -792,6 +779,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                 deleteOffer(sentOfferList[index].giveId.toString(),
                     sentOfferList[index].takeId.toString());
                 sentOfferList.remove(sentOfferList[index]);
+                widget.user.credit =
+                    (int.parse(widget.user.credit.toString()) + 6).toString();
+                updateCredit();
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1004,5 +994,16 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     barterItemMap.clear();
     loadbarter();
     setState(() {});
+  }
+
+  void updateCredit() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/update_credit.php"),
+        body: {
+          "credit": widget.user.credit,
+          "userid": widget.user.id,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {}
+    });
   }
 }

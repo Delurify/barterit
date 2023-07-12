@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
-import 'package:barterit/views/experiment.dart';
+import 'package:barterit/views/screens/editprofilescreen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -123,112 +123,180 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                   padding: const EdgeInsets.all(8),
                   height: screenHeight * 0.18,
                   width: screenWidth,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Row(children: [
+                    const SizedBox(width: 25),
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            // Profile picture
-                            CircleAvatar(
-                                radius: screenHeight * 0.05,
-                                backgroundImage: widget.user.hasavatar
-                                            .toString() ==
-                                        "1"
-                                    ? NetworkImage(
-                                        "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
-                                    : NetworkImage(
-                                        "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                        const SizedBox(height: 10),
+                        // Profile picture
+                        CircleAvatar(
+                            radius: screenHeight * 0.05,
+                            backgroundImage: widget.user.hasavatar.toString() ==
+                                    "1"
+                                ? NetworkImage(
+                                    "${MyConfig().SERVER}/barterit/assets/avatars/${widget.user.id}.png?v=$val")
+                                : NetworkImage(
+                                    "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
 
-                            const SizedBox(height: 10),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => PurchaseCreditScreen(
+                                          user: widget.user,
+                                        ))).then((value) {
+                              setState(() {});
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.add_circle,
+                                color: Colors.orange,
+                              ),
+                              Text(
+                                "  ${widget.user.credit.toString()}",
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(width: 30),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(posts.toString()),
+                                Text(
+                                  "Posts",
+                                  style: textTheme.bodyMedium
+                                      ?.copyWith(color: Colors.grey),
+                                )
+                              ],
+                            ),
+                            const SizedBox(width: 30),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (content) =>
-                                            PurchaseCreditScreen(
-                                              user: widget.user,
-                                            ))).then((value) {
-                                  setState(() {});
+                                        builder: (content) => FollowListScreen(
+                                            user: widget.user,
+                                            page: "follower"))).then((value) {
+                                  setState(() {
+                                    loadfollowers();
+                                    loadfollowing();
+                                  });
                                 });
                               },
-                              child: Row(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(
-                                    Icons.add_circle,
-                                    color: Colors.orange,
-                                  ),
+                                  Text(followers.toString()),
                                   Text(
-                                    "  ${widget.user.credit.toString()}",
+                                    "Followers",
+                                    style: textTheme.bodyMedium
+                                        ?.copyWith(color: Colors.grey),
                                   )
                                 ],
                               ),
-                            )
+                            ),
+                            const SizedBox(width: 30),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (content) => FollowListScreen(
+                                            user: widget.user,
+                                            page: "following"))).then((value) {
+                                  setState(() {
+                                    loadfollowers();
+                                    loadfollowing();
+                                  });
+                                });
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(following.toString()),
+                                  Text("Following",
+                                      style: textTheme.bodyMedium
+                                          ?.copyWith(color: Colors.grey))
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Expanded(child: Container()),
+                        Row(
                           children: [
-                            Text(posts.toString()),
-                            Text(
-                              "Posts",
-                              style: textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.grey),
-                            )
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            SizedBox(
+                                width: screenWidth * 0.3,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: isDark
+                                            ? Colors.grey[800]
+                                            : Colors.grey[300]),
+                                    child: Text(
+                                        style: TextStyle(
+                                            color: isDark
+                                                ? Colors.grey[200]
+                                                : Colors.grey[800],
+                                            fontWeight: FontWeight.bold),
+                                        "Buy Credit"),
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (content) =>
+                                                  PurchaseCreditScreen(
+                                                    user: widget.user,
+                                                  ))).then((value) {});
+                                    })),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                                width: screenWidth * 0.3,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: isDark
+                                            ? Colors.grey[800]
+                                            : Colors.grey[300]),
+                                    child: Text(
+                                        style: TextStyle(
+                                            color: isDark
+                                                ? Colors.grey[200]
+                                                : Colors.grey[800],
+                                            fontWeight: FontWeight.bold),
+                                        "Edit Profile"),
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (content) =>
+                                                  EditProfileScreen(
+                                                    user: widget.user,
+                                                  ))).then((value) {});
+                                    }))
                           ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (content) => FollowListScreen(
-                                        user: widget.user,
-                                        page: "follower"))).then((value) {
-                              setState(() {
-                                loadfollowers();
-                                loadfollowing();
-                              });
-                            });
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(followers.toString()),
-                              Text(
-                                "Followers",
-                                style: textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.grey),
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (content) => FollowListScreen(
-                                        user: widget.user,
-                                        page: "following"))).then((value) {
-                              setState(() {
-                                loadfollowers();
-                                loadfollowing();
-                              });
-                            });
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(following.toString()),
-                              Text("Following",
-                                  style: textTheme.bodyMedium
-                                      ?.copyWith(color: Colors.grey))
-                            ],
-                          ),
-                        ),
-                      ]),
+                        )
+                      ],
+                    ),
+                  ]),
                 ),
 
                 // This is just design to seperate profile information with item information
@@ -593,16 +661,9 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (content) => Experiment(
+                builder: (content) => EditProfileScreen(
                       user: widget.user,
-                      useritem: itemList[0],
-                      page: "",
-                    ))).then((value) {
-          setState(() {
-            loadfollowers();
-            loadfollowing();
-          });
-        });
+                    ))).then((value) {});
 
         break;
       case 1:
