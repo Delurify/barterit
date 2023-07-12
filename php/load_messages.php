@@ -7,27 +7,39 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
-$barterid = $_POST['barterid'];
+if (isset($_POST['date'])) {
+    $barterid = $_POST['barterid'];
+    $sentBy = $_POST['sentBy'];
+    $date = $_POST['date'];
 
-// Construct sql query
-$sqlloadusers = "SELECT * FROM tbl_messages WHERE barter_id = '$barterid'";
+    $date = date('Y-m-d H:i:s', strtotime($date) - 5);
+
+    $sqlloadusers = "SELECT * FROM tbl_messages WHERE barter_id = '$barterid' AND message_sentBy = '$sentBy' AND message_date > '$date'";
+
+} else {
+    $barterid = $_POST['barterid'];
+
+    // Construct sql query
+    $sqlloadusers = "SELECT * FROM tbl_messages WHERE barter_id = '$barterid'";
+
+}
+
 
 
 $result = $conn->query($sqlloadusers);
 if ($result->num_rows > 0) {
     $messages["messages"] = array();
-    $row_count = mysqli_num_rows($result);
 
     while ($row = $result->fetch_assoc()) {
         $messagelist = array();
-        $itemlist['item_id'] = $row['item_id'];
-        $itemlist['user_id'] = $row['user_id'];
-        $itemlist['item_name'] = $row['item_name'];
-        $itemlist['item_price'] = $row['item_price'];
-        $itemlist['item_type'] = $row['item_type'];
-        array_push($items["items"], $itemlist);
+        $messagelist['barterid'] = $row['barter_id'];
+        $messagelist['text'] = $row['message_text'];
+        $messagelist['date'] = $row['message_date'];
+        $messagelist['sentBy'] = $row['message_sentBy'];
+        $messagelist['sentTo'] = $row['message_sentTo'];
+        array_push($messages["messages"], $messagelist);
     }
-    $response = array('status' => 'success', 'data' => $items, 'posts' => $row_count);
+    $response = array('status' => 'success', 'data' => $messages);
     sendJsonResponse($response);
 } else {
     $response = array('status' => 'failed', 'data' => null);

@@ -93,6 +93,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                     widget.user.name.toString()),
                 actions: [
                   PopupMenuButton<int>(
+                      color: isDark ? null : Colors.white,
                       onSelected: (item) => onSelected(context, item),
                       itemBuilder: (context) => [
                             const PopupMenuItem<int>(

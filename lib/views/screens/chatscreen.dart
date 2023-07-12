@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
+import 'dart:async';
+import 'package:barterit/views/screens/traderscreen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:barterit/models/barter.dart';
@@ -20,12 +23,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late double screenWidth, screenHeight;
-  final df = DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS');
+  late int val = random.nextInt(10000);
+  final df = DateFormat('yyyy-MM-dd HH:mm:ss');
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _messageEditingController =
       TextEditingController();
   List<Message> messages = [];
-  User otherUser = User();
+  User trader = User();
+  Random random = Random();
+  Timer? _timer;
 
   @override
   void initState() {
@@ -37,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _focusNode.dispose();
-
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -48,7 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: Text(otherUser.name.toString()),
+        title: Text(trader.name.toString()),
       ),
       body: GestureDetector(
         onTap: () {
@@ -56,46 +62,93 @@ class _ChatScreenState extends State<ChatScreen> {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Column(children: [
-          Expanded(
-              child: GroupedListView<Message, DateTime>(
-            padding: const EdgeInsets.all(8),
-            reverse: true,
-            order: GroupedListOrder.DESC,
-            useStickyGroupSeparators: true,
-            floatingHeader: true,
-            elements: messages,
-            groupBy: (message) => DateTime(
-              df.parse(message.date.toString()).year,
-              df.parse(message.date.toString()).month,
-              df.parse(message.date.toString()).day,
-            ),
-            groupHeaderBuilder: (Message message) => SizedBox(
-                height: 40,
-                child: Center(
-                  child: Card(
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                          DateFormat.yMMMd()
-                              .format(df.parse(message.date.toString())),
-                          style: const TextStyle(color: Colors.white)),
-                    ),
+          if (messages.isEmpty)
+            Expanded(
+                child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: screenHeight * 0.35,
                   ),
-                )),
-            itemBuilder: (context, Message message) => Align(
-              alignment: message.sentBy == widget.user.id
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
-              child: Card(
-                elevation: 8,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(message.text.toString()),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage: trader.hasavatar.toString() == "1"
+                            ? NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/avatars/${trader.id}.png?v=$val")
+                            : NetworkImage(
+                                "${MyConfig().SERVER}/barterit/assets/images/profile-placeholder.png")),
+                  ),
+                  Text(
+                    trader.name.toString(),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Text(
+                    "Start chatting to talk \nabout barter details!\n",
+                    style: TextStyle(color: Colors.grey, height: 1.25),
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (content) => TraderScreen(
+                                    user: widget.user,
+                                    trader: trader))).then((value) {});
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              isDark ? Colors.grey[700] : Colors.orange[600]),
+                      child: const Text(
+                        "VIEW PROFILE",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                ],
+              ),
+            )),
+          if (messages.isNotEmpty)
+            Expanded(
+                child: GroupedListView<Message, DateTime>(
+              padding: const EdgeInsets.all(8),
+              reverse: true,
+              order: GroupedListOrder.DESC,
+              useStickyGroupSeparators: true,
+              floatingHeader: true,
+              elements: messages,
+              groupBy: (message) => DateTime(
+                df.parse(message.date.toString()).year,
+                df.parse(message.date.toString()).month,
+                df.parse(message.date.toString()).day,
+              ),
+              groupHeaderBuilder: (Message message) => SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: Card(
+                      color: Theme.of(context).primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                            DateFormat.yMMMd()
+                                .format(df.parse(message.date.toString())),
+                            style: const TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  )),
+              itemBuilder: (context, Message message) => Align(
+                alignment: message.sentBy == widget.user.id
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Card(
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(message.text.toString()),
+                  ),
                 ),
               ),
-            ),
-          )),
+            )),
           Row(
             children: [
               Padding(
@@ -137,6 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           sentTo: widget.barter.takeuserid,
                         );
                         _messageEditingController.clear();
+                        insertmessage(message);
                         setState(
                           () => messages.add(message),
                         );
@@ -156,7 +210,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       sentTo: widget.barter.takeuserid,
                     );
                     _messageEditingController.clear();
-
+                    insertmessage(message);
                     setState(
                       () => messages.add(message),
                     );
@@ -194,6 +248,47 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }
       setState(() {});
+
+      // Start the timer to execute the function every 5 seconds
+      _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        // Call your desired function here
+        loadtradermessages();
+      });
+    });
+  }
+
+  void loadtradermessages() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_messages.php"),
+        body: {
+          "barterid": widget.barter.barterid,
+          "sentBy": trader.id.toString(),
+          "date": DateTime.now().toString(),
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['messages'].forEach((v) {
+          messages.add(Message.fromJson(v));
+        });
+      }
+      setState(() {});
+    });
+  }
+
+  void insertmessage(Message message) {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/insert_message.php"),
+        body: {
+          "barterid": message.barterid,
+          "text": message.text,
+          "date": message.date,
+          "sentBy": message.sentBy,
+          "sentTo": message.sentTo,
+        }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {}
+      }
     });
   }
 
@@ -204,7 +299,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
-        otherUser = User.fromJson(jsondata['data']);
+        trader = User.fromJson(jsondata['data']);
       }
       setState(() {});
     });
