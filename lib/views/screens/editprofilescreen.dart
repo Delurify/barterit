@@ -245,7 +245,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               onPressed: () async {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
                 await updateUser();
               },
             ),
@@ -265,15 +264,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future updateUser() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          title: Text("Please Wait"),
-          content: Text("Updating..."),
-        );
-      },
-    );
     String name = _nameEditingController.text;
     String email = _emailEditingController.text;
     String phone = _phoneEditingController.text;
@@ -285,24 +275,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": email,
           "phone": phone,
         }).then((response) {
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == 'success') {
-          widget.user.name = _nameEditingController.text;
-          widget.user.email = _emailEditingController.text;
-          widget.user.phone = _phoneEditingController.text;
-
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Update Success")));
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Update Failed")));
+      if (mounted) {
+        // Check if the widget is still mounted
+        if (response.statusCode == 200) {
+          var jsondata = jsonDecode(response.body);
+          if (jsondata['status'] == 'success') {
+            widget.user.name = _nameEditingController.text;
+            widget.user.email = _emailEditingController.text;
+            widget.user.phone = _phoneEditingController.text;
+            setState(() {});
+          }
+          Navigator.pop(context);
         }
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Update Failed")));
-        Navigator.pop(context);
       }
     });
   }

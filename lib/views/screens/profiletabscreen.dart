@@ -295,7 +295,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                                                   EditProfileScreen(
                                                     user: widget.user,
                                                   ))).then((value) {
-                                        loadUser();
+                                        setState(() {});
                                       });
                                     }))
                           ],
@@ -668,7 +668,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
                 builder: (content) => EditProfileScreen(
                       user: widget.user,
                     ))).then((value) {
-          loadUser();
+          setState(() {});
         });
 
         break;
