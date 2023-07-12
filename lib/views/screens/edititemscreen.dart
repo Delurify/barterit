@@ -289,6 +289,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                                         user: widget.user,
                                         isSelected: isSelected,
                                       ))).then((value) {
+                            FocusScope.of(context).requestFocus(FocusNode());
                             BoxedReturns box = value;
                             // fetch the isSelected object from BarterTo
                             setState(() {

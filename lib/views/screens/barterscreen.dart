@@ -68,9 +68,6 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     var tabText = const TextStyle(fontSize: 18);
 
-    print(screenHeight);
-    print(screenWidth);
-
     return Scaffold(
         body: Column(
       children: [
@@ -306,7 +303,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
                                                 color: Colors.orange),
                                           ),
                                           Text(
-                                            "Qty: ${itemMap[sentOfferList[index].giveId]!.itemQty.toString()}",
+                                            "Qty: ${itemMap[sentOfferList[index].giveId]?.itemQty.toString()}",
                                             softWrap: true,
                                             maxLines: 1,
                                             style: TextStyle(

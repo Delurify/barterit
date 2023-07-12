@@ -298,6 +298,7 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
                                         user: widget.user,
                                         isSelected: isSelected,
                                       ))).then((value) {
+                            FocusScope.of(context).requestFocus(FocusNode());
                             // fetch the isSelected object from BarterTo
                             setState(() {
                               BoxedReturns box = value;

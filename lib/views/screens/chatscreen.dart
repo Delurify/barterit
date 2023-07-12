@@ -20,15 +20,17 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late double screenWidth, screenHeight;
-  final df = DateFormat('dd-MM-yyyy HH:mm');
+  final df = DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS');
   final FocusNode _focusNode = FocusNode();
+  final TextEditingController _messageEditingController =
+      TextEditingController();
   List<Message> messages = [];
   User otherUser = User();
 
   @override
   void initState() {
     super.initState();
-    loadotheruser();
+    loadtrader();
     loadmessages();
   }
 
@@ -58,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: GroupedListView<Message, DateTime>(
             padding: const EdgeInsets.all(8),
             reverse: true,
-            order: GroupedListOrder.ASC,
+            order: GroupedListOrder.DESC,
             useStickyGroupSeparators: true,
             floatingHeader: true,
             elements: messages,
@@ -111,6 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(20))),
                   child: TextField(
+                    controller: _messageEditingController,
                     focusNode: _focusNode,
                     style: TextStyle(
                         color: _focusNode.hasFocus && !isDark
@@ -125,28 +128,46 @@ class _ChatScreenState extends State<ChatScreen> {
                         contentPadding: EdgeInsets.all(12),
                         hintText: '\tType your message here...'),
                     onSubmitted: (text) {
-                      final message = Message(
-                        barterid: widget.barter.barterid,
-                        text: text,
-                        date: DateTime.now().toString(),
-                        sentBy: widget.user.id.toString(),
-                        sentTo: widget.barter.takeuserid,
-                      );
-                      setState(
-                        () => messages.add(message),
-                      );
+                      if (text != "") {
+                        final message = Message(
+                          barterid: widget.barter.barterid,
+                          text: text,
+                          date: DateTime.now().toString(),
+                          sentBy: widget.user.id.toString(),
+                          sentTo: widget.barter.takeuserid,
+                        );
+                        _messageEditingController.clear();
+                        setState(
+                          () => messages.add(message),
+                        );
+                      }
                     },
                   ),
                 ),
               ),
               RawMaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_messageEditingController.text != "") {
+                    final message = Message(
+                      barterid: widget.barter.barterid,
+                      text: _messageEditingController.text,
+                      date: DateTime.now().toString(),
+                      sentBy: widget.user.id.toString(),
+                      sentTo: widget.barter.takeuserid,
+                    );
+                    _messageEditingController.clear();
+
+                    setState(
+                      () => messages.add(message),
+                    );
+                  }
+                },
                 elevation: 10,
                 fillColor: isDark ? Colors.grey[700] : Colors.orange,
                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                 shape: const CircleBorder(),
                 child: const Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: EdgeInsets.all(5.0),
                   child: Icon(
                     Icons.send,
                     size: 20.0,
@@ -160,9 +181,23 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void loadmessages() {}
+  void loadmessages() {
+    http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_messages.php"),
+        body: {
+          "barterid": widget.barter.barterid,
+        }).then((response) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['messages'].forEach((v) {
+          messages.add(Message.fromJson(v));
+        });
+      }
+      setState(() {});
+    });
+  }
 
-  void loadotheruser() {
+  void loadtrader() {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/login_user.php"),
         body: {
           "user_id": widget.barter.takeuserid,
