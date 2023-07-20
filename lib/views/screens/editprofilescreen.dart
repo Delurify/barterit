@@ -158,9 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage();
-    } else {
-      print('No Image selected.');
-    }
+    } else {}
   }
 
   Future<void> cropImage() async {
@@ -187,9 +185,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (croppedFile != null) {
       File imageFile = File(croppedFile.path);
       _image = imageFile;
-      int? sizeInBytes = _image?.lengthSync();
-      double sizeInMb = sizeInBytes! / (1024 * 1024);
-      print(sizeInMb);
       insertAvatar();
       setState(() {
         val++;

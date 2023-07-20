@@ -45,7 +45,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     super.dispose();
-    print("dispose");
   }
 
   @override

@@ -5,7 +5,7 @@ class SearchItemWidget extends StatefulWidget {
   final IconData icon;
   final String text;
 
-  const SearchItemWidget(this.color, this.icon, this.text);
+  const SearchItemWidget(this.color, this.icon, this.text, {super.key});
 
   @override
   State<SearchItemWidget> createState() => _SearchItemWidgetState();
@@ -20,7 +20,7 @@ class _SearchItemWidgetState extends State<SearchItemWidget> {
     screenWidth = MediaQuery.of(context).size.width;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
+    return SizedBox(
       width: screenWidth * 0.25,
       height: screenWidth * 0.25,
       child: Card(

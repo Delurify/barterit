@@ -175,8 +175,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
         body: {"favorite_userid": widget.user.id}).then((response) {
       itemList.clear();
-
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
@@ -189,7 +187,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             const SnackBar(content: Text("No Favorited item(s)")));
         Navigator.pop(context);
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 }

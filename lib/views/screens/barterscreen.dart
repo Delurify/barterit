@@ -838,6 +838,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
         body: {"itemIdList": itemIdList.toString()}).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
+        if (!mounted) return;
         var extractdata = jsondata['data'];
         extractdata['items'].forEach((v) {
           Item item = Item.fromJson(v);
@@ -861,6 +862,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
           "giveid": giveId,
           "takeid": takeId,
         }).then((response) {
+      if (!mounted) return;
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {}
       setState(() {});
@@ -874,6 +876,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
         }).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
+        if (!mounted) return;
         var extractdata = jsondata['data'];
         extractdata['offers'].forEach((v) {
           receivedOfferList.add(Offer.fromJson(v));
@@ -903,6 +906,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
         body: {"itemIdList": userItemIdList.toString()}).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
+        if (!mounted) return;
         var extractdata = jsondata['data'];
         extractdata['items'].forEach((v) {
           userItemList.add(Item.fromJson(v));
@@ -927,6 +931,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
         }).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
+        if (!mounted) return;
         var extractdata = jsondata['data'];
         extractdata['barters'].forEach((v) {
           barterList.add(Barter.fromJson(v));
@@ -977,6 +982,7 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
         body: {"barterIdList": barterIdList.toString()}).then((response) {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
+        if (!mounted) return;
         var extractdata = jsondata['data'];
         extractdata['barteritems'].forEach((v) {
           BarterItem barteritem = BarterItem.fromJson(v);
@@ -1002,7 +1008,9 @@ class _BarterTabScreenState extends State<BarterTabScreen> {
           "userid": widget.user.id,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {}
+      if (jsondata['status'] == "success") {
+        if (!mounted) return;
+      }
     });
   }
 }

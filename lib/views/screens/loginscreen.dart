@@ -190,7 +190,6 @@ class _LoginScreenState extends State<LoginScreen> {
             "email": email,
             "user_password": pass,
           }).then((response) {
-        print(response.body);
         if (response.statusCode == 200) {
           var jsondata = jsonDecode(response.body);
           if (jsondata['status'] == 'success') {
@@ -214,9 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }).timeout(const Duration(seconds: 5), onTimeout: () {
         // Time has run out, do what you wanted to do.
       });
-    } on TimeoutException catch (_) {
-      print("Time out");
-    }
+    } on TimeoutException catch (_) {}
   }
 
   void _forgotDialog() {}
@@ -252,6 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passEditingController.text = '';
         _isChecked = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Preferences Removed")));
     }

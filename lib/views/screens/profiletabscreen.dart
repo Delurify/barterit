@@ -620,7 +620,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
 
   void checkLogin() {
-    print(widget.user.email);
     if (widget.user.id == "na") {
       showDialog(
         context: context,
@@ -687,7 +686,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
 
         break;
       case 2:
-        print('Clicked Logout');
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (content) => const LoginScreen()));
 
@@ -706,8 +704,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage();
-    } else {
-      print('No Image selected.');
     }
   }
 
@@ -735,9 +731,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
     if (croppedFile != null) {
       File imageFile = File(croppedFile.path);
       _image = imageFile;
-      int? sizeInBytes = _image?.lengthSync();
-      double sizeInMb = sizeInBytes! / (1024 * 1024);
-      print(sizeInMb);
       insertAvatar();
       setState(() {
         val++;
@@ -780,7 +773,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
           "limit": limit.toString(),
           "offset": offset.toString()
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
@@ -858,7 +850,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Future loadfavorites() async {
     http.post(Uri.parse("${MyConfig().SERVER}/barterit/php/load_items.php"),
         body: {"favorite_userid": widget.user.id}).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         gotFavorite = true;
@@ -905,7 +896,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
         body: {
           "userid": widget.user.id,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         User user = User.fromJson(jsondata['data']);

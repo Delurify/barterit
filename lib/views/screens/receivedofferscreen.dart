@@ -411,7 +411,6 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
         extractofferdata['offers'].forEach((v) {
           offerList.add(Offer.fromJson(v));
         });
-        print(offerList[0].giveId);
       }
       setState(() {});
     });
@@ -477,9 +476,7 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
             "barter_imagecount": item.itemImageCount,
             "item_id": item.itemId
           }).then((response) {
-        print(response.body);
         var jsondata = jsonDecode(response.body);
-        print(jsondata);
         if (jsondata['status'] == "success") {}
         setState(() {});
       });
@@ -493,7 +490,6 @@ class _ReceivedOfferScreenState extends State<ReceivedOfferScreen> {
           "barter_takeuserid": takeitem.userId,
         }).then((response) {
       var jsondata = jsonDecode(response.body);
-      print(jsondata);
       if (jsondata['status'] == "success") {}
       setState(() {});
     });

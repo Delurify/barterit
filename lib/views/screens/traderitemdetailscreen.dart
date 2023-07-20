@@ -1087,7 +1087,6 @@ class _TraderItemDetailScreenState extends State<TraderItemDetailScreen> {
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
-        print(extractdata);
         extractdata.forEach((v) {
           sentOfferList.add(v.toString());
         });

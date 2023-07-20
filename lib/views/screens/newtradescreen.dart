@@ -516,8 +516,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage(index);
-    } else {
-      print('No image selected.');
     }
   }
 
@@ -691,7 +689,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
           "locality": _prlocalEditingController.text,
           "barterto": barterto.toString(),
         }).then((response) {
-      print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {
@@ -740,7 +737,6 @@ class _NewTradeScreenState extends State<NewTradeScreen> {
       prlat = "6.443455345";
       prlong = "100.05488449";
     } else {
-      print(placemarks[0].locality.toString());
       _prlocalEditingController.text = placemarks[0].locality.toString();
       _prstateEditingController.text =
           placemarks[0].administrativeArea.toString();

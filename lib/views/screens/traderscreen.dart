@@ -366,7 +366,6 @@ class _TraderScreenState extends State<TraderScreen> {
           "limit": limit.toString(),
           "offset": offset.toString()
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];

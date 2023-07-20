@@ -42,7 +42,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     hasMore = true;
     loadSharedPrefs();
@@ -107,7 +106,8 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                             sharedPref.save(
                                 widget.user.id.toString(), interest);
 
-                            if (singleitem.userId == widget.user.id) {
+                            if (singleitem.userId == widget.user.id ||
+                                widget.user.id == "na") {
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -165,7 +165,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                           )
                                         : itemList[index].itemImageCount == "2"
                                             ? ImageSlideshow(
-                                              
                                                 width: screenWidth,
                                                 initialPage: 0,
                                                 children: [
@@ -338,8 +337,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
           itemList.clear();
           firstLoad = false;
         }
-
-        print(response.body);
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           var extractdata = jsondata['data'];
@@ -373,7 +370,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
           firstLoad = false;
         }
 
-        print(response.body);
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           var extractdata = jsondata['data'];

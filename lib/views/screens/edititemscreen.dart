@@ -295,7 +295,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
                             setState(() {
                               isSelected = box.isSelected;
                               barterto.addAll(box.barterto);
-                              print(barterto.toString());
                             });
                             // loaduseritems();
                           });
@@ -577,7 +576,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
           "type": widget.useritem.itemType,
           "barterto": barterto.toString(),
         }).then((response) {
-      print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {

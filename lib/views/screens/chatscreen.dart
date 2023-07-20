@@ -292,7 +292,9 @@ class _ChatScreenState extends State<ChatScreen> {
           messages.add(Message.fromJson(v));
         });
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -321,7 +323,9 @@ class _ChatScreenState extends State<ChatScreen> {
       if (jsondata['status'] == "success") {
         trader = User.fromJson(jsondata['data']);
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 }

@@ -20,7 +20,6 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
   @override
   void dispose() {
     super.dispose();
-    print("dispose");
   }
 
   @override

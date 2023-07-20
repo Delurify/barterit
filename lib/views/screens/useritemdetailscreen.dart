@@ -442,13 +442,9 @@ class _UserItemDetailScreenState extends State<UserItemDetailScreen> {
           "user_id": widget.user.id,
           "item_id": widget.useritem.itemId,
         }).then((response) {
-      var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {
-        print("favorite added successfully");
-      } else {
-        print("failed to add favorite");
+      if (mounted) {
+        setState(() {});
       }
-      setState(() {});
     });
   }
 
@@ -460,13 +456,9 @@ class _UserItemDetailScreenState extends State<UserItemDetailScreen> {
           "user_id": widget.user.id,
           "item_id": widget.useritem.itemId,
         }).then((response) {
-      var jsondata = jsonDecode(response.body);
-      if (jsondata['status'] == "success") {
-        print("favorite deleted successfully");
-      } else {
-        print("failed to delete favorite");
+      if (mounted) {
+        setState(() {});
       }
-      setState(() {});
     });
   }
 }

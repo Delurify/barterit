@@ -311,7 +311,6 @@ class _FollowListScreenState extends State<FollowListScreen>
         body: {
           "list_traderid": widget.user.id,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
@@ -319,7 +318,9 @@ class _FollowListScreenState extends State<FollowListScreen>
           followerList.add(User.fromJson(v));
         });
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -329,18 +330,16 @@ class _FollowListScreenState extends State<FollowListScreen>
         body: {
           "list_userid": widget.user.id,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
-        print("success");
         var extractdata = jsondata['data'];
         extractdata['users'].forEach((v) {
           followingList.add(User.fromJson(v));
         });
-      } else {
-        print("failed");
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 

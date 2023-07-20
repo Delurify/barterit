@@ -507,7 +507,6 @@ class _SearchScreenState extends State<SearchScreen>
           "searchname": search,
           "username": widget.user.name,
         }).then((response) {
-      print(response.body);
       var jsondata = jsonDecode(response.body);
       if (jsondata['status'] == "success") {
         var extractdata = jsondata['data'];
